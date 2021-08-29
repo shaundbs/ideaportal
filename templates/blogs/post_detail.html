@@ -1,0 +1,151 @@
+{% include 'components/navbar_reg.html' %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Django Central</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+        <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <style>
+            body {
+            font-family: "Roboto", sans-serif;
+            font-size: 17px;
+            background-color: #fdfdfd;
+        }
+        .btn-danger {
+            color: #fff;
+            background-color: #f00000;
+            border-color: #dc281e;
+        }
+        .masthead {
+            background: #3398E1;
+            height: auto;
+            padding-bottom: 15px;
+            padding-top: 10px;
+        }
+    </style>
+
+
+<div class="container">
+
+  <div class="container">
+    <br>
+
+
+  <div class="row">
+    
+    <div class="col-md-9 card mb-4  mt-5 left  top">
+      
+      <div class="card-body">
+
+        <div class="nhsuk-back-link">
+          <a class="nhsuk-back-link__link" href="{{request.META.HTTP_REFERER}}">
+            <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+            </svg>
+            Go back</a>
+      
+        </div>
+
+        <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
+        <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
+        <p class=" text-muted"> Severity: {{ object.severity| capfirst }}</p>
+        <p class="card-text ">{{ object.description | safe }}</p>
+        <hr>
+
+                    <form action="{% url 'like_post' post.pk post.slug %}" method="post">
+                        {% csrf_token %}
+                        {% if user.is_authenticated %}
+
+                        {% if liked %}
+                        <button id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary">Downvote</button>
+                        {% else %}
+                        <button id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button">Upvote</button>
+                        {% endif %}
+                        {% else %}
+                        <a href="{% url 'enter' %}"><p>Login</a> to like </p>
+                        {% endif %}
+                        <button formaction="{% url 'comment_post' post.pk post.slug %}" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary">Leave a comment</button>
+                        <a href="{% url 'ideaform' post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
+
+                        <p>{{ total_likes }} Likes</p>
+                      </form>
+                      <hr>
+                      
+                      <h2>Ideas:</h2>
+
+                      <div class="nhsuk-header__search-wrap beta-header__search-wrap js-show" id="wrap-search">
+                        <form class="nhsuk-header__search-form beta-header__search-form" id="search" action="{% url 'search_idea' %}" method="post" role="search">
+                          {% csrf_token %}
+                          <label class="nhsuk-u-visually-hidden" for="search-field">Search the NHS website</label>
+                          <div class="autocomplete-container" id="autocomplete-container"></div>
+                          <input class="nhsuk-search__input" id="search-field" name="searched" type="search" placeholder="Search" autocomplete="off" >
+  
+                            <span class="nhsuk-u-visually-hidden">Search</span>
+                          </button>
+                        </form>
+                      </div>
+
+                      {% if not post.ideas.all %}
+                      <p class=" text-muted">
+
+                      No ideas yet to display:<br><br>
+
+                      <a href="{% url 'ideaform' post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
+
+                      {% else %}
+                      {% for idea in post.ideas.all %}
+                      <div class="col-md-12 card mb-4  mt-5 left  top">
+      
+                        <div class="card-body">
+            
+                      <h3>{{ idea.title }} </h3>
+                      <p class="card-text ">{{ idea.created_on }} | {{ idea.author }} 
+                      </p>
+
+
+
+
+                      {{ idea.description }} <br><br>
+                      <a href="{% url 'idea_post' idea.pk idea.slug %}" class="nhsuk-button nhsuk-button--primary">Read More</a>
+              
+                  </div>
+
+                </div>
+                      {% endfor %}
+
+                      {% endif %}
+
+      </div>
+
+    </div>
+    {% block sidebar %} {% include 'components/scrollable_comments.html' %} {% endblock sidebar %}
+
+
+  </div>
+
+</div>
+
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% include 'components/footer.html' %}
+
+

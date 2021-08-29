@@ -1,0 +1,122 @@
+{% extends 'blogs/base.html' %} {% block content %}
+
+<div class="container">
+  <div class="row">
+    
+    <div class="col-md-20 card mb-4  mt-5 left  top">
+      
+      <div class="card-body">
+
+        <div class="nhsuk-back-link">
+  <a class="nhsuk-back-link__link" href="{{request.META.HTTP_REFERER}}">
+    <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+    </svg>
+    Go back</a>
+
+</div>
+<form action="" method="post">
+  {% csrf_token %}
+
+<h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
+<p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
+<p class=" text-muted"> Severity: {{ object.severity| capfirst }}</p>
+{% if object.status %}
+<p class=" text-muted">Status: Approved</p>
+<div class="nhsuk-form-group">
+  <fieldset class="nhsuk-fieldset" aria-describedby="example-hint" role="group">
+    <legend class="nhsuk-fieldset__legend nhsuk-label--l">
+      <br><br>
+      <h1 class="nhsuk-fieldset__heading">
+        Enter a start and end date
+      </h1>
+    </legend>
+    <div class="nhsuk-hint" id="example-hint">
+      For example, 15 3 1984
+    </div>
+
+    <div class="nhsuk-date-input" id="example">
+      <div class="nhsuk-date-input__item">
+        <div class="nhsuk-form-group">
+          <label class="nhsuk-label nhsuk-date-input__label" for="example-day">
+            Day
+          </label>
+          <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" id="example-day" name="example-day" type="text" pattern="[0-9]*" inputmode="numeric">
+        </div>
+      </div>
+      <div class="nhsuk-date-input__item">
+        <div class="nhsuk-form-group">
+          <label class="nhsuk-label nhsuk-date-input__label" for="example-month">
+            Month
+          </label>
+          <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-2" id="example-month" name="example-month" type="text" pattern="[0-9]*" inputmode="numeric">
+        </div>
+      </div>
+      <div class="nhsuk-date-input__item">
+        <div class="nhsuk-form-group">
+          <label class="nhsuk-label nhsuk-date-input__label" for="example-year">
+            Year
+          </label>
+          <input class="nhsuk-input nhsuk-date-input__input nhsuk-input--width-4" id="example-year" name="example-year" type="text" pattern="[0-9]*" inputmode="numeric">
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <br>
+  <button formaction="{% url 'approve_challenge' post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button" onclick="return confirm('Are you sure you want to approve this item?');">Submit</button><br>
+</div>
+<a href="{% 'idea_post' idea.pk idea.slug}">Click to view winning ideas</a><br><br>
+{% else %}
+<p class=" text-muted">Status: Not approved</p>
+{% endif %}
+<p class="card-text ">{{ object.description | safe }}</p>
+<hr>
+
+<!-- <button formaction="{% url 'approve_challenge' post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button" onclick="return confirm('Are you sure you want to approve this item?');">Approve</button> -->
+<button formaction="{% url 'approval_view' post.pk post.slug %}" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button">Review</button>
+
+<button formaction="{% url 'reject_challenge' post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary" onclick="return confirm('Are you sure you want to reject this item?');">Reject</button>
+
+</form>
+                      <br>
+
+<br>
+                      <br>
+
+                      <div class="nhsuk-header__search-wrap beta-header__search-wrap js-show" id="wrap-search">
+
+                      </div>
+
+                    
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% include 'components/footer.html' %}
+{% endblock content %}
+
+<script>
+var result = confirm("Want to delete?");
+if (result) {
+    //Logic to delete the item
+}
+</script>

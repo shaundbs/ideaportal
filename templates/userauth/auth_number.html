@@ -1,0 +1,51 @@
+{% include 'components/navbar_reg.html' %}
+
+{% load static %}
+
+  
+  <div class="nhsuk-width-container">
+          
+          <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
+              <a class="nhsuk-back-link__link" id="back_button_link" href="/book-a-coronavirus-vaccination/do-you-have-an-nhs-number">
+                  <svg class="nhsuk-icon nhsuk-icon__chevron-left"
+                       xmlns="http://www.w3.org/2000/svg"
+                       viewBox="0 0 24 24"
+                       aria-hidden="true">
+                      <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+                  </svg>
+                  Go back
+              </a>
+          </div>
+   
+      
+  
+      <main class="nhsuk-main-wrapper" id="main-content" role="main">
+  
+          
+  
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+      
+      <h1 id="page_h1_title">What is your NHS number?</h1>
+      <p>Your NHS number is a 10 digit number that you find on any letter the NHS has sent you. For example, 485 777 3456.</p>
+      <form method="post" action="{% url 'auth_name' %}">
+        {% csrf_token %}
+
+        <div class="nhsuk-form-group " id="question_nhsnumber">
+          <label for="NhsNumber" class="nhsuk-label">Your NHS number</label>
+          
+          <input type="text" spellcheck="false" inputmode="numeric" class="nhsuk-input nhsuk-input--width-20 nhsuk-input" data-val="true" data-val-required="Enter your NHS number" id="NhsNumber" name="NhsNumber" value="" />
+        </div>
+        <button id="submit-button" type="submit" class="nhsuk-button">Continue</button>
+      <input name="__RequestVerificationToken" type="hidden" value="CfDJ8FTFIt_4U2pNpv3VDtvSAxY3BYs2s2GoJYSme2p0MTSbTLVTG2ncjUX-xDWx-X9OkbbSgsR0jK4DlYtFqtmMiuCzph487XLIjoFw6Z4wI705wBdgbkZoOcCRSXvwGh1QSK-HISgkj07EiMB7A8UBRUw" /></form>
+    </div>
+  </div>
+  
+  
+      </main>
+  </div>
+  
+  {% include 'components/footer.html' %}
+  
+  </body>
+  </html>

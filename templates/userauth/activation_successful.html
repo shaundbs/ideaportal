@@ -1,0 +1,65 @@
+{% include 'components/navbar_reg.html' %}
+
+{% load static %}
+
+  
+  <div class="nhsuk-width-container">
+          
+      
+  
+      <main class="nhsuk-main-wrapper" id="main-content" role="main">
+  
+          
+  
+  <div class="nhsuk-grid-row">
+    <div class="nhsuk-grid-column-two-thirds">
+  
+    
+      <form method="get" action="{% url 'enter' %}">
+        {% csrf_token %}
+  
+        <div class="nhsuk-form-group">
+
+            <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-hint">
+                <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
+                    <h1 id="page_h1_title" class="nhsuk-fieldset__heading">
+                         Activation Complete
+                    </h1>
+                </legend>
+                <br><br>
+                <div id="nhs-number-hint">
+                    <p>Welcome to NHS ML/AI Ideas portal <br><br> You have completed registration and your account is now active</p>
+                    <br><br><br><br><br>
+                    <div class="nhsuk-hint" id="example-hint">
+                        Click the button to return to the login screen
+                      </div>
+                    
+                </div>
+               
+            </fieldset>
+
+        
+        </div>
+        <a id="submit-button" type="submit" class="nhsuk-button" href="{% url 'enter' %}">Login</a>
+  
+      <!-- <input name="__RequestVerificationToken" type="hidden" value="CfDJ8FTFIt_4U2pNpv3VDtvSAxZpzKN5Q5mcKb0jzaXKDbM-lyrg9BbLo4YJZRq2Zaiebr-tT0bhvby73IhfDVyJ6TSKClfQB5Y1tHmxWGvI20kZlnYxgIxSk_Rcs_DE2nbYN2YMq-nf4iNGy3GvqRKWnf8" /></form> -->
+  
+    </div>
+  </div>
+  
+  
+      </main>
+  </div>
+  
+
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+  
+  
+  </body>
+  {% include 'components/footer.html' %}
+  </html>

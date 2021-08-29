@@ -1,0 +1,68 @@
+{% extends 'blogs/base.html' %} {% block content %}
+
+<div class="container">
+  <div class="row">
+
+    <div class="col-md-12 card mb-4  mt-5 left  top">
+      
+        <div class="card-body">
+          <div class="nhsuk-back-link">
+    <a class="nhsuk-back-link__link" href="{{request.META.HTTP_REFERER}}">
+      <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+      </svg>
+      Go back</a>
+  </div>
+  {% load widget_tweaks %}
+
+
+  <form method="post" action="">
+    {% csrf_token %}
+    <fieldset class="nhsuk-fieldset" aria-describedby="name-hint">
+        <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
+          <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Suggest a new category</h1>
+        </legend>
+        <br>
+
+
+
+
+ {{ form.department.label_tag }} 
+ <br>      
+{% render_field form.department class="nhsuk-select" id="select-4" name="select-4" %}  
+<br>
+<br>
+{{ form.sub_department.label_tag }}  
+<br>      
+{% render_field form.sub_department class="nhsuk-select" id="select-5" name="select-5" %}  
+
+
+
+    
+    </fieldset>
+    <br>
+      <button  id="submit-button" type="submit" class="nhsuk-button">Submit for Review</button>
+
+          
+        </div>
+      </div>
+    </form>
+    </div>
+    
+
+  </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+{% include 'components/footer.html' %}
+{% endblock content %}
+
