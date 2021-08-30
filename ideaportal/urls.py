@@ -54,6 +54,8 @@ urlpatterns = [
 
     path('landing/public/', views.public_landing, name='public_landing'),
     path('blogs/post-feed/<slug:slug>/', views.blogfeed_main.as_view(), name='blogfeed_main'),
+    path('blogs/post-feed/<slug:slug>/edit', views.blogfeed_main_edit.as_view(), name='blogfeed_main_edit'),
+
     # path('challenges/<slug:slug>/', bviews.PostDetail.as_view, name='post_detail'),
     path('blogs/post-feed/challenges/', include('blog.urls'), name='feed'),
     # path('blogs/post-feed/challenges/likes/', include('blog.urls'), name='likes'),

@@ -18,14 +18,15 @@ from organisations.models import Organisation
 
 from .forms import CommentForm
 from .models import Comment, Post
-
+from organisations.models import Organisation
 
 def search_blog(request):
+
     if request.method == "POST":
         searched = request.POST['searched']
         posts = Post.objects.filter(title__contains=searched)
         contents = Post.objects.filter(description__contains=searched)
-
+        
 
         return render(request, 'search/blog_search.html', {'searched': searched, 'posts': posts, 'contents': contents})
     else:

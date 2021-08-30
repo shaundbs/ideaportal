@@ -2,7 +2,7 @@
 {% load static %}
 {% load auth_extras %}
 
-{% include 'components/navbar_search.html' %}
+{% include 'components/navbar_reg.html' %}
 
 
 <!DOCTYPE HTML>
@@ -66,6 +66,8 @@
     <div id="chat" class="intelecomchat">
     </div>
 
+    
+
 
     <section class="components" id="main-content">
 
@@ -76,10 +78,24 @@
                 
     <div class="full-width-background" style="margin: 30px 0; background-color: #e8edee;">
         <div class="row">
+            <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
+                <a class="nhsuk-back-link__link" id="back_button_link" href="{{request.META.HTTP_REFERER}}">
+                    <svg class="nhsuk-icon nhsuk-icon__chevron-left"
+                         xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+                    </svg>
+                    Go back
+                </a>
+            </div>
+            
             <div class="blog-component">
                                     <header>
                         <h2>Latest publications</h2>
                     </header>
+
+                    
                                                 <article class="blog-component-sticky-post">
 
                     <header>
@@ -94,11 +110,25 @@
 </div>
                     </header>
 
+                    
+
                     <div class="rich-text content">
                         <p>GP Patient Survey Dental Statistics; January to March 2021, England In January to March 2021, 2.4 million adults were asked about their views on NHS dentistry as part of the GP Patient Survey. Participants were asked if they had tried to obtain an appointment with an NHS dentist and, if so, whether it was with [&hellip;]</p>
                     </div>
 
                 </article>
+
+                   <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
+        <a class="nhsuk-back-link__link" id="back_button_link" href="{{request.META.HTTP_REFERER}}">
+            <svg class="nhsuk-icon nhsuk-icon__chevron-left"
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 aria-hidden="true">
+                <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+            </svg>
+            Go back
+        </a>
+    </div>
 
                 <div class="blog-component-recent-posts">
 

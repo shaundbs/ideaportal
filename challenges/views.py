@@ -13,6 +13,9 @@ from django.http import HttpResponseRedirect
 from django.urls.base import reverse_lazy
 from django.views.generic.edit import CreateView
 import datetime
+from django.utils import timezone
+from django.utils.timezone import make_aware
+from organisations.models import Organisation
 
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -26,14 +29,14 @@ from rest_framework.views import APIView
 #     return render(request,'challenge_management/dashboard.html')
 
 class PostList(generic.ListView):
-    today = datetime.datetime.now()
+    today = make_aware(datetime.datetime.now())
     queryset = Post.objects.filter(status=0).filter(endDate=None).order_by('-created_on')
     template_name = 'blogs/manager_index.html'
 
     model = Post
 
 class PostListCompleted(generic.ListView):
-    today = datetime.datetime.now()
+    today = make_aware(datetime.datetime.now())
     print(today)
     queryset = Post.objects.filter(status=1).filter(endDate__lte=today)
     # most_popular = Idea.objects.order_by("-likes")[:3]
@@ -105,10 +108,13 @@ class ideaform(CreateView):
     form_class = IdeaForm
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super(ideaform, self).get_context_data(**kwargs)
         obj = get_object_or_404(Post, pk=self.kwargs['pk'])
         context['object'] = context['post'] = obj
-        print(obj.department)
+        challenge_choice = Post.objects.get(slug=self.kwargs['slug'])
+        challenge_slug = Post.objects.get(slug=self.kwargs['slug']).slug
+        print(challenge_slug)
+        context['challenge'] = Post.objects.get(slug=challenge_slug)
         return context
         
     def form_valid(self, form):

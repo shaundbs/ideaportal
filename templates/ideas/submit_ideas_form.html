@@ -42,8 +42,13 @@
   {% csrf_token %}
   <fieldset class="nhsuk-fieldset" aria-describedby="name-hint">
     <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
-      <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Submit an idea</h1>
+      <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Suggest an idea</h1>
     </legend>
+    <br>
+    <h3>Challenge:</h3>
+    <h3 id="name-hint" >"{{ challenge }}"</h3>
+    <br>
+
     <p id="name-hint">Please fill out all required fields</p>
     <div class="nhsuk-form-group " id="question_nhsnumber">
 

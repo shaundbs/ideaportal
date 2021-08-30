@@ -47,6 +47,12 @@
                                                      														<p class="name mb-0">{{ org.name }}</p>
                                                         <br>
                                                         <a href="{% url 'blogfeed_main' org.slug %}">Sign in</a>
+														<br><br>
+														{% if request.user|has_group:"admins" %}
+														<a href="{% url 'blogfeed_main_edit' org.slug %}">Sign in and customise your portal</a>
+														{% else %}
+														{% endif %}
+														
 													</div>
 												</div>
                                                 </form>

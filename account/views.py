@@ -5,6 +5,7 @@ from django.template.loader import render_to_string, select_template
 import smtplib, ssl
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.urls.base import reverse_lazy
 from requests.api import head
 from requests.models import HTTPBasicAuth
 from .forms import AgeForm, CustomUserCreationForm, EmployeeForm
@@ -26,6 +27,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str, force_text, DjangoUnicodeDecodeError
 from django.contrib.sites.shortcuts import get_current_site
 from .utils import TokenGenerator, generate_token
+from django.contrib.auth.forms import UserChangeForm
 from django.urls import reverse
 import threading
 from formtools.wizard.views import SessionWizardView, NamedUrlWizardView
@@ -362,6 +364,24 @@ class blogfeed_main(generic.DetailView):
     #             "post3": chosen_post3 }
 
     # return render(request, "blogs/blogfeed_main.html", context)
+
+
+class blogfeed_main_edit(generic.DetailView):
+
+    form_class = Organisation
+    model = Organisation
+    template_name = 'blogs/blogfeed_main_edit.html'
+    success_url = reverse_lazy('blogfeed_main')
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(blogfeed_main_edit, self).get_context_data(*args, **kwargs)
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        print(portal_choice)
+        print(portal_slug)
+        context['org'] = Organisation.objects.get(slug=portal_slug)
+        return context
+
 
 def test_api(request):
     response = requests.post()
