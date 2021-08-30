@@ -22,14 +22,13 @@ class IdeaForm(forms.ModelForm):
         model = Idea
         fields = ('title', 'description', 'image', 'department')
 
-        
-
 class CriteriaForm(forms.Form):
     notes = forms.CharField(label='Notes', max_length=500, widget=forms.Textarea)
     is_user_led = BooleanField()
     # image = forms.ImageField()
-    estimated_cost = forms.DecimalField()
+    estimated_cost = forms.DecimalField(required=False)
 
+   
 class DepartmentForm(forms.ModelForm):
     class Meta:
         model = Department
@@ -44,6 +43,7 @@ class ChallengeForm(forms.ModelForm):
         super(ChallengeForm, self).__init__(*args, **kwargs)
         self.fields['department'].queryset = Department.objects.filter(is_approved=True)
         self.fields['additional_field'].required = False
+
 
     class Meta:
         model = Challenge
