@@ -1,4 +1,39 @@
-{% extends 'blogs/base.html' %} {% block content %}
+{% include 'components/navbar_reg.html' %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Django Central</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+        <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <style>
+            body {
+            font-family: "Roboto", sans-serif;
+            font-size: 17px;
+            background-color: #fdfdfd;
+        }
+        .btn-danger {
+            color: #fff;
+            background-color: #f00000;
+            border-color: #dc281e;
+        }
+        .masthead {
+            background: #3398E1;
+            height: auto;
+            padding-bottom: 15px;
+            padding-top: 10px;
+        }
+    </style>
+
+
+
 
 <div class="container">
   <div class="row">
@@ -7,7 +42,8 @@
       
         <div class="card-body">
           <div class="nhsuk-back-link">
-    <a class="nhsuk-back-link__link" href="{% url 'bloghub' %}">
+    <!-- <a class="nhsuk-back-link__link" href="{% url 'idea_post' orgslug postid posty %}"> -->
+      <a class="nhsuk-back-link__link" href="{{request.META.HTTP_REFERER}}">
       <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
       </svg>
@@ -20,7 +56,7 @@
     {% csrf_token %}
     <fieldset class="nhsuk-fieldset" aria-describedby="name-hint">
         <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
-          <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Comment on this post</h1>
+          <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Comment on this idea</h1>
         </legend>
 
 
@@ -42,28 +78,7 @@
       </div>
     </form>
     </div>
-    
-    
-    <!-- <div class="col-md-12 card mb-4  mt-5 left  top">
-      
-      <div class="card-body">
-        <div class="nhsuk-back-link">
-  <a class="nhsuk-back-link__link" href="{% url 'bloghub' %}">
-    <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
-    </svg>
-    Go back</a>
-</div>
-        <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
-        <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
-        <p class="card-text ">{{ object.content | safe }}</p>
-        <hr>
-                 
-                       
 
-                        <p>{{ total_likes }} Likes</p>
-      </div>
-    </div> -->
   </div>
 </div>
 <br>
@@ -78,5 +93,4 @@
 <br>
 
 {% include 'components/footer.html' %}
-{% endblock content %}
 

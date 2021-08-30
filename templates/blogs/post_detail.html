@@ -46,7 +46,7 @@
       <div class="card-body">
 
         <div class="nhsuk-back-link">
-          <a class="nhsuk-back-link__link" href="{{request.META.HTTP_REFERER}}">
+          <a class="nhsuk-back-link__link" href="{% url 'bloghub' orgslug %}">
             <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
             </svg>
@@ -60,7 +60,7 @@
         <p class="card-text ">{{ object.description | safe }}</p>
         <hr>
 
-                    <form action="{% url 'like_post' post.pk post.slug %}" method="post">
+                    <form action="{% url 'like_post' orgslug post.pk post.slug %}" method="post">
                         {% csrf_token %}
                         {% if user.is_authenticated %}
 
@@ -72,7 +72,7 @@
                         {% else %}
                         <a href="{% url 'enter' %}"><p>Login</a> to like </p>
                         {% endif %}
-                        <button formaction="{% url 'comment_post' post.pk post.slug %}" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary">Leave a comment</button>
+                        <button formaction="{% url 'comment_post' orgslug post.pk post.slug %}" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary">Leave a comment</button>
                         <a href="{% url 'ideaform' post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
 
                         <p>{{ total_likes }} Likes</p>
@@ -114,7 +114,7 @@
 
 
                       {{ idea.description }} <br><br>
-                      <a href="{% url 'idea_post' idea.pk idea.slug %}" class="nhsuk-button nhsuk-button--primary">Read More</a>
+                      <a href="{% url 'idea_post' orgslug idea.pk idea.slug %}" class="nhsuk-button nhsuk-button--primary">Read More</a>
               
                   </div>
 

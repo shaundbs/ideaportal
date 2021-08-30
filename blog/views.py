@@ -1,4 +1,5 @@
 from os import stat, stat_result
+from re import S
 
 import challenges.models
 from challenges.forms import DepartmentForm, IdeaCommentForm, ApprovalForm
@@ -369,8 +370,9 @@ def reject_challenge(request, pk, slug):
 
     return HttpResponseRedirect(reverse('post_management_detail', args=[str(pk), slug]))
 
-def like_view(request, pk, slug):
+def like_view(request, pk, slug, orgslug):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    print(post.slug)
     liked = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
@@ -378,10 +380,11 @@ def like_view(request, pk, slug):
     else:
         post.likes.add(request.user)
         liked = True
-    return HttpResponseRedirect(reverse('post_detail', args=[str(pk), slug]))
+    return HttpResponseRedirect(reverse('post_detail', args=[orgslug, str(pk), slug]))
 
-def like_view_idea(request, pk, slug):
+def like_view_idea(request, pk, slug, orgslug):
     idea = get_object_or_404(Idea, id=request.POST.get('idea_id'))
+
     liked = False
     if idea.likes.filter(id=request.user.id).exists():
         idea.likes.remove(request.user)
@@ -389,7 +392,7 @@ def like_view_idea(request, pk, slug):
     else:
         idea.likes.add(request.user)
         liked = True
-    return HttpResponseRedirect(reverse('idea_post', args=[str(pk), slug]))
+    return HttpResponseRedirect(reverse('idea_post', args=[orgslug, str(pk), slug]))
 
 class approval_view(CreateView):
     model = Post
@@ -411,6 +414,16 @@ class comment_view(CreateView):
         form.instance.post_id = self.kwargs['pk']
         return super().form_valid(form)
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(comment_view, self).get_context_data()
+        portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
+        print(portal_choice)
+        print(portal_slug)
+        context['orgslug'] = portal_slug
+
+        return context
+
     success_url = reverse_lazy('bloghub')
 
 class idea_comment_view(CreateView):
@@ -421,6 +434,30 @@ class idea_comment_view(CreateView):
     def form_valid(self, form):
         form.instance.post_id = self.kwargs['pk']
         return super().form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(idea_comment_view, self).get_context_data()
+
+        stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
+        context['posty'] = stuff.slug
+        context['postid'] = stuff.pk
+        total_likes = stuff.total_likes()
+
+        liked = False
+        if stuff.likes.filter(id=self.request.user.id).exists():
+            liked = True
+
+        context["total_likes"] = total_likes
+        context["liked"] = liked
+        portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
+
+        print(stuff.slug)
+        print(portal_choice)
+        print(portal_slug)
+        context['orgslug'] = portal_slug
+
+        return context
 
     success_url = reverse_lazy('bloghub')
 
@@ -441,6 +478,12 @@ class IdeaDetail(generic.DetailView):
 
         context["total_likes"] = total_likes
         context["liked"] = liked
+        portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
+        print(portal_choice)
+        print(portal_slug)
+        context['orgslug'] = portal_slug
 
         return context
+
 

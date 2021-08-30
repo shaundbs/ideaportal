@@ -1,7 +1,7 @@
 {% load auth_extras %}
 
 {% block header %}
-{% if request.user|has_group:"challenge_managers" %}
+{% if request.user|has_group:"admins" %}
 {% include 'components/navbar_management.html' %}
 {% else %}
 {% include 'components/navbar_blog.html' %}

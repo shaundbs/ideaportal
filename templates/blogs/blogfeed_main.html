@@ -263,11 +263,6 @@
           {% else %}
           <p class="mb-0">Portal Managers please fill out this section</p>
           {% endif %}
-          {% if request.user|has_group:"admins" %}
-          <p>Hello</p>
-          <a href="{% url 'blogfeed_main_edit' %}">Customise Organisation Page</a>
-          {% else %}
-          {% endif %}
         </div>
 
         <div class="p-4">

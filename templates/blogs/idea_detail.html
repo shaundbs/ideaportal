@@ -20,7 +20,7 @@
         <img src="{{ idea.image.url }}" style="max-width:30%;max-height:30%;">
         {% endif %}
         <hr>
-                    <form action="{% url 'like_idea' idea.pk idea.slug %}" method="post">
+                    <form action="{% url 'like_idea' orgslug idea.pk idea.slug %}" method="post">
                         {% csrf_token %}
                         {% if user.is_authenticated %}
 
@@ -45,7 +45,7 @@
 
                       No comments yet to display:<br><br>
 
-                      <a href="{% url 'comment_idea' idea.pk idea.slug %}" class="nhsuk-button nhsuk-button--secondary">Comment</a>
+                      <a href="{% url 'comment_idea' orgslug idea.pk idea.slug %}" class="nhsuk-button nhsuk-button--secondary">Comment</a>
 
                       {% else %}
                       {% for comment in idea.comments.all %}
