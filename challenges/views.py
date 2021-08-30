@@ -16,6 +16,7 @@ import datetime
 from django.utils import timezone
 from django.utils.timezone import make_aware
 from organisations.models import Organisation
+from django.core.paginator import *
 
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -34,6 +35,34 @@ class PostList(generic.ListView):
     template_name = 'blogs/manager_index.html'
 
     model = Post
+
+    paginate_by = 4
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        return Post.objects.filter(status=0).filter(org_tag=portal_choice).filter(endDate=None).order_by('-created_on')
+
+    def get_context_data(self, **kwargs):
+        context = super(PostList, self).get_context_data(**kwargs) 
+        list_challenges = Post.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+
+        page = self.request.GET.get('page')
+
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        context['org'] = Organisation.objects.get(slug=portal_slug)
+        print(context['org'].slug)
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
 
 class PostListCompleted(generic.ListView):
     today = make_aware(datetime.datetime.now())
