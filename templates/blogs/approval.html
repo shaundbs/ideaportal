@@ -23,19 +23,19 @@
           <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Review this idea</h1>
         </legend>
 
-        {{ form.startDate.label_tag}}
+        {{ approvalform.startDate.label_tag}}
         <br>
-        {{ form.startDate}}
-        <br>
-        <br>
-        {{ form.endDate.label_tag}}
-        <br>
-        {{ form.endDate}}
+        {{ approvalform.startDate}}
         <br>
         <br>
-        {{ form.status.label_tag}}
+        {{ approvalform.endDate.label_tag}}
         <br>
-        {{ form.status}}
+        {{ approvalform.endDate}}
+        <br>
+        <br>
+        {{ approvalform.status.label_tag}}
+        <br>
+        {{ approvalform.status}}
 
         
 <!-- {% render_field form.comment class="nhsuk-textarea" rows="5" autocomplete="given-name" data-val="true" %}   -->
@@ -46,7 +46,7 @@
     
     </fieldset>
     <br>
-      <button  id="submit-button" type="submit" class="nhsuk-button">Comment</button>
+      <button  id="submit-button" type="submit" class="nhsuk-button">Approve</button>
 
           
         </div>

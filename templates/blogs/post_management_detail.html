@@ -3,7 +3,7 @@
 <div class="container">
   <div class="row">
     
-    <div class="col-md-20 card mb-4  mt-5 left  top">
+    <div class="col-md-15 card mb-4  mt-5 left  top">
       
       <div class="card-body">
 
@@ -63,19 +63,18 @@
     </div>
   </fieldset>
   <br>
-  <button formaction="{% url 'approve_challenge' post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button" onclick="return confirm('Are you sure you want to approve this item?');">Submit</button><br>
+  <button formaction="{% url 'approve_challenge' orgslug post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button" onclick="return confirm('Are you sure you want to approve this item?');">Submit</button><br>
 </div>
-<a href="{% 'idea_post' idea.pk idea.slug}">Click to view winning ideas</a><br><br>
+<a href="{% url 'idea_post' orgslug idea.pk idea.slug}">Click to view winning ideas</a><br><br>
 {% else %}
 <p class=" text-muted">Status: Not approved</p>
 {% endif %}
 <p class="card-text ">{{ object.description | safe }}</p>
 <hr>
 
-<!-- <button formaction="{% url 'approve_challenge' post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button" onclick="return confirm('Are you sure you want to approve this item?');">Approve</button> -->
-<button formaction="{% url 'approval_view' post.pk post.slug %}" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button">Review</button>
+<button formaction="{% url 'approval_view' orgslug post.pk post.slug %}" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button">Review</button>
 
-<button formaction="{% url 'reject_challenge' post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary" onclick="return confirm('Are you sure you want to reject this item?');">Reject</button>
+<button formaction="{% url 'reject_challenge' orgslug post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary" onclick="return confirm('Are you sure you want to reject this item?');">Reject</button>
 
 </form>
                       <br>

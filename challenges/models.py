@@ -51,7 +51,7 @@ class Challenge(models.Model):
 ]
     severity = models.CharField(max_length=32, choices=SEVERITY_CHOICES, default='low')
     updated_on = models.DateTimeField(auto_now=True)
-    description = models.TextField(max_length=500,default='Type content here...')
+    description = models.TextField(max_length=500,default='')
     created_on = models.DateTimeField(auto_now_add=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='category', null=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/challenges_images")

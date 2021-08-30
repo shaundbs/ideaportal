@@ -21,13 +21,13 @@ urlpatterns = [
 
 
 
-    path('<int:pk>/<slug:slug>/manage/', views.PostManagementDetail.as_view(), name='post_management_detail'),
-    path('<int:pk>/<slug:slug>/manage/approve', views.approve_challenge, name='approve_challenge'),
-    path('<int:pk>/manage/<slug:slug>/reject', views.reject_challenge, name='reject_challenge'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/', views.PostManagementDetail.as_view(), name='post_management_detail'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/approve', views.approve_challenge, name='approve_challenge'),
+    path('<slug:orgslug>/<int:pk>/manage/<slug:slug>/reject', views.reject_challenge, name='reject_challenge'),
     path('<slug:orgslug>/<int:pk>/<slug:slug>/likes/', views.like_view, name='like_post'),
 
     
-    path('<int:pk>/<slug:slug>/manage/approval-view/', views.approval_view.as_view(), name='approval_view'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/approval-view/', views.approval_view, name='approval_view'),
     path('ideas/<slug:orgslug>/<int:pk>/<slug:slug>/', views.IdeaDetail.as_view(), name='idea_post'),
     path('ideas/<slug:orgslug>/likes/<int:pk>/<slug:slug>/', views.like_view_idea, name='like_idea'),
     path('ideas/<slug:orgslug>/<int:pk>/<slug:slug>/comment', views.idea_comment_view.as_view(), name='comment_idea'),

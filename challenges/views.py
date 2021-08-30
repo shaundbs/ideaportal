@@ -31,7 +31,6 @@ from rest_framework.views import APIView
 
 class PostList(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    queryset = Post.objects.filter(status=0).filter(endDate=None).order_by('-created_on')
     template_name = 'blogs/manager_index.html'
 
     model = Post
@@ -51,8 +50,10 @@ class PostList(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        print(portal_choice)
+        print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
-        print(context['org'].slug)
+        context['orgslug'] = portal_slug
 
         try:
             file_exams = paginator.page(page)
@@ -92,16 +93,22 @@ class PostListCompleted(generic.ListView):
     #     return context
 
 
-def submit_challenge_successful(request):
-    return render(request,'challenges/submit_challenge_success.html')
+def submit_challenge_successful(request, slug):
+    context = { 'slug': slug}
+    return render(request,'challenges/submit_challenge_success.html', context)
 
 
 def challenge_history(request):
     return render(request,'challenges/challenge_history.html')
 
 
-def submit_challenge(request):
+def submit_challenge(request, slug):
     form = ChallengeForm()
+    print(slug)
+    org = slug
+    orgobject = Organisation.objects.get(slug=slug)
+   
+    
     if request.method == "POST":
         form = ChallengeForm(request.POST)
 
@@ -111,11 +118,14 @@ def submit_challenge(request):
             challenge = form.save()
             challenge.author = request.user
             challenge = form.save()
-            Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, challenge=challenge, description=challenge.description)
+            Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, challenge=challenge, description=challenge.description, org_tag=orgobject)
 
-            return redirect('submit_challenge_successful')
+            return redirect('submit_challenge_successful', slug=slug)
+    
 
-    context = {'challengeform': form}
+    context = {'challengeform': form, 'org': org}
+
+
 
     return render(request,'challenges/submit_challenge.html', context)
 

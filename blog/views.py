@@ -9,7 +9,7 @@ from django.core.checks import messages
 from django.core.paginator import *
 from django.http import HttpResponseRedirect
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.urls.base import reverse_lazy
 from django.views import generic
@@ -310,11 +310,10 @@ class PostManagementDetail(generic.DetailView):
 
         context["total_likes"] = total_likes
         context["liked"] = liked
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
-        context['org'] = Organisation.objects.get(slug=portal_slug)
+        portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
+        context['orgslug'] = portal_slug
+
 
         return context
 
@@ -342,14 +341,14 @@ class PostCommentList(generic.ListView):
 
         return context
 
-def approve_challenge(request, pk, slug):
+def approve_challenge(request, pk, slug, orgslug):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
     print(post.status)
     post.status = True
     print(post.status)
     post.save()
 
-    return HttpResponseRedirect(reverse('post_management_detail', args=[str(pk), slug]))
+    return HttpResponseRedirect(reverse('post_management_detail', args=[orgslug, str(pk), slug]))
 
 
 def add_dates(request, pk, slug):
@@ -361,14 +360,14 @@ def add_dates(request, pk, slug):
 
     return HttpResponseRedirect(reverse('post_management_detail', args=[str(pk), slug]))
 
-def reject_challenge(request, pk, slug):
+def reject_challenge(request, pk, slug, orgslug):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
     print(post.status)
     post.status = False
     print(post.status)
     post.save()
 
-    return HttpResponseRedirect(reverse('post_management_detail', args=[str(pk), slug]))
+    return HttpResponseRedirect(reverse('post_management_detail', args=[orgslug, str(pk), slug]))
 
 def like_view(request, pk, slug, orgslug):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
@@ -394,16 +393,48 @@ def like_view_idea(request, pk, slug, orgslug):
         liked = True
     return HttpResponseRedirect(reverse('idea_post', args=[orgslug, str(pk), slug]))
 
-class approval_view(CreateView):
-    model = Post
-    template_name = 'blogs/approval.html' 
-    form_class = ApprovalForm
+def approval_view(request, pk, slug, orgslug):
+    print(orgslug)
+    form = ApprovalForm()
+    if request.method == "POST":
+        form = ApprovalForm(request.POST)
+        if form.is_valid():
+            return redirect('profile_main')
 
-    def form_valid(self, form):
-        form.instance.post_id = self.kwargs['pk']
-        return super().form_valid(form)
+        context = {'approvalform': form}
 
-    success_url = reverse_lazy('bloghub')
+    return render(request, 'blogs/approval.html', context)
+
+# class approval_view(CreateView):
+#     model = Post
+#     template_name = 'blogs/approval.html' 
+#     form_class = ApprovalForm
+
+    # def form_valid(self, form):
+    #     form.instance.post_id = self.kwargs['pk']
+    #     return super().form_valid(form)
+
+    # def get_context_data(self, *args, **kwargs):
+    #     context = super(PostCommentList, self).get_context_data()
+
+    #     stuff = get_object_or_404(Comment, id=self.kwargs['pk'])
+    #     total_likes = stuff.total_likes()
+
+        # liked = False
+        # if stuff.likes.filter(id=self.request.user.id).exists():
+        #     liked = True
+
+        # context["total_likes"] = total_likes
+        # context["liked"] = liked
+        # portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        # portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        # print(portal_choice)
+        # print(portal_slug)
+        # context['org'] = Organisation.objects.get(slug=portal_slug)
+
+        # return context
+
+    success_url = reverse_lazy('profile_main')
 
 class comment_view(CreateView):
     model = Comment

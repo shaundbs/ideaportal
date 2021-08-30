@@ -81,6 +81,13 @@ class IdeaCommentForm(forms.ModelForm):
         fields = ('comment', 'image')
 
 class ApprovalForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ApprovalForm, self).__init__(*args, **kwargs)
+        self.fields['startDate'].required = True
+        self.fields['endDate'].required = True
+        self.fields['status'].required = True
+
     class Meta:
         model = Post
         fields = ('startDate', 'endDate', 'status')
