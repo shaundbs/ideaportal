@@ -15,36 +15,47 @@
   </div>
   {% load widget_tweaks %}
 
+  <div class="nhsuk-form-group">
+    <form method="post" action="">
+      {% csrf_token %}
+    <fieldset class="nhsuk-fieldset" aria-describedby="example-hint">
+      <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+        <h1 class="nhsuk-fieldset__heading">
+          Review this challenge
+        </h1>
+      </legend>
+  
+      <div class="nhsuk-hint" id="example-hint">
+        By approving this challenge you are starting a poll
+      </div>
+      <br>
 
-  <form method="post" action="">
-    {% csrf_token %}
-    <fieldset class="nhsuk-fieldset" aria-describedby="name-hint">
-        <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
-          <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Review this idea</h1>
-        </legend>
+      {{ approvalform.startDate.label_tag}}
+      <br>
+      {{ approvalform.startDate}}
+      <br>
+      <br>
+      {{ approvalform.endDate.label_tag}}
+      <br>
+      {{ approvalform.endDate}}
 
-        {{ approvalform.startDate.label_tag}}
-        <br>
-        {{ approvalform.startDate}}
-        <br>
-        <br>
-        {{ approvalform.endDate.label_tag}}
-        <br>
-        {{ approvalform.endDate}}
-        <br>
-        <br>
-        {{ approvalform.status.label_tag}}
-        <br>
-        {{ approvalform.status}}
+  <br> <br><br>
 
-        
-<!-- {% render_field form.comment class="nhsuk-textarea" rows="5" autocomplete="given-name" data-val="true" %}   -->
-<br>
+      <div class="nhsuk-checkboxes">
+  
+        <div class="nhsuk-checkboxes__item">
+          {% render_field approvalform.status class="nhsuk-checkboxes__input"  id="status" name="status" type="checkbox" value="status" %}  
+          <label class="nhsuk-label nhsuk-checkboxes__label" for="example-1">
+            Status
+          </label>
+        </div>
+  
 
-
-
-    
+  
+      </div>
     </fieldset>
+  
+  </div>
     <br>
       <button  id="submit-button" type="submit" class="nhsuk-button">Approve</button>
 

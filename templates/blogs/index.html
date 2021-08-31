@@ -80,7 +80,7 @@
 
 
                     <a href="{% url 'post_detail' org.slug post.pk post.slug %}" class="nhsuk-button">Read More</a>
-                    <a href="{% url 'ideaform' post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
+                    <a href="{% url 'ideaform' org.slug post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
                 </div>
             </div>
             {% endfor %}

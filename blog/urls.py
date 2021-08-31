@@ -16,8 +16,9 @@ urlpatterns = [
     path('<int:pk>/<slug:slug>/comments-list', views.PostCommentList.as_view(), name='bloghub_post_comments'),
 
     path('<slug:orgslug>/<int:pk>/<slug:slug>/', views.PostDetail.as_view(), name='post_detail'),
-    path('<int:pk>/<slug:slug>/submit-idea-form-1/', cviews.ideaform.as_view(), name='ideaform'),
-    path('submit-idea-form-2/', cviews.idea_criteria_form, name='criteria'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/submit-idea-form-1/', cviews.ideaform.as_view(), name='ideaform'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/submit-idea-form-2/', cviews.idea_criteria_form, name='criteria'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/submit-idea-form-3/', cviews.submit_success, name='submit_success'),
 
 
 

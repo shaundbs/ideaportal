@@ -394,12 +394,25 @@ def like_view_idea(request, pk, slug, orgslug):
     return HttpResponseRedirect(reverse('idea_post', args=[orgslug, str(pk), slug]))
 
 def approval_view(request, pk, slug, orgslug):
-    print(orgslug)
+    print(pk)
     form = ApprovalForm()
+    idea = Post.objects.get(id=pk)
+    print(idea.title)
     if request.method == "POST":
         form = ApprovalForm(request.POST)
         if form.is_valid():
-            return redirect('profile_main')
+            startDate = form.cleaned_data.get('startDate')
+            print(startDate)
+            endDate = form.cleaned_data.get('endDate')
+            print(endDate)
+            status = form.cleaned_data.get('status')
+            print(status)
+            idea.startDate = startDate
+            idea.endDate = endDate
+            idea.status = status
+            idea.save()
+
+            return redirect('post_management_detail', orgslug=orgslug, pk=pk, slug=slug)
 
         context = {'approvalform': form}
 

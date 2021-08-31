@@ -153,23 +153,25 @@ class ideaform(CreateView):
         challenge_choice = Post.objects.get(slug=self.kwargs['slug'])
         challenge_slug = Post.objects.get(slug=self.kwargs['slug']).slug
         print(challenge_slug)
+        
+        portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
+        print(portal_choice)
+        print(portal_slug)
+   
+
         context['challenge'] = Post.objects.get(slug=challenge_slug)
         return context
         
     def form_valid(self, form):
         form.instance.post_id = self.kwargs['pk']
-        # form.instance.department = self.get_context_data.
-        # form.instance.post_department = self.get_context_data(['post.department'])
         return super().form_valid(form)
 
-    
-
-    # def get_context_data(self, **kwargs):
-    #     context = super(ideaform, self).get_context_data(**kwargs)
-    #     context['idea'] = Post.objects.get(department=self.kwargs['department'])
-    #     return context
-
-    success_url = reverse_lazy('criteria')
+    def get_success_url(self):
+        pk=self.kwargs['pk']
+        orgslug=self.kwargs['orgslug']
+        slug = self.kwargs['slug']
+        return reverse_lazy('criteria', kwargs={'orgslug': orgslug, 'pk': pk, 'slug':slug,})
 
 # class ideaform(CreateView):
 #     model = Idea
@@ -212,7 +214,7 @@ class ideaform(CreateView):
             # idea.author = request.id.user
             # idea.save()
 
-def idea_criteria_form(request):
+def idea_criteria_form(request, orgslug, pk, slug):
     idea = Idea.objects.latest('created_on')
     form = CriteriaForm()
     if request.method == "POST":
@@ -229,14 +231,15 @@ def idea_criteria_form(request):
             # idea.author = request.id.user
             idea.save()
 
-            return redirect('submit_success')
+            return redirect('submit_success', orgslug=orgslug, pk=pk, slug=slug)
 
     context = {'criteriaform': form}
 
     return render(request, 'ideas/idea_criteria_form.html', context)
 
-def submit_success(request):
-    return  render(request, 'ideas/submit_success.html')
+def submit_success(request, orgslug, pk, slug):
+    context = {'orgslug': orgslug}
+    return  render(request, 'ideas/submit_success.html', context)
 
 class CommentList(generic.ListView):
     queryset = Post.objects.filter(status=1).order_by('-created_on')

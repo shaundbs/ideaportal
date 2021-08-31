@@ -27,7 +27,7 @@
     <div class="nhsuk-grid-column-two-thirds">
   
     
-      <form method="get" action="{% url 'bloghub' %}">
+      <form method="get" action="{% url 'bloghub' orgslug %}">
         {% csrf_token %}
   
         <div class="nhsuk-form-group">

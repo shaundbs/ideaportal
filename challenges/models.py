@@ -4,6 +4,7 @@ from account.models import Account
 from blog.models import Post
 import ideaportal.settings as settings
 from django.utils.text import slugify 
+from django.db.models import Count
 # Create your models here.
 
 STATUS = (
@@ -98,6 +99,9 @@ class Idea(models.Model):
     def get_winner(self, challenge):
         print(self.likes.count(max))
         return self.likes.count(max)
+
+    def total_likes_received(user):
+        return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes']
 
     # def __str__(self):
     #     return "£ " + str(self.estimated_cost)

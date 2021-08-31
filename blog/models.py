@@ -4,7 +4,7 @@ from django.db.models.deletion import CASCADE, SET_NULL
 from django.db.models.fields import NullBooleanField
 from account.models import Account
 from django.utils.text import slugify 
-
+from django.db.models import Count
 # Create your models here.
 
 STATUS = (
@@ -29,8 +29,8 @@ class Post(models.Model):
     department = models.ForeignKey('challenges.Department', on_delete=SET_NULL, related_name='dept', null=True)
     likes = models.ManyToManyField(Account, related_name='post_likes', null=True, blank=True)
     challenge = models.ForeignKey('challenges.Challenge', related_name='post_to_challenge', on_delete=CASCADE, null=True)
-    startDate = models.DateTimeField(null=True, blank=True)
-    endDate =  models.DateTimeField(null=True, blank=True)
+    startDate = models.DateField(null=True, blank=True)
+    endDate =  models.DateField(null=True, blank=True)
     description = models.TextField(max_length=500,default='Type content here...')
     manager = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='challenge_manager', null=True, blank=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/challenges_images")
@@ -41,6 +41,9 @@ class Post(models.Model):
 
     def total_likes(self):
         return self.likes.count()
+
+    def total_likes_received(user):
+        return user.posts.aggregate(total_likes=Count('likes'))['total_likes'] or 0
 
     def get_winner(self, challenge):
         return self.likes.count(max)

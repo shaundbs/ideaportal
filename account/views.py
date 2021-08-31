@@ -34,6 +34,7 @@ from formtools.wizard.views import SessionWizardView, NamedUrlWizardView
 import account.forms
 import requests, json
 import http.client
+from challenges.models import Idea
 
 
 FORMS = [("contact", account.forms.CustomUserCreationForm),
@@ -98,7 +99,21 @@ def auth(request):
     return render(request, 'userauth/userhub.html')
 
 def profile_main(request):
-    return render(request, 'profile/profile_main.html')
+    user = request.user
+    user_ideas = Idea.objects.filter(author=request.user).count()
+    idea = Idea.objects.filter(author=request.user)
+    stuff = Idea.total_likes_received(request.user)
+    print(stuff)
+
+    context={
+      'user':user,
+      'total_ideas': user_ideas,
+      'total_likes': stuff,
+  
+    }
+    posts = Post.objects.filter(author=request.user).count()
+    print(posts)
+    return render(request, 'profile/profile_main.html', context)
 
 def testing(request):
     form = CustomUserCreationForm()

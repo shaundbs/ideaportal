@@ -73,7 +73,7 @@
                         <a href="{% url 'enter' %}"><p>Login</a> to like </p>
                         {% endif %}
                         <button formaction="{% url 'comment_post' orgslug post.pk post.slug %}" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary">Leave a comment</button>
-                        <a href="{% url 'ideaform' post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
+                        <a href="{% url 'ideaform' orgslug post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
 
                         <p>{{ total_likes }} Likes</p>
                       </form>

@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import  widgets
 from django.contrib.auth import get_user_model
 from django.forms.fields import BooleanField
 from .models import Idea, Challenge, Department, IdeaComment
@@ -91,3 +92,7 @@ class ApprovalForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('startDate', 'endDate', 'status')
+        widgets = {
+            'startDate': widgets.DateInput(attrs={'type': 'date'}),
+            'endDate': widgets.DateInput(attrs={'type': 'date'}),
+        }
