@@ -45,8 +45,8 @@ class Post(models.Model):
     def total_likes_received(user):
         return user.posts.aggregate(total_likes=Count('likes'))['total_likes'] or 0
 
-    def get_winner(self, challenge):
-        return self.likes.count(max)
+    def get_winner(user):
+        return user.winner.count(max)
 
     def __str__(self):
         return self.title

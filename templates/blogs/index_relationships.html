@@ -1,5 +1,40 @@
-{% extends "blogs/base.html" %} 
-{% block content %}
+{% include 'components/navbar_blog.html' %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Django Central</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+        <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <style>
+            body {
+            font-family: "Roboto", sans-serif;
+            font-size: 17px;
+            background-color: #fdfdfd;
+        }
+        .btn-danger {
+            color: #fff;
+            background-color: #f00000;
+            border-color: #dc281e;
+        }
+        .masthead {
+            background: #3398E1;
+            height: auto;
+            padding-bottom: 15px;
+            padding-top: 10px;
+        }
+    </style>
+
+
+
+
 
 <style>
     body {
@@ -16,7 +51,6 @@
         box-shadow: 0 16px 48px #E3E7EB;
     }
 </style>
-
 <div class="container">
     <br>
     <div class="nhsuk-back-link">
@@ -44,7 +78,7 @@
 
 
                     <a href="{% url 'post_detail' org.slug post.pk post.slug %}" class="nhsuk-button">Read More</a>
-                    <a href="{% url 'ideaform' post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
+                    <a href="{% url 'ideaform' org.slug post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
                 </div>
             </div>
             {% endfor %}
@@ -71,4 +105,3 @@
     {% endif %}
 </div>
 {% include 'components/footer.html' %}
-{%endblock%}

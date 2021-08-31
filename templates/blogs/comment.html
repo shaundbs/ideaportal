@@ -57,10 +57,21 @@
         <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
           <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Comment on this post</h1>
         </legend>
+<br>
+
+<h3>"{{title}}"</h3>
+    
 
 
+        <div id="nhs-number-hint">
+          <div class="nhsuk-hint" id="example-hint">
+            "{{description}}"
+            </div>
+          
+      </div>
 
-        
+
+        <br>
 {% render_field form.comment class="nhsuk-textarea" rows="5" autocomplete="given-name" data-val="true" %}  
 <br>
 {{form.image}}
@@ -70,6 +81,7 @@
     
     </fieldset>
     <br>
+    
       <button  id="submit-button" type="submit" class="nhsuk-button">Comment</button>
 
           

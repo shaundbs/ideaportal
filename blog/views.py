@@ -1,5 +1,6 @@
 from os import stat, stat_result
 from re import S
+import re
 
 import challenges.models
 from challenges.forms import DepartmentForm, IdeaCommentForm, ApprovalForm
@@ -16,17 +17,22 @@ from django.views import generic
 from django.views.generic.edit import CreateView
 import requests
 from organisations.models import Organisation
-
+from django.db.models import Max, Count
 from .forms import CommentForm
 from .models import Comment, Post
 from organisations.models import Organisation
+from django.db import models
 
-def search_blog(request):
+
+def search_blog(request, orgslug):
 
     if request.method == "POST":
         searched = request.POST['searched']
         posts = Post.objects.filter(title__contains=searched)
         contents = Post.objects.filter(description__contains=searched)
+        print(orgslug)
+        print("hello")
+
         
 
         return render(request, 'search/blog_search.html', {'searched': searched, 'posts': posts, 'contents': contents})
@@ -71,6 +77,9 @@ class PostList(generic.ListView):
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
         context['org'] = Organisation.objects.get(slug=portal_slug)
         print(context['org'].slug)
+        
+        
+
 
         try:
             file_exams = paginator.page(page)
@@ -269,6 +278,10 @@ class PostListData(generic.ListView):
         return context
     
 
+# def get_winning_idea():
+#     for idea in all_ideas:
+#                 print(idea.total_likes())
+
 class PostDetail(generic.DetailView):
     model = Post
     template_name = 'blogs/post_detail.html'
@@ -278,6 +291,18 @@ class PostDetail(generic.DetailView):
 
         stuff = get_object_or_404(Post, id=self.kwargs['pk'])
         total_likes = stuff.total_likes()
+        all_ideas = Idea.objects.filter(post=self.kwargs['pk'])
+        context["total_ideas"] = all_ideas.count()
+
+        try:
+            winning_idea = all_ideas.order_by("likes")[:1]
+            winning_idea_id = winning_idea.values('id')[0]['id']
+            winning_idea_slug = winning_idea.values('slug')[0]['slug']
+            print(winning_idea_slug)
+            context['winnerpk'] = winning_idea_id
+            context['winnerslug'] = winning_idea_slug
+        except:
+            print("hello")
 
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
@@ -287,11 +312,11 @@ class PostDetail(generic.DetailView):
         context["liked"] = liked
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
-        print(portal_choice)
-        print(portal_slug)
         context['orgslug'] = portal_slug
 
         return context
+
+        
 
 class PostManagementDetail(generic.DetailView):
     
@@ -462,9 +487,18 @@ class comment_view(CreateView):
         context = super(comment_view, self).get_context_data()
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
+
+        post = Post.objects.get(slug=self.kwargs['slug'])
+        title = post.title
+        desc = post.description
+
         print(portal_choice)
         print(portal_slug)
         context['orgslug'] = portal_slug
+        context['description'] = desc
+        context['title'] = title
+
+
 
         return context
 

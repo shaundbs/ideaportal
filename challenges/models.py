@@ -96,12 +96,17 @@ class Idea(models.Model):
     def total_likes(self):
         return self.likes.count()
 
+    def total_likes(self):
+        return self.likes.count()
+
     def get_winner(self, challenge):
-        print(self.likes.count(max))
         return self.likes.count(max)
 
     def total_likes_received(user):
-        return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes']
+        return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes'] or 0
+
+    def total_likes_given(user):
+        return user.idea_likes.count()
 
     # def __str__(self):
     #     return "£ " + str(self.estimated_cost)

@@ -35,6 +35,7 @@ import account.forms
 import requests, json
 import http.client
 from challenges.models import Idea
+from django.db.models import Count
 
 
 FORMS = [("contact", account.forms.CustomUserCreationForm),
@@ -103,12 +104,18 @@ def profile_main(request):
     user_ideas = Idea.objects.filter(author=request.user).count()
     idea = Idea.objects.filter(author=request.user)
     stuff = Idea.total_likes_received(request.user)
+    given_likes = Idea.total_likes_given(request.user)
+    user_challenges = Post.objects.filter(author=request.user).count()
+    print(given_likes)
     print(stuff)
+    # print(Account.objects.annotate(num_likes=Count('author__likes')).order_by('-likes').filter()[:20])
 
     context={
       'user':user,
       'total_ideas': user_ideas,
       'total_likes': stuff,
+      'likes_given': given_likes,
+      'total_challenges': user_challenges,
   
     }
     posts = Post.objects.filter(author=request.user).count()
