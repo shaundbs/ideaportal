@@ -4,13 +4,32 @@ from django.contrib.auth import get_user_model
 from django.forms.fields import BooleanField
 from .models import Idea, Challenge, Department, IdeaComment
 from blog.models import Post
+import datetime
+from django.utils.timezone import make_aware
 
 class IdeaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(IdeaForm, self).__init__(*args, **kwargs)
         # self.fields['department'].queryset = Department.objects.filter(is_approved=True).distinct()
+        # self.fields['department'].required = True
+
         
+    #     class TaskForm(forms.ModelForm):
+    # class Meta:
+    #     model = Task
+
+    # def handle_state(self, *args, **kwargs):
+    #     task = getattr(self, 'instance', None)
+    #     if task:     
+    #         if task.status = Task.ACCEPTED:
+    #              self.fields['datereceived'].disabled = True
+    #          elif task.status = Task.COMPLETED:
+    #              ...
+
+    # def __init__(self, *args, **kwargs):
+    #     super(TaskForm, self).__init__(*args, **kwargs)
+    #     self.handle_state(*args, **kwargs)   
 
         # self.fields['sub_department'].queryset = Department.objects.filter(is_approved=True).distinct()
 
@@ -21,7 +40,7 @@ class IdeaForm(forms.ModelForm):
 
     class Meta:
         model = Idea
-        fields = ('title', 'description', 'image', 'department')
+        fields = ('title', 'description', 'image')
 
 class CriteriaForm(forms.Form):
     notes = forms.CharField(label='Notes', max_length=500, widget=forms.Textarea)
@@ -87,7 +106,19 @@ class ApprovalForm(forms.ModelForm):
         super(ApprovalForm, self).__init__(*args, **kwargs)
         self.fields['startDate'].required = True
         self.fields['endDate'].required = True
-        self.fields['status'].required = True
+        
+    def clean_start_date(self):
+        date = self.cleaned_data['startDate']
+        print(date)
+        if date < make_aware(datetime.date.today()):
+            raise forms.ValidationError("The date cannot be in the past!")
+        return date
+
+    def clean_end_date(self):
+        date = self.cleaned_data['endDate']
+        if date < make_aware(datetime.date.today()):
+            raise forms.ValidationError("The date cannot be in the past!")
+        return date            
 
     class Meta:
         model = Post

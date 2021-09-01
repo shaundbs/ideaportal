@@ -22,6 +22,8 @@ from .forms import CommentForm
 from .models import Comment, Post
 from organisations.models import Organisation
 from django.db import models
+from django.utils.timezone import make_aware
+import datetime
 
 
 def search_blog(request, orgslug):
@@ -333,11 +335,24 @@ class PostManagementDetail(generic.DetailView):
         if stuff.likes.filter(id=self.request.user.id).exists():
             liked = True
 
+        # today = datetime.date.today()
+        # print(today)
+        active = False
+        
+        if stuff.endDate == None:
+            active = True
+
+
+
         context["total_likes"] = total_likes
         context["liked"] = liked
+        context["is_active"] = active
+
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
         context['orgslug'] = portal_slug
+
+
 
 
         return context

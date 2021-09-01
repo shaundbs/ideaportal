@@ -42,8 +42,6 @@
                     <p class="card-text">{{post.description|slice:":200" }}...</p>
                     <p class="card-text"> Start Date: {{post.startDate }} <br> End Date: {{post.endDate  }}</p>
                     <p class="card-text">                                 Severity: {{post.severity|capfirst}} </p>
-
-
                     <a href="{% url 'post_management_detail' orgslug post.pk post.slug %}" class="nhsuk-button">Manage</a>
                 </div>
             </div>

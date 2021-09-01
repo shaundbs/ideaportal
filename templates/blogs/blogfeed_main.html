@@ -68,13 +68,16 @@
   <br>
  
 
-  <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
-    <div class="col-md-6 px-0">
+  <div class="p-6 p-md-5 mb-4 text-white rounded bg-dark">
+    <div class="col-md-6 px-7">
  <h1>{{ object.post1.title }}</h1>
 <p class="lead my-3">{{ object.post1.description|slice:":200" }}</p>
-      <p class="lead mb-0"><a href="#" class="text-white fw-bold">Continue reading...</a></p>
+      <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post1.pk object.post1.slug %}" class="text-white fw-bold">Continue reading...</a></p>
+      
     </div>
+    
   </div>
+  
 
   
   <div class="row mb-2">
@@ -88,7 +91,8 @@
         <div class="mb-1 text-muted">{{ object.post2.updated_on}}</div>
           <p class="card-text mb-auto">{{ object.post2.description|slice:":300" }}</p>
 
-          
+          <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post2.pk object.post2.slug %}" class="text-black fw-bold">Continue reading...</a></p>
+
         </div>
          <section class="nhsuk-hero nhsuk-hero--image nhsuk-hero--image-description">
     <script>
@@ -138,7 +142,8 @@
         <div class="mb-1 text-muted">{{ object.post3.updated_on}}</div>
 
           <p class="card-text mb-auto">{{ object.post3.description|slice:":300" }}</p>
-          
+          <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post3.pk object.post3.slug %}" class="text-black fw-bold">Continue reading...</a></p>
+
         </div>
          <section class="nhsuk-hero nhsuk-hero--image nhsuk-hero--image-description">
     <script>
@@ -175,7 +180,7 @@
   <div class="row g-5">
     <div class="col-md-8">
       <h3 class="pb-4 mb-4 fst-italic border-bottom">
-        Latest News
+        Portal Summary
       </h3>
 
       <article class="blog-post">
@@ -198,7 +203,7 @@
         <br>
         {% endif %}
 
-        <h3>Example table</h3>
+        <h3>Most popular challenges</h3>
         <p>And don't forget about tables in these posts:</p>
         <table class="table">
           <thead>

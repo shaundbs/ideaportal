@@ -1,4 +1,37 @@
-{% extends 'blogs/base.html' %} {% block content %}
+{% include 'components/navbar_reg.html' %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Django Central</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+        <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <style>
+            body {
+            font-family: "Roboto", sans-serif;
+            font-size: 17px;
+            background-color: #fdfdfd;
+        }
+        .btn-danger {
+            color: #fff;
+            background-color: #f00000;
+            border-color: #dc281e;
+        }
+        .masthead {
+            background: #3398E1;
+            height: auto;
+            padding-bottom: 15px;
+            padding-top: 10px;
+        }
+    </style>
+
 
 <div class="container">
   <div class="row">
@@ -26,19 +59,21 @@
 <div class="nhsuk-form-group">
   
   <br>
-  <button formaction="{% url 'approve_challenge' orgslug post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button" onclick="return confirm('Are you sure you want to approve this item?');">Submit</button><br>
 </div>
-<a href="{% url 'idea_post' orgslug idea.pk idea.slug}">Click to view winning ideas</a><br><br>
 {% else %}
 <p class=" text-muted">Status: Not approved</p>
 {% endif %}
 <p class="card-text ">{{ object.description | safe }}</p>
 <hr>
 
+{% if is_active %}
+
 <button formaction="{% url 'approval_view' orgslug post.pk post.slug %}" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button">Review</button>
 
 <button formaction="{% url 'reject_challenge' orgslug post.pk post.slug %}" id="submit-button" type="submit" name="post_id" value="{{ post.id }}" class="nhsuk-button nhsuk-button--secondary" onclick="return confirm('Are you sure you want to reject this item?');">Reject</button>
 
+{% else %}
+{% endif %}
 </form>
                       <br>
 
@@ -74,11 +109,10 @@
 <br>
 
 {% include 'components/footer.html' %}
-{% endblock content %}
 
-<script>
+<!-- <script>
 var result = confirm("Want to delete?");
 if (result) {
     //Logic to delete the item
 }
-</script>
+</script> -->

@@ -75,6 +75,32 @@ class PostListCompleted(generic.ListView):
 
     model = Post
 
+    paginate_by = 4
+
+
+    def get_context_data(self, **kwargs):
+        context = super(PostListCompleted, self).get_context_data(**kwargs) 
+        list_challenges = Post.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+
+        page = self.request.GET.get('page')
+
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        print(portal_choice)
+        print(portal_slug)
+        context['org'] = Organisation.objects.get(slug=portal_slug)
+        context['orgslug'] = portal_slug
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
     
 
     # def get_context_data(self, *args, **kwargs):
@@ -215,7 +241,14 @@ class ideaform(CreateView):
             # idea.save()
 
 def idea_criteria_form(request, orgslug, pk, slug):
+    print(pk)
+    
+    post = Post.objects.get(slug=slug)
+    org = Organisation.objects.get(slug=orgslug)
+    # idea = Idea.objects.filter(author=request.user).latest('created_on')
     idea = Idea.objects.latest('created_on')
+    print(idea)
+    print(post.title)
     form = CriteriaForm()
     if request.method == "POST":
         form = CriteriaForm(request.POST)
@@ -228,6 +261,8 @@ def idea_criteria_form(request, orgslug, pk, slug):
             is_user_led = form.cleaned_data.get('is_user_led')
             idea.is_user_led = is_user_led
             idea.author = request.user
+            idea.org_tag = org
+            idea.department = post.department
             # idea.author = request.id.user
             idea.save()
 
