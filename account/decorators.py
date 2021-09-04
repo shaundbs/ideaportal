@@ -14,13 +14,10 @@ from organisations.models import Organisation
 
 
 def unauthenticated_user(view_func):
-    # org = Organisation.objects.get(slug=orgslug)
+    # orgslug = Organisation.objects.get(slug=orgslug)
     def wrapper_func(request, *args, **kwargs):
         if request.user.is_authenticated:
-            
-            # return redirect('public_landing')
-
-            return redirect('blogfeed_main',  orgslug=orgslug)
+            return redirect('home')
         else:
             return view_func(request, *args, **kwargs)
 

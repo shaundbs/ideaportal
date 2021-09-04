@@ -452,7 +452,6 @@ def approval_view(request, pk, slug, orgslug):
             return redirect('post_management_detail', orgslug=orgslug, pk=pk, slug=slug)
 
         context = {'approvalform': form}
-    context={}
 
     return render(request, 'blogs/approval.html', context)
 

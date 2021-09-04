@@ -536,6 +536,11 @@ def idea_criteria_form(request, orgslug, pk, slug):
     
     post = Post.objects.get(slug=slug)
     org = Organisation.objects.get(slug=orgslug)
+    org_name = org.name
+    print(org.name)
+    publish_publicly = False
+    if org_name == 'Public':
+        publish_publicly = True
     # idea = Idea.objects.filter(author=request.user).latest('created_on')
     idea = Idea.objects.latest('created_on')
     print(idea)
@@ -566,7 +571,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
 
             return redirect('submit_success', orgslug=orgslug, pk=pk, slug=slug)
 
-    context = {'criteriaform': form}
+    context = {'criteriaform': form, 'publish_publicly': publish_publicly}
 
     return render(request, 'ideas/idea_criteria_form.html', context)
 
