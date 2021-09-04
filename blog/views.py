@@ -26,18 +26,20 @@ from django.utils.timezone import make_aware
 import datetime
 
 
-def search_blog(request, orgslug):
+def search_blog(request, slug):
+    # org = Organisation.objects.get(id=slug)
+    orgslug = slug
 
     if request.method == "POST":
         searched = request.POST['searched']
         posts = Post.objects.filter(title__contains=searched)
         contents = Post.objects.filter(description__contains=searched)
-        print(orgslug)
+        # print(orgslug)
         print("hello")
 
         
 
-        return render(request, 'search/blog_search.html', {'searched': searched, 'posts': posts, 'contents': contents})
+        return render(request, 'search/blog_search.html', {'searched': searched, 'posts': posts, 'contents': contents, 'orgslug' : orgslug,})
     else:
         return render(request, 'search/blog_search.html', {})
 

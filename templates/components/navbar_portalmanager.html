@@ -97,7 +97,7 @@
 
         <div class="nhsuk-header__search">
             <div class="nhsuk-header__search-wrap beta-header__search-wrap js-show" id="wrap-search">
-              <form class="nhsuk-header__search-form beta-header__search-form" id="search" action="{% url 'search_blog' %}" method="post" role="search">
+              <form class="nhsuk-header__search-form beta-header__search-form" id="search" action="{% url 'search_blog' slug %}" method="post" role="search">
                 {% csrf_token %}
                 <label class="nhsuk-u-visually-hidden" for="search-field">Search the NHS website</label>
                 <div class="autocomplete-container" id="autocomplete-container"></div>
