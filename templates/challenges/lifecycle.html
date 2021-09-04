@@ -1,0 +1,156 @@
+
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Django Central</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+        <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <style>
+
+body{margin-top:20px;}
+.timeline-steps {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap
+}
+
+.timeline-steps .timeline-step {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin: 1rem
+}
+
+@media (min-width:768px) {
+    .timeline-steps .timeline-step:not(:last-child):after {
+        content: "";
+        display: block;
+        border-top: .25rem dotted #3b82f6;
+        width: 3.46rem;
+        position: absolute;
+        left: 7.5rem;
+        top: .3125rem
+    }
+    .timeline-steps .timeline-step:not(:first-child):before {
+        content: "";
+        display: block;
+        border-top: .25rem dotted #3b82f6;
+        width: 3.8125rem;
+        position: absolute;
+        right: 7.5rem;
+        top: .3125rem
+    }
+}
+
+.timeline-steps .timeline-content {
+    width: 10rem;
+    text-align: center
+}
+
+.timeline-steps .timeline-content .inner-circle {
+    border-radius: 1.5rem;
+    height: 1rem;
+    width: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #3b82f6
+}
+
+.timeline-steps .timeline-content .inner-circle:before {
+    content: "";
+    background-color: #3b82f6;
+    display: inline-block;
+    height: 3rem;
+    width: 3rem;
+    min-width: 3rem;
+    border-radius: 6.25rem;
+    opacity: .5
+}
+</style>
+
+{% include 'components/navbar_reg.html' %}
+
+
+<div class="container">  
+    <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
+        <a class="nhsuk-back-link__link" id="back_button_link"href="{% url 'challenge_history' slug %}">
+            <svg class="nhsuk-icon nhsuk-icon__chevron-left"
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 aria-hidden="true">
+                <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+            </svg>
+            Go back
+        </a>
+    </div>                    
+    <div class="row text-center justify-content-center mb-5">
+        <div class="col-xl-6 col-lg-8">
+            <br>
+            <h2 class="font-weight-bold">Idea Lifecycle</h2>
+            <p class="text-muted">Click on a stage to view an ideas progression</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="timeline-steps aos-init aos-animate" data-aos="fade-up">
+                <div class="timeline-step">
+                    <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right?" data-original-title="2003">
+                        <a href="{% url 'open_ideas' pk %}">
+                        <div class="inner-circle"></div>
+                        <p class="h6 text-muted mb-0 mb-lg-0">Open</p>
+                    </div>
+                </div>
+            </a>
+                <div class="timeline-step">
+                    <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right?" data-original-title="2010">
+                        <a href="{% url 'in_review_ideas' pk %}">
+                        <div class="inner-circle"></div>
+                        <p class="h6 text-muted mb-0 mb-lg-0">Under review</p>
+                    </div>
+                </div>
+            </a>
+                <div class="timeline-step mb-0">
+                    <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right?" data-original-title="2020">
+                        <a href="{% url 'accepted_ideas' pk %}">
+                        <div class="inner-circle"></div>
+                        <p class="h6 text-muted mb-0 mb-lg-0">Accepted</p>
+                    </div>
+                </div>
+            </a>
+                <div class="timeline-step mb-0">
+                    <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right?" data-original-title="2020">
+                        <a href="{% url 'in_dev_ideas' pk %}">
+                        <div class="inner-circle"></div>
+                        <p class="h6 text-muted mb-0 mb-lg-0">In development</p>
+                    </div>
+                </div>
+            </a>
+                <div class="timeline-step mb-0">
+                    <div class="timeline-content" data-toggle="popover" data-trigger="hover" data-placement="top" title="" data-content="And here's some amazing content. It's very engaging. Right?" data-original-title="2020">
+                        <a href="{% url 'delivered_ideas' pk %}">
+                        <div class="inner-circle"></div>
+                        <p class="h6 text-muted mb-0 mb-lg-0">Delivered</p>
+                    </div>
+                </div>
+            </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+{% include 'components/footer.html' %}

@@ -24,7 +24,7 @@ urlpatterns = [
 
 
 
-    path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/', views.PostManagementDetail.as_view(), name='post_management_detail'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/manage-challenges/', views.PostManagementDetail.as_view(), name='post_management_detail'),
     path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/approve', views.approve_challenge, name='approve_challenge'),
     path('<slug:orgslug>/<int:pk>/manage/<slug:slug>/reject', views.reject_challenge, name='reject_challenge'),
     path('<slug:orgslug>/<int:pk>/<slug:slug>/likes/', views.like_view, name='like_post'),

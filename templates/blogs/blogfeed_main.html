@@ -67,7 +67,7 @@
 
   <br>
  
-
+{% if object.post1 %}
   <div class="p-6 p-md-5 mb-4 text-white rounded bg-dark">
     <div class="col-md-6 px-7">
  <h1>{{ object.post1.title }}</h1>
@@ -77,9 +77,22 @@
     </div>
     
   </div>
-  
 
-  
+  {% else %}
+
+  <div class="p-6 p-md-5 mb-4 text-white rounded bg-dark">
+    <div class="col-md-6 px-7">
+ <h1>Please submit some challenges to being populating this portal</h1>
+      
+    </div>
+    
+  </div>
+
+  {% endif %}
+
+  {% if object.post2 %}
+
+
   <div class="row mb-2">
     <div class="col-md-6">
 
@@ -94,6 +107,8 @@
           <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post2.pk object.post2.slug %}" class="text-black fw-bold">Continue reading...</a></p>
 
         </div>
+
+   
          <section class="nhsuk-hero nhsuk-hero--image nhsuk-hero--image-description">
     <script>
       function randomImage() {
@@ -128,7 +143,9 @@
         
       </div>
     </div>
-   
+    {% else %}
+    {% endif %}
+    {% if object.post3 %}
     <div class="col-md-6">
 
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-280 position-relative">
@@ -176,6 +193,8 @@
         
       </div>
     </div>
+{% else %}
+{% endif %}
 
   <div class="row g-5">
     <div class="col-md-8">

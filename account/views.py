@@ -1,4 +1,5 @@
 import re
+from django.core.exceptions import ValidationError
 from django.http import response
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string, select_template
@@ -36,6 +37,7 @@ import requests, json
 import http.client
 from challenges.models import Idea
 from django.db.models import Count
+from email.mime.multipart import MIMEMultipart
 
 
 FORMS = [("contact", account.forms.CustomUserCreationForm),
@@ -101,25 +103,29 @@ def auth(request):
 
 def profile_main(request):
     user = request.user
-    user_ideas = Idea.objects.filter(author=request.user).count()
-    idea = Idea.objects.filter(author=request.user)
-    stuff = Idea.total_likes_received(request.user)
-    given_likes = Idea.total_likes_given(request.user)
-    user_challenges = Post.objects.filter(author=request.user).count()
-    print(given_likes)
-    print(stuff)
+    try:
+        user_ideas = Idea.objects.filter(author=request.user).count()
+        idea = Idea.objects.filter(author=request.user)
+        stuff = Idea.total_likes_received(request.user)
+        given_likes = Idea.total_likes_given(request.user)
+        user_challenges = Post.objects.filter(author=request.user).count()
+        print(given_likes)
+        print(stuff)
     # print(Account.objects.annotate(num_likes=Count('author__likes')).order_by('-likes').filter()[:20])
 
-    context={
-      'user':user,
-      'total_ideas': user_ideas,
-      'total_likes': stuff,
-      'likes_given': given_likes,
-      'total_challenges': user_challenges,
-  
-    }
-    posts = Post.objects.filter(author=request.user).count()
-    print(posts)
+        context={
+        'user':user,
+        'total_ideas': user_ideas,
+        'total_likes': stuff,
+        'likes_given': given_likes,
+        'total_challenges': user_challenges,
+    
+        }
+        posts = Post.objects.filter(author=request.user).count()
+        print(posts)
+    except:
+        context={}
+        ValidationError("Nor signed in")
     return render(request, 'profile/profile_main.html', context)
 
 def testing(request):
@@ -176,16 +182,17 @@ def send_action_email(request, user):
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': generate_token.make_token(user)
     })
+    msg = 'Subject: {}\n\n{}'.format(email_subject, email_body)
 
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
     sender_email = "ideasportal.nhs@gmail.com"
-    password = "97_Greenwood_19"
+    password = "shaun_ml_idea_platform_v3"
 
     context = ssl.create_default_context()
     with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
         server.login(sender_email, password)
-        email = server.sendmail('ideasportal.nhs@gmail.com', [user.email], email_body)
+        email = server.sendmail('ideasportal.nhs@gmail.com', [user.email], msg)
 
     EmailThread(email).start()
 
@@ -326,6 +333,7 @@ class blogfeed_main(generic.DetailView):
         context = super(blogfeed_main, self).get_context_data(*args, **kwargs)
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        context['slug'] = portal_slug
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)

@@ -1,0 +1,112 @@
+{% include 'components/navbar_reg.html' %}
+
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Django Central</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+        <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <style>
+            body {
+            font-family: "Roboto", sans-serif;
+            font-size: 17px;
+            background-color: #fdfdfd;
+        }
+        .btn-danger {
+            color: #fff;
+            background-color: #f00000;
+            border-color: #dc281e;
+        }
+        .masthead {
+            background: #3398E1;
+            height: auto;
+            padding-bottom: 15px;
+            padding-top: 10px;
+        }
+    </style>
+
+
+
+
+
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+        font-size: 18px;
+        background-color: #fdfdfd;
+    }
+    
+    .head_text {
+        color: white;
+    }
+    
+    .card {
+        box-shadow: 0 16px 48px #E3E7EB;
+    }
+</style>
+
+<div class="container">
+    <br>
+    
+
+
+    <h1>{{ title }}</h1>
+    <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
+        <a class="nhsuk-back-link__link" id="back_button_link"href="{% url 'lifecycle' pk %}">
+            <svg class="nhsuk-icon nhsuk-icon__chevron-left"
+                 xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 aria-hidden="true">
+                <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+            </svg>
+            Go back
+        </a>
+    </div>
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-12 mt-3 left">
+            {% if idea_list %}
+            {% for idea in idea_list %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Idea: {{ idea.title }}</h2>
+                    <h4>{% block title %}Challenge: {{ idea.post.title }}{% endblock title %}</h4>
+                    <p class="card-text text-muted h6">{{ idea.author }} | {{ idea.created_on}} </p>
+
+                    <br>
+               
+                    <p class="card-text">Summary:</p>
+                    <p class="card-text">{{idea.description|slice:":300" }}...</p>
+                    
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h4>There are currently no {{ title }} for this organisation - check regularly for updates</h4>
+            {% endif %}
+        </div>
+    </div>
+    {% if is_paginated %}
+        <div class="pagination">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                <a href="/blogs/post-feed/challenges/{{ org.slug }}/live-polls/?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <a href="/blogs/post-feed/challenges/{{ org.slug }}/live-polls/?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
+                {% endif %}
+                <span class="page-current">
+                    <h2 class="card-title">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</h2>                    
+                </span>
+            </span>
+        </div>
+    {% endif %}
+</div>
+{% include 'components/footer.html' %}

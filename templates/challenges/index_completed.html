@@ -1,0 +1,42 @@
+{% extends "blogs/base.html" %} 
+{% block content %}
+
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+        font-size: 18px;
+        background-color: #fdfdfd;
+    }
+    
+    .head_text {
+        color: white;
+    }
+    
+    .card {
+        box-shadow: 0 16px 48px #E3E7EB;
+    }
+</style>
+
+<div class="container">
+    <br>
+
+    <h1>Completed Challenges</h1>
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-8 mt-3 left">
+            {% if post_list %}
+            {% for post in post_list %}
+            <div class="card mb-4">
+                <div class="card-body">
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h3>There are currently no pending polls - you will be notified once a user makes a request</h3>
+            {% endif %}
+        </div>
+        {% block sidebar %} {% include 'components/sidebar.html' %} {% endblock sidebar %}
+    </div>
+</div>
+{% include 'components/footer.html' %}
+{%endblock%}

@@ -4,7 +4,7 @@ from django.views import generic
 
 # Create your views here.
 def select_org(request):
-    orgs = Organisation.objects.all()
+    orgs = Organisation.objects.filter(is_active=True)
     context={
       'orgs':orgs
     }

@@ -43,8 +43,15 @@ class IdeaForm(forms.ModelForm):
         fields = ('title', 'description', 'image')
 
 class CriteriaForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(CriteriaForm, self).__init__(*args, **kwargs)
+        self.fields['is_public'].required = False
+
     notes = forms.CharField(label='Notes', max_length=500, widget=forms.Textarea)
     is_user_led = BooleanField()
+    is_public = BooleanField()
+
     # image = forms.ImageField()
     estimated_cost = forms.DecimalField(required=False)
 
@@ -127,3 +134,12 @@ class ApprovalForm(forms.ModelForm):
             'startDate': widgets.DateInput(attrs={'type': 'date'}),
             'endDate': widgets.DateInput(attrs={'type': 'date'}),
         }
+
+class IdeaApprovalForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(IdeaApprovalForm, self).__init__(*args, **kwargs)
+     
+    class Meta:
+        model = Idea
+        fields = ('status',)

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .forms import IdeaForm, CriteriaForm, ChallengeForm, DepartmentForm
+from .forms import IdeaForm, CriteriaForm, ChallengeForm, DepartmentForm, IdeaApprovalForm
 from django.shortcuts import redirect
 from operator import pos
 from django.core.checks import messages
@@ -17,6 +17,8 @@ from django.utils import timezone
 from django.utils.timezone import make_aware
 from organisations.models import Organisation
 from django.core.paginator import *
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
 
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -65,12 +67,84 @@ class PostList(generic.ListView):
         context['list_challenges'] = file_exams
         return context
 
+def approve_idea(request, pk, slug, orgslug):
+    idea = get_object_or_404(Idea, id=request.POST.get('idea_id'))
+    print(idea.status)
+    idea.status = 1
+    idea.stage = 'open'
+    print(idea.status)
+    idea.save()
+
+    return HttpResponseRedirect(reverse('idea_management_detail', args=[orgslug, str(pk), slug]))
+
+def reject_idea(request, pk, slug, orgslug):
+    idea = get_object_or_404(Idea, id=request.POST.get('idea_id'))
+    print(idea.status)
+    idea.status = 0
+    print(idea.status)
+    idea.save()
+
+    return HttpResponseRedirect(reverse('idea_management_detail', args=[orgslug, str(pk), slug]))
+
+# IdeaApprovalForm
+
+class PendingIdeasList(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    template_name = 'ideas/pending_ideas.html'
+    # queryset = Idea.objects.all()
+
+    model = Idea
+
+    paginate_by = 4
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = self.kwargs['slug']
+        print(portal_choice)
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        return Idea.objects.filter(status=0).filter(org_tag=portal_choice)
+
+    def get_context_data(self, **kwargs):
+        context = super(PendingIdeasList, self).get_context_data(**kwargs) 
+        list_challenges = Idea.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+
+        page = self.request.GET.get('page')
+
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        print(portal_choice)
+        print(portal_slug)
+        context['org'] = Organisation.objects.get(slug=portal_slug)
+        context['orgslug'] = portal_slug
+        
+
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
+class IdeaManagementDetail(generic.DetailView):
+    
+    model = Idea
+    template_name = 'ideas/idea_management_detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(IdeaManagementDetail, self).get_context_data()
+        portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
+        context['orgslug'] = portal_slug
+        return context
+
 class PostListCompleted(generic.ListView):
     today = make_aware(datetime.datetime.now())
     print(today)
     queryset = Post.objects.filter(status=1).filter(endDate__lte=today)
-    # most_popular = Idea.objects.order_by("-likes")[:3]
-    # print(most_popular)
     template_name = 'blogs/completed_challenges.html'
 
     model = Post
@@ -101,7 +175,263 @@ class PostListCompleted(generic.ListView):
             
         context['list_challenges'] = file_exams
         return context
+
+class IdeaListOpen(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    print(today)
     
+    queryset = Idea.objects.filter(stage='open')
+    template_name = 'ideas/index_open.html'
+
+    model = Idea
+
+    paginate_by = 4
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
+        portal_id = portal_choice.id
+        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+    
+    def get_context_data(self, **kwargs):
+        context = super(IdeaListOpen, self).get_context_data(**kwargs) 
+        list_challenges = Idea.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+        print(self.kwargs['pk'])
+        context['title'] = 'Open Ideas'
+        context['pk'] = self.kwargs['pk']
+        page = self.request.GET.get('page')
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
+class IdeaListDelivered(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    print(today)
+    
+    queryset = Idea.objects.filter(stage='open')
+    template_name = 'ideas/index_open.html'
+
+    model = Idea
+
+    paginate_by = 4
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
+        portal_id = portal_choice.id
+        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(IdeaListDelivered, self).get_context_data(**kwargs) 
+        list_challenges = Idea.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+        print(self.kwargs['pk'])
+        context['title'] = 'Delivered Ideas'
+        context['pk'] = self.kwargs['pk']
+
+        page = self.request.GET.get('page')
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
+class IdeaListReview(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    print(today)
+    
+    queryset = Idea.objects.filter(stage='open')
+    template_name = 'ideas/index_open.html'
+
+    model = Idea
+
+    paginate_by = 4
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
+        portal_id = portal_choice.id
+        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(IdeaListReview, self).get_context_data(**kwargs) 
+        list_challenges = Idea.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+        print(self.kwargs['pk'])
+        context['title'] = 'Under-review Ideas'
+        context['pk'] = self.kwargs['pk']
+
+
+        page = self.request.GET.get('page')
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
+class IdeaListAccepted(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    print(today)
+    
+    queryset = Idea.objects.filter(stage='open')
+    template_name = 'ideas/index_open.html'
+
+    model = Idea
+
+    paginate_by = 4
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
+        portal_id = portal_choice.id
+        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(IdeaListAccepted, self).get_context_data(**kwargs) 
+        list_challenges = Idea.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+        print(self.kwargs['pk'])
+        context['title'] = 'Accepted Ideas'
+        context['pk'] = self.kwargs['pk']
+
+
+        page = self.request.GET.get('page')
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
+class IdeaListInDev(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    print(today)
+    
+    queryset = Idea.objects.filter(stage='open')
+    template_name = 'ideas/index_open.html'
+
+    model = Idea
+
+    paginate_by = 4
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
+        portal_id = portal_choice.id
+        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+
+    
+    def get_context_data(self, **kwargs):
+        context = super(IdeaListInDev, self).get_context_data(**kwargs) 
+        list_challenges = Idea.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+        print(self.kwargs['pk'])
+        context['title'] = 'In-development Ideas'
+        context['pk'] = self.kwargs['pk']
+
+
+        page = self.request.GET.get('page')
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+        
+class History(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    template_name = 'challenges/index_history.html'
+
+    model = Organisation
+    queryset = Organisation.objects.all()
+    paginate_by = 4
+
+    def get_context_data(self, **kwargs):
+        context = super(History, self).get_context_data(**kwargs) 
+        list_challenges = Organisation.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+        # context['slug'] = Organisation.objects.get(slug=portal_slug)
+        # print(context['org'])
+        context['slug'] = self.kwargs['slug']
+
+
+        page = self.request.GET.get('page')
+
+        # portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        # portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        # print(portal_choice)
+        # print(portal_slug)
+        # context['org'] = Organisation.objects.get(slug=portal_slug)
+        # context['orgslug'] = portal_slug
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
+class HistoryListCompleted(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    print(today)
+    queryset = Post.objects.filter(status=1).filter(endDate__lte=today)
+    template_name = 'challenges/index_completed.html'
+
+    model = Post
+
+    paginate_by = 4
+
+
+    def get_context_data(self, **kwargs):
+        context = super(HistoryListCompleted, self).get_context_data(**kwargs) 
+        list_challenges = Post.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+
+        page = self.request.GET.get('page')
+
+        # portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        # portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        # print(portal_choice)
+        # print(portal_slug)
+        # context['org'] = Organisation.objects.get(slug=portal_slug)
+        # context['orgslug'] = portal_slug
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context    
 
     # def get_context_data(self, *args, **kwargs):
     #     context = super(PostList, self).get_context_data()
@@ -124,8 +454,8 @@ def submit_challenge_successful(request, slug):
     return render(request,'challenges/submit_challenge_success.html', context)
 
 
-def challenge_history(request):
-    return render(request,'challenges/challenge_history.html')
+# def challenge_history(request):
+#     return render(request,'challenges/challenge_history.html')
 
 
 def submit_challenge(request, slug):
@@ -133,7 +463,9 @@ def submit_challenge(request, slug):
     print(slug)
     org = slug
     orgobject = Organisation.objects.get(slug=slug)
-   
+    current_site = get_current_site(request)
+    print(current_site)
+    print(str(current_site)[:9])
     
     if request.method == "POST":
         form = ChallengeForm(request.POST)
@@ -199,47 +531,6 @@ class ideaform(CreateView):
         slug = self.kwargs['slug']
         return reverse_lazy('criteria', kwargs={'orgslug': orgslug, 'pk': pk, 'slug':slug,})
 
-# class ideaform(CreateView):
-#     model = Idea
-#     template_name = 'blogs/submit_ideas_form.html' 
-#     form_class = IdeaForm
-
-#     def form_valid(self, form):
-#         form.instance.post_id = self.kwargs['pk']
-#         form.instance.slug = self.kwargs['slug']
-
-#         return super().form_valid(form)
-
-#     success_url = reverse_lazy('bloghub')
-    
-# class idea_criteria_form(CreateView):
-
-#     model = Idea
-#     template_name = 'ideas/idea_criteria_form.html' 
-#     form_class = CriteriaForm()
-
-#     def form_valid(self, form):
-#         form.instance.post_id = self.kwargs['pk']
-#         return super().form_valid(form)
-
-#     success_url = ('submit_success')
-
-
-    # idea = Idea.objects.latest('created_on')
-    # form = CriteriaForm()
-    # if request.method == "POST":
-    #     form = CriteriaForm(request.POST)
-    #     if form.is_valid():
-    #         estimated_cost = form.cleaned_data.get('estimated_cost')
-    #         print(estimated_cost)
-    #         idea.estimated_cost = estimated_cost
-    #         notes = form.cleaned_data.get('notes')
-    #         idea.notes = notes
-    #         is_user_led = form.cleaned_data.get('is_user_led')
-    #         idea.is_user_led = is_user_led
-            # idea.author = request.id.user
-            # idea.save()
-
 def idea_criteria_form(request, orgslug, pk, slug):
     print(pk)
     
@@ -259,9 +550,16 @@ def idea_criteria_form(request, orgslug, pk, slug):
             notes = form.cleaned_data.get('notes')
             idea.notes = notes
             is_user_led = form.cleaned_data.get('is_user_led')
+            is_public = form.cleaned_data.get('is_public')
+            # idea.org_tag = 
+            public = Organisation.objects.get(name='Public')
+            if is_public:
+                idea.org_tag.add(public)
+
+
             idea.is_user_led = is_user_led
             idea.author = request.user
-            idea.org_tag = org
+            idea.org_tag.add(org) 
             idea.department = post.department
             # idea.author = request.id.user
             idea.save()
@@ -275,6 +573,12 @@ def idea_criteria_form(request, orgslug, pk, slug):
 def submit_success(request, orgslug, pk, slug):
     context = {'orgslug': orgslug}
     return  render(request, 'ideas/submit_success.html', context)
+
+def lifecycle(request, pk):
+    org = Organisation.objects.get(id=pk)
+    org_slug = org.slug
+    context = {'pk':pk, 'slug': org_slug}
+    return  render(request, 'challenges/lifecycle.html', context)
 
 class CommentList(generic.ListView):
     queryset = Post.objects.filter(status=1).order_by('-created_on')

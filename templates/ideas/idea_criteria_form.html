@@ -80,6 +80,15 @@
 
             <br>
 
+            <div class="nhsuk-checkboxes__item">
+              {% render_field criteriaform.is_public class="nhsuk-checkboxes__input"  id="example-3" name="example" type="checkbox" value="text message" %} 
+              <label class="nhsuk-label nhsuk-checkboxes__label" for="example-3">
+                {{ criteriaform.is_public.label }} 
+              </label>
+            </div>
+
+            <br>
+
             <div class="nhsuk-form-group " id="question_nhsnumber">
               {{ criteriaform.image.label_tag }}
               <div class="nhsuk-form-group " >

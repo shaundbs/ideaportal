@@ -1,9 +1,10 @@
 {% autoescape off %}
 
-Hi {{user.username}}
+Hi {{user.username}},
 
-Please use the link below to verify your account.
+Welcome to the NHS Ideas Portal, please use the link below to complete registration and verify your account:
 
 http://{{domain}}{% url 'activate' uidb64=uid token=token %}
+
 
 {% endautoescape %}

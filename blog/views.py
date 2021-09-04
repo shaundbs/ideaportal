@@ -351,10 +351,6 @@ class PostManagementDetail(generic.DetailView):
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
         context['orgslug'] = portal_slug
-
-
-
-
         return context
 
 class PostCommentList(generic.ListView):
@@ -450,11 +446,13 @@ def approval_view(request, pk, slug, orgslug):
             idea.startDate = startDate
             idea.endDate = endDate
             idea.status = status
+            idea.stage = 'open'
             idea.save()
 
             return redirect('post_management_detail', orgslug=orgslug, pk=pk, slug=slug)
 
         context = {'approvalform': form}
+    context={}
 
     return render(request, 'blogs/approval.html', context)
 

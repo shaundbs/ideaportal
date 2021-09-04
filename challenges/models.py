@@ -79,16 +79,18 @@ class Idea(models.Model):
     is_approved = models.BooleanField(default=False, null=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/idea_images")
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='idea_department', null=True, blank=True)
-    sub_department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='idea_sub_department', null=True)
+    sub_department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='idea_sub_department', null=True, blank=True)
     likes = models.ManyToManyField(Account, related_name='idea_likes')
     STAGES = [
+    ('open', 'Open'),
+    ('under review', 'Under Review'),
     ('accepted', 'Accepted'),
     ('rejected', 'Rejected'),
     ('in development', 'In development'),
-    ('complete', 'Complete'),
+    ('delivered', 'Delivered'),
 ]
     stage = models.CharField(max_length=2000, choices=STAGES, blank=True, null=True)
-    org_tag = models.ForeignKey("organisations.Organisation", on_delete=models.SET_NULL, related_name='ideaorgtag', null=True)
+    org_tag = models.ManyToManyField("organisations.Organisation", related_name='ideaorgtag', null=True)
 
     def __str__(self):
         return self.title

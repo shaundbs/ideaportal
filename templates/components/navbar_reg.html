@@ -2,7 +2,57 @@
 
 
 <!DOCTYPE html>
-  <html lang="en">
+<html>
+
+    <head>
+        <title>Django Central</title>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
+        <meta name="google" content="notranslate" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous" />
+    </head>
+
+    <body>
+        <style>
+            body {
+            font-family: "Roboto", sans-serif;
+            font-size: 17px;
+            background-color: #fdfdfd;
+        }
+        .btn-danger {
+            color: #fff;
+            background-color: #f00000;
+            border-color: #dc281e;
+        }
+        .masthead {
+            background: #3398E1;
+            height: auto;
+            padding-bottom: 15px;
+            padding-top: 10px;
+        }
+    </style>
+
+
+
+
+
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+        font-size: 18px;
+        background: transparent;
+    }
+    
+    .head_text {
+        color: white;
+    }
+    
+    .card {
+        box-shadow: 0 16px 48px #E3E7EB;
+    }
+</style>
+
   <head>
 
     <meta charset="utf-8">
@@ -30,7 +80,7 @@
         <header class="nhsuk-header nhsuk-header--transactional" role="banner">
     <div class="nhsuk-width-container nhsuk-header__container">
       <div class="nhsuk-header__logo">
-        <a id="link_nhs_uk_logo_home" class="nhsuk-header__link" href="{% url 'home' %}" aria-label="NHS homepage">
+        <a id="link_nhs_uk_logo_home" class="nhsuk-header__link" href="" aria-label="NHS homepage">
           <image style="height: 40px; width: 85px; border-radius: 5px;" src="{% static 'frontend/imgs/ixn.jpeg' %}" xlink:href=""></image>
         </a>
       </div>

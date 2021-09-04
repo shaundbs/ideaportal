@@ -1,6 +1,7 @@
 from django.contrib.auth import decorators
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
+from organisations.models import Organisation
 # from django import template
 # from django.contrib.auth.models import Group 
 
@@ -13,12 +14,13 @@ from django.shortcuts import redirect, render
 
 
 def unauthenticated_user(view_func):
+    # org = Organisation.objects.get(slug=orgslug)
     def wrapper_func(request, *args, **kwargs):
         if request.user.is_authenticated:
             
             # return redirect('public_landing')
 
-            return redirect('blogfeed_main')
+            return redirect('blogfeed_main',  orgslug=orgslug)
         else:
             return view_func(request, *args, **kwargs)
 
