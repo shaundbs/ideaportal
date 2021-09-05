@@ -129,5 +129,30 @@ class IdeaComment(models.Model):
         
     class Meta:
         ordering = ['-created_on']
-  
 
+# class Custom(models.Model):
+    # organisation = models.ForeignKey("organisations.Organisation", on_delete=models.SET_NULL, related_name='idea_comment_author', null=True)
+    # creator = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='idea_comment_author', null=True)
+    # updated_on = models.DateTimeField(auto_now=True)
+    # field_1 = models.TextField(max_length=500,default='Type content here...')
+    # field_1 = models.DateTimeField(auto_now_add=True)
+    # field_1 = models.ManyToManyField(Account, related_name='idea_comment_likes', blank=True)
+    # field_1 = models.ImageField(upload_to='images/', default='images/gender.png', null=True)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    # field_1 = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
