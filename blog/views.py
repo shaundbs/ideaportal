@@ -289,6 +289,7 @@ class PostListData(generic.ListView):
 class PostDetail(generic.DetailView):
     model = Post
     template_name = 'blogs/post_detail.html'
+    
 
     def get_context_data(self, *args, **kwargs):
         context = super(PostDetail, self).get_context_data()

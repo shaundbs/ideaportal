@@ -1,4 +1,7 @@
+from django.core.exceptions import ValidationError
 from django.shortcuts import render
+from requests.adapters import Response
+from rest_framework.views import APIView
 from .forms import IdeaForm, CriteriaForm, ChallengeForm, DepartmentForm, IdeaApprovalForm
 from django.shortcuts import redirect
 from operator import pos
@@ -19,12 +22,14 @@ from organisations.models import Organisation
 from django.core.paginator import *
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
+# from rest_framework.generics import ListAPIView, CreateAPIView
 
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
-
+# from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+# from rest_framework.permissions import IsAuthenticated
+# from rest_framework.response import Response
+# from rest_framework.views import APIView
+from rest_framework import viewsets
+from .serializers import IdeaSerializer
 
 
 # Create your views here.
@@ -454,6 +459,8 @@ def submit_challenge_successful(request, slug):
     return render(request,'challenges/submit_challenge_success.html', context)
 
 
+
+
 # def challenge_history(request):
 #     return render(request,'challenges/challenge_history.html')
 
@@ -579,6 +586,51 @@ def submit_success(request, orgslug, pk, slug):
     context = {'orgslug': orgslug}
     return  render(request, 'ideas/submit_success.html', context)
 
+class IdeaViewSet(viewsets.ModelViewSet):
+    queryset = Idea.objects.all().order_by('title')
+    serializer_class = IdeaSerializer
+
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)
+
+# class IdeaViewSet(viewsets.Up):
+#     queryset = Idea.objects.all().order_by('title')
+#     serializer_class = IdeaSerializer
+
+    
+
+# class IdeaAPIView(APIView):
+#     serializer_class = IdeaSerializer
+
+#     def get_queryset(self):
+#         ideas = Idea.objects.all()
+#         return ideas
+
+#     def get(self, request, *args, **kwargs):
+#         try:
+#             id = request.query_params["id"]
+#             if id != None:
+#                 idea = Idea.objects.get(id=id)
+#                 serializer = IdeaSerializer(idea)
+#         except:
+#             ideas = self.get_queryset()
+#             serializer = Idea(ideas)
+        
+#         return Response(serializer.data)
+
+#     def put(self, request, *args, **kwargs):
+#         idea_object = Idea.object.get()
+
+#         data = request.data 
+#         idea_object.stage = data["stage"]
+#         idea_object.save()
+#         serializer = IdeaSerializer(idea_object)
+   
+#         return Response(serializer.data)
+    
+
+
 def lifecycle(request, pk):
     org = Organisation.objects.get(id=pk)
     org_slug = org.slug
@@ -615,9 +667,9 @@ class add_category_view(CreateView):
     template_name = 'blogs/add_category.html' 
     form_class = DepartmentForm
 
-    # def form_valid(self, form):
-    #     form.instance.post_id = self.kwargs['pk']
-    #     return super().form_valid(form)
+    def form_valid(self, form):
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form)
 
     success_url = reverse_lazy('bloghub')
         

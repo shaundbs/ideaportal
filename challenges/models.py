@@ -101,8 +101,11 @@ class Idea(models.Model):
     def total_likes(self):
         return self.likes.count()
 
-    def get_winner(self, challenge):
-        return self.likes.count(max)
+    # def get_winner(self, challenge):
+    #     return self.likes.count(max)
+
+    # def get_winner(post):
+    #     return post.id(post.)
 
     def total_likes_received(user):
         return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes'] or 0
@@ -115,6 +118,8 @@ class Idea(models.Model):
     
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+        # self.winner = self.get_winner()
+        print(self.winner)
         super(Idea, self).save(*args, **kwargs)
 
 

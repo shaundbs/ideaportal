@@ -1,6 +1,10 @@
 from . import views
 from django.urls import path, include 
-   
+from rest_framework import routers
+router = routers.DefaultRouter()
+router.register(r'ideas', views.IdeaViewSet)
+
+
 urlpatterns = [
     path('<slug:slug>/submit-challenge-form-1/', views.submit_challenge, name='submit_challenge'),
     path('<slug:slug>/submit-challenge-successful/', views.submit_challenge_successful, name='submit_challenge_successful'),
@@ -19,8 +23,9 @@ urlpatterns = [
     path('<slug:orgslug>/<int:pk>/<slug:slug>/manage-ideas/', views.IdeaManagementDetail.as_view(), name='idea_management_detail'),
     path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/approve', views.approve_idea, name='approve_idea'),
     path('<slug:orgslug>/<int:pk>/manage/<slug:slug>/reject', views.reject_idea, name='reject_idea'),
-
-
+    path('router/', include(router.urls)),
+    path('selected-ideas/', views.IdeaViewSet, name='selected_ideas'),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
 

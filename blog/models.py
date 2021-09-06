@@ -38,6 +38,12 @@ class Post(models.Model):
     org_tag = models.ForeignKey('organisations.Organisation', on_delete=models.SET_NULL, related_name='postorgtag', null=True)
 
     # winning_idea = models.OneToOneField('challenges.Idea', on_delete=models.SET_NULL, related_name='winning_idea', null=True, blank=True)
+    #  winning_idea = all_ideas.order_by("likes")[:1]
+    #         winning_idea_id = winning_idea.values('id')[0]['id']
+    #         winning_idea_slug = winning_idea.values('slug')[0]['slug']
+    #         print(winning_idea_slug)
+    #         context['winnerpk'] = winning_idea_id
+    #         context['winnerslug'] = winning_idea_slug
 
     def total_likes(self):
         return self.likes.count()
@@ -45,14 +51,17 @@ class Post(models.Model):
     def total_likes_received(user):
         return user.posts.aggregate(total_likes=Count('likes'))['total_likes'] or 0
 
-    def get_winner(user):
-        return user.winner.count(max)
+    # def get_winner(post, pk):
+    #     range = post.winner.filter(post=pk)
+    #     chosen = range.order_by('likes')[:1]
+    #     return chosen
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
+        # self.winner = self.winner.likes.count(max)
         super(Post, self).save(*args, **kwargs)
 
     def create_post(self, author, title, severity, department, challenge, description):
@@ -69,6 +78,7 @@ class Post(models.Model):
         )
         post.save(using=self._db)
         return post
+
 
 class Comment(models.Model):
     author = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='comment_author', null=True)
