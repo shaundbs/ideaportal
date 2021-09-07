@@ -333,7 +333,7 @@ class IdeaListInDev(generic.ListView):
     today = make_aware(datetime.datetime.now())
     print(today)
     
-    queryset = Idea.objects.filter(stage='delivered')
+    queryset = Idea.objects.filter(stage='in development')
     template_name = 'ideas/index_open.html'
 
     model = Idea
@@ -343,7 +343,7 @@ class IdeaListInDev(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
         portal_id = portal_choice.id
-        return Idea.objects.filter(stage='delivered').filter(org_tag=portal_id).order_by('-created_on')
+        return Idea.objects.filter(stage='in development').filter(org_tag=portal_id).order_by('-created_on')
 
     
     def get_context_data(self, **kwargs):
