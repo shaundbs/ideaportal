@@ -220,7 +220,7 @@ class IdeaListDelivered(generic.ListView):
     today = make_aware(datetime.datetime.now())
     print(today)
     
-    queryset = Idea.objects.filter(stage='open')
+    queryset = Idea.objects.filter(stage='delivered')
     template_name = 'ideas/index_open.html'
 
     model = Idea
@@ -230,7 +230,7 @@ class IdeaListDelivered(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
         portal_id = portal_choice.id
-        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+        return Idea.objects.filter(stage='delivered').filter(org_tag=portal_id).order_by('-created_on')
 
     
     def get_context_data(self, **kwargs):
@@ -257,7 +257,7 @@ class IdeaListReview(generic.ListView):
     today = make_aware(datetime.datetime.now())
     print(today)
     
-    queryset = Idea.objects.filter(stage='open')
+    queryset = Idea.objects.filter(stage='under review')
     template_name = 'ideas/index_open.html'
 
     model = Idea
@@ -267,7 +267,7 @@ class IdeaListReview(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
         portal_id = portal_choice.id
-        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+        return Idea.objects.filter(stage='under review').filter(org_tag=portal_id).order_by('-created_on')
 
     
     def get_context_data(self, **kwargs):
@@ -295,7 +295,7 @@ class IdeaListAccepted(generic.ListView):
     today = make_aware(datetime.datetime.now())
     print(today)
     
-    queryset = Idea.objects.filter(stage='open')
+    queryset = Idea.objects.filter(stage='accepted')
     template_name = 'ideas/index_open.html'
 
     model = Idea
@@ -305,7 +305,7 @@ class IdeaListAccepted(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
         portal_id = portal_choice.id
-        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+        return Idea.objects.filter(stage='accepted').filter(org_tag=portal_id).order_by('-created_on')
 
     
     def get_context_data(self, **kwargs):
@@ -333,7 +333,7 @@ class IdeaListInDev(generic.ListView):
     today = make_aware(datetime.datetime.now())
     print(today)
     
-    queryset = Idea.objects.filter(stage='open')
+    queryset = Idea.objects.filter(stage='delivered')
     template_name = 'ideas/index_open.html'
 
     model = Idea
@@ -343,7 +343,7 @@ class IdeaListInDev(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
         portal_id = portal_choice.id
-        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+        return Idea.objects.filter(stage='delivered').filter(org_tag=portal_id).order_by('-created_on')
 
     
     def get_context_data(self, **kwargs):
@@ -590,9 +590,9 @@ class IdeaViewSet(viewsets.ModelViewSet):
     queryset = Idea.objects.all().order_by('title')
     serializer_class = IdeaSerializer
 
-    def update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return super().update(request, *args, **kwargs)
+    # def update(self, request, *args, **kwargs):
+    #     kwargs['partial'] = True
+    #     return super().update(request, *args, **kwargs)
 
 # class IdeaViewSet(viewsets.Up):
 #     queryset = Idea.objects.all().order_by('title')

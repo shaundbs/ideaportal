@@ -21,9 +21,9 @@ class PostSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('id','title', 'description', 'created_on', 'startDate', 'endDate', 'winner')
 
 class IdeaSerializer(serializers.HyperlinkedModelSerializer):
-    post = PostSerializer('post')
+    post = PostSerializer(read_only=True)
     org_tag = OrganisationSerializer(read_only=True, many=True)
-    department = DepartmentSerializer('department')
+    department = DepartmentSerializer(read_only=True)
     class Meta:
         model = Idea
         fields = ('id', 'title', 'estimated_cost', 'description', 'post', 'stage', 'org_tag', 'department')
