@@ -30,6 +30,9 @@ from django.core.mail import EmailMessage
 # from rest_framework.views import APIView
 from rest_framework import viewsets
 from .serializers import IdeaSerializer
+import requests, json
+from django.http import JsonResponse
+
 
 
 # Create your views here.
@@ -494,22 +497,45 @@ def submit_challenge(request, slug):
 
     return render(request,'challenges/submit_challenge.html', context)
 
-# def ideaform(request):
-#     form = IdeaForm()
-#     if request.method == "POST":
-#         form = IdeaForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             idea = form.save()
-#             return redirect('criteria')
 
-#     context = {'ideaform': form}
+def orcha_api(request):
+    
+    data = '{"username" : "cnwl", "password":"K2Q5!ZqnJ!#RYV"}'
+    data_2 = '{"searchTerm": "Back Pain","pageNumber": "1", "pageSize": "12", "costIds": [],"capabilityIds": [],"designedForIds": [],"countryIds": []}'
 
-#     return render(request, 'ideas/submit_ideas_form.html', context)
+    headers = {
+    'Content-type':'application/json', 
+    'Accept':'application/json'
+    } 
+
+    response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
+    body = json.loads(response.text)
+    access_token = body['result']['accessToken']
+    # print(response.headers)
+    # print(access_token)
+
+    headers_2 = {"Authorization": "Bearer " + str(access_token)}
+    headers_3 = {
+    'Content-type':'application/json', 
+    'Accept':'application/json',
+    "Authorization": "Bearer " + str(access_token)
+    }     
+    # print(headers_2)
+    response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
+    # print(response_2.text)
+    body_2 = json.loads(response_2.text)   
+    categories =  body_2['result']
+    category_list = []
+    for category in categories:
+        category_list.append(category['subCategoryName'])
+    print(category_list)
+    return render(request)
 
 class ideaform(CreateView):
     model = Idea
     template_name = 'ideas/submit_ideas_form.html' 
     form_class = IdeaForm
+    
 
     def get_context_data(self, **kwargs):
         context = super(ideaform, self).get_context_data(**kwargs)
@@ -521,6 +547,7 @@ class ideaform(CreateView):
         
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
+        context['orgslug'] = portal_slug
         print(portal_choice)
         print(portal_slug)
    
@@ -536,10 +563,13 @@ class ideaform(CreateView):
         pk=self.kwargs['pk']
         orgslug=self.kwargs['orgslug']
         slug = self.kwargs['slug']
+
         return reverse_lazy('criteria', kwargs={'orgslug': orgslug, 'pk': pk, 'slug':slug,})
+
 
 def idea_criteria_form(request, orgslug, pk, slug):
     print(pk)
+    
     
     post = Post.objects.get(slug=slug)
     org = Organisation.objects.get(slug=orgslug)
@@ -553,6 +583,125 @@ def idea_criteria_form(request, orgslug, pk, slug):
     print(idea)
     print(post.title)
     form = CriteriaForm()
+    data = '{"username" : "cnwl", "password":"K2Q5!ZqnJ!#RYV"}'
+
+    headers = {
+    'Content-type':'application/json', 
+    'Accept':'application/json'
+    } 
+
+    response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
+    body = json.loads(response.text)
+    access_token = body['result']['accessToken']
+    # print(response.headers)
+    # print(access_token)
+
+    headers_2 = {"Authorization": "Bearer " + str(access_token)}
+    headers_3 = {
+    'Content-type':'application/json', 
+    'Accept':'application/json',
+    "Authorization": "Bearer " + str(access_token)
+    }     
+    # print(headers_2)
+    response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
+    # print(response_2.text)
+    body_2 = json.loads(response_2.text)   
+    categories =  body_2['result']
+    category_list = []
+    for category in categories:
+        category_list.append(category['subCategoryName'])
+    print(category_list)
+    print(idea.description)
+
+    # get idea title 
+    compare = idea.title
+    compare_desc = idea.description
+    title_list = []
+    description_list = []
+
+    # append key words form title to list
+    for word in compare.split():
+        title_list.append(word)
+    print(title_list)
+
+    for word in compare_desc.split():
+        description_list.append(word)
+
+    # initiate state variable
+    is_similar = False
+    category_names = []
+
+    category_list_lower = [item.lower() for item in category_list]
+    title_list_lower = [item.lower() for item in title_list]
+    description_list_lower = [item.lower() for item in description_list]
+
+
+    # if the keywords from the idea match any sub category areas set state to True and create a list of the similar terms
+    comparers = (set(category_list_lower) & set(title_list_lower) or set(description_list_lower))
+    print(set(category_list_lower) & set(title_list_lower))
+    ranger = (set(category_list_lower) & set(title_list_lower))
+    existing_ideas = ""
+
+
+    if (set(category_list_lower) & set(title_list_lower)):
+        print("This idea could be similar to an exisiting solution")
+        is_similar = True
+        print("MATCH ALERT")
+        category_names = list(set(category_list_lower) & set(title_list_lower) or set(description_list_lower))
+        print(category_names)
+    else:
+        print("This idea is not similar to an exisitng solution")
+
+    # append key words form title to list
+    keywords = []
+    keyterms = []
+    for name in category_names:
+        name.split()
+        keywords.append(name)
+    print(keywords)
+
+
+    appName = ''
+    clinicalAssuranceScore = ''
+    userExperienceScore = ''
+    publisherName = ''
+    description= ''
+    version= ''
+    downloadLink = ''
+    platform = ''
+
+
+    for category in keywords:
+        data_2 = '{"searchTerm": "' + category + '","pageNumber": "1", "pageSize": "12", "costIds": [],"capabilityIds": [],"designedForIds": [],"countryIds": []}'
+        response_3 = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Review/SearchPagedReviews", data=data_2, headers=headers_3)
+        json_str = json.loads(response_3.text)
+        existing_ideas = json_str['result']['items']
+        counter = 0
+        for id in existing_ideas:
+            counter = counter + 1
+        print("Total isssssssss " + str(counter))
+
+        # context_2 = {'existing_ideas': existing_ideas}
+        existing_idea_names = []
+        existing_publisher_names = []
+        existing_descriptions = []
+        existing_links = []
+        exisiting_platforms = []
+
+        for idea in existing_ideas:
+            existing_idea_names.append(idea['appName'])
+            existing_publisher_names.append(idea['publisherName'])
+            existing_descriptions.append(idea['description'])
+            existing_links.append(idea['downloadLink'])
+            exisiting_platforms.append(idea['platform'])
+
+        zipped_values = zip(existing_idea_names, existing_publisher_names, existing_descriptions, existing_links,exisiting_platforms)
+        print(zipped_values)
+
+    # posts = Post.objects.filter(title__contains=searched)
+    # contents = Post.objects.filter(description__contains=searched)
+
+
     if request.method == "POST":
         form = CriteriaForm(request.POST)
         if form.is_valid():
@@ -567,8 +716,6 @@ def idea_criteria_form(request, orgslug, pk, slug):
             public = Organisation.objects.get(name='Public')
             if is_public:
                 idea.org_tag.add(public)
-
-
             idea.is_user_led = is_user_led
             idea.author = request.user
             idea.org_tag.add(org) 
@@ -578,7 +725,11 @@ def idea_criteria_form(request, orgslug, pk, slug):
 
             return redirect('submit_success', orgslug=orgslug, pk=pk, slug=slug)
 
-    context = {'criteriaform': form, 'publish_publicly': publish_publicly}
+    try:
+        context = {'criteriaform': form, 'publish_publicly': publish_publicly, 'existing_ideas' : existing_ideas, 'app_names' : existing_idea_names, 'publisher_names' : existing_publisher_names, 'app_descriptions' : existing_descriptions, 'download_links' : existing_links, 'app_platforms' : exisiting_platforms, 'zipped_values' : zipped_values, 'is_similar' : is_similar, 'counter' : counter}
+    except:
+        context = {'criteriaform': form, 'publish_publicly': publish_publicly}
+
 
     return render(request, 'ideas/idea_criteria_form.html', context)
 

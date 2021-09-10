@@ -124,16 +124,19 @@ class Idea(models.Model):
 
 
 class IdeaComment(models.Model):
-    author = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='idea_comment_author', null=True)
+    author = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='idea_comment_author', null=True, blank=True)
     updated_on = models.DateTimeField(auto_now=True)
     comment = models.TextField(max_length=500,default='Type content here...')
     created_on = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(Account, related_name='idea_comment_likes', blank=True)
-    image = models.ImageField(upload_to='images/', default='images/gender.png', null=True)
-    idea = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0)
+    image = models.ImageField(upload_to='images/', default='images/gender.png', null=True, blank=True)
+    idea = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0, null=True, blank=True)
         
     class Meta:
         ordering = ['-created_on']
+
+    def __str__(self):
+        return self.comment
 
 # class Custom(models.Model):
 #     organisation = models.ForeignKey("organisations.Organisation", on_delete=models.SET_NULL, related_name='idea_comment_author', null=True)

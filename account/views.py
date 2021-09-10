@@ -38,6 +38,8 @@ import http.client
 from challenges.models import Idea
 from django.db.models import Count
 from email.mime.multipart import MIMEMultipart
+from rest_framework import viewsets
+from requests.auth import HTTPDigestAuth
 
 
 FORMS = [("contact", account.forms.CustomUserCreationForm),
@@ -81,7 +83,123 @@ def logoutUser(request):
     logout(request)
     return redirect('enter')
 
+class BearerAuth(requests.auth.AuthBase):
+    def __init__(self, token):
+        self.token = token
+    def __call__(self, r):
+        r.headers["authorization"] = "Bearer " + self.token
+        return r
+
 def home(request):
+
+    data = '{"username" : "cnwl", "password":"K2Q5!ZqnJ!#RYV"}'
+    data_2 = '{"searchTerm": "Back Pain","pageNumber": "1", "pageSize": "12", "costIds": [],"capabilityIds": [],"designedForIds": [],"countryIds": []}'
+
+    headers = {
+    'Content-type':'application/json', 
+    'Accept':'application/json'
+    } 
+
+    listio = ['hello','dome',7,8]
+    if 'dome' in listio:
+        print("domeeeeeeeeeeeeeee")   
+
+    response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
+    body = json.loads(response.text)
+    access_token = body['result']['accessToken']
+    # print(response.headers)
+    # print(access_token)
+
+    headers_2 = {"Authorization": "Bearer " + str(access_token)}
+    headers_3 = {
+    'Content-type':'application/json', 
+    'Accept':'application/json',
+    "Authorization": "Bearer " + str(access_token)
+    }     
+    # print(headers_2)
+    response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
+    # print(response_2.text)
+    body_2 = json.loads(response_2.text)   
+    categories =  body_2['result']
+    category_list = []
+    for category in categories:
+        category_list.append(category['subCategoryName'])
+    print(category_list)
+
+    # print(body_2['result'][0]['subCategoryName'])
+    response_3 = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Review/SearchPagedReviews", data=data_2, headers=headers_3)
+    # print(response_3.status_code)
+    # print(response_3.text)
+    json_str = json.loads(response_3.text)
+    # print(json_str)
+    # print(json_str['result']['items'][0]['description'])
+    
+
+
+    # print(response.raw)
+
+
+    # print(response["accessToken"])
+    
+    # endpoint = 'https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories'
+    # data_2 = {}
+    # headers_2 = {"Authorization"}
+
+
+
+      
+
+    # headers2 = {'Authorization' : 'Bearer {access_token}'}
+
+    # url = 'https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate'
+
+    # data = {"name": "Value"}
+
+    # resp = requests.post(url, data={}, auth=HTTPBasicAuth('cnwl', 'K2Q5!ZqnJ!#RYV'), json=data, headers=headers)
+    # resp2 = requests.get('https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories', data={}, auth=HTTPBasicAuth('cnwl', 'K2Q5!ZqnJ!#RYV'), json=data, headers=headers)
+
+    # body = json.loads(resp.content)
+    # token = body["accessToken"]
+    # print(body)
+    # print(resp)
+    # print(resp.status_code)
+    # print(resp.reason)
+    # print(resp.content)
+    # print(resp.url)
+    # print(resp.json)
+    # response = requests.get('https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories', headers=headers2)
+
+    # for i in resp.content:
+    #     print(i)
+    # print(resp.headers)
+    # json_store = resp.json()
+    # print(resp)
+    # dict = resp.json()
+    # print(resp.text)
+    
+    # print(dict)
+    # print(dict["result"])
+    # please = dict["result"][0]
+    # print(please)
+
+
+
+    # fish = resp.json()
+    # data_dict = json.dumps(fish)
+    # print(data_dict)
+    # print(data_dict["result"]["accessToken"])
+    # print(resp.content)
+
+    # print(resp.content[5])
+
+    # url2 = "https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories"
+
+    # payload={}
+    # headers2 = {}
+
+    # response = requests.request("GET", url2, headers=headers2, data=payload)
+    # print(response.text)
+    # print(response.status_code)
     return render(request, 'userauth/home.html')
 
 def index(request):
@@ -315,14 +433,16 @@ def public_landing(request):
 # @login_required(login_url='')
 # @allowed_users(allowed_roles=['public'])
 
-headers = {
-    'Content-type':'application/json', 
-    'Accept':'application/json'
-}
+# headers = {
+#     'Content-type':'application/json', 
+#     'Accept':'application/json'
+# }
 
-url = 'https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate'
+# headers2 = {'Authorization' : 'Bearer {access_token}'}
 
-data = {"name": "Value"}
+# url = 'https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate'
+
+# data = {"name": "Value"}
 
 class blogfeed_main(generic.DetailView):
 
@@ -343,42 +463,6 @@ class blogfeed_main(generic.DetailView):
 
 
 
-    # resp = requests.post(url, data={}, auth=HTTPBasicAuth('cnwl', 'K2Q5!ZqnJ!#RYV'), json=data, headers=headers)
-    # print(resp)
-    # print(resp.status_code)
-    # print(resp.reason)
-    # print(resp.content[:100])
-    # for i in resp.content:
-    #     print(i)
-    # print(resp.headers)
-    # json_store = resp.json()
-    # print(resp)
-    # dict = resp.json()
-    # print(resp.text)
-    
-    # print(dict)
-    # print(dict["result"])
-    # please = dict["result"][0]
-    # print(please)
-
-
-
-    # fish = resp.json()
-    # data_dict = json.dumps(fish)
-    # print(data_dict)
-    # print(data_dict["result"]["accessToken"])
-    # print(resp.content)
-
-    # print(resp.content[5])
-
-    # url2 = "https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories"
-
-    # payload={}
-    # headers2 = {}
-
-    # response = requests.request("GET", url2, headers=headers2, data=payload)
-    # print(response.text)
-    # print(response.status_code)
 
 
 

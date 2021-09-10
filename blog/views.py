@@ -289,7 +289,7 @@ class PostListData(generic.ListView):
 class PostDetail(generic.DetailView):
     model = Post
     template_name = 'blogs/post_detail.html'
-    
+
 
     def get_context_data(self, *args, **kwargs):
         context = super(PostDetail, self).get_context_data()
@@ -517,15 +517,21 @@ class comment_view(CreateView):
 
         return context
 
-    success_url = reverse_lazy('bloghub')
+    def get_success_url(self):
+        print(self.kwargs['orgslug'])
+        return reverse_lazy('post_detail', kwargs={'orgslug': self.kwargs['orgslug'], 'pk' : self.kwargs['pk'], 'slug' : self.kwargs['slug'] })
+
 
 class idea_comment_view(CreateView):
     model = IdeaComment
     template_name = 'blogs/idea_comment.html' 
     form_class = IdeaCommentForm
 
-    def form_valid(self, form):
+    def form_valid(self,form):
+        stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
         form.instance.post_id = self.kwargs['pk']
+        form.instance.author = self.request.user
+        form.instance.idea = stuff
         return super().form_valid(form)
 
     def get_context_data(self, *args, **kwargs):
@@ -535,6 +541,7 @@ class idea_comment_view(CreateView):
         context['posty'] = stuff.slug
         context['postid'] = stuff.pk
         total_likes = stuff.total_likes()
+
 
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
@@ -552,7 +559,10 @@ class idea_comment_view(CreateView):
 
         return context
 
-    success_url = reverse_lazy('bloghub')
+    def get_success_url(self):
+        print(self.kwargs['orgslug'])
+        return reverse_lazy('idea_post', kwargs={'orgslug': self.kwargs['orgslug'], 'pk' : self.kwargs['pk'], 'slug' : self.kwargs['slug'] })
+
 
 
 class IdeaDetail(generic.DetailView):
@@ -563,7 +573,19 @@ class IdeaDetail(generic.DetailView):
         context = super(IdeaDetail, self).get_context_data()
 
         stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
+        idea_post = stuff.post.slug
+        idea_pk = stuff.post.id
+        print(idea_post)
+        context['slug'] = idea_post
+        context['pk'] = idea_pk
+        print(self.kwargs['pk'])
+        idea_comments = IdeaComment.objects.filter(idea=self.kwargs['pk'])
+        print(idea_comments)
+        context['idea_comments'] = idea_comments
+
+
         total_likes = stuff.total_likes()
+
 
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
