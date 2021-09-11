@@ -4,7 +4,7 @@ from account.models import Account
 from blog.models import Post
 import ideaportal.settings as settings
 from django.utils.text import slugify 
-from django.db.models import Count
+from django.db.models import Count, Max
 import random
 
 # Create your models here.
@@ -131,6 +131,12 @@ class Idea(models.Model):
 
     def total_likes_given(user):
         return user.idea_likes.count()
+
+    # def favourite_org(user):
+    #     return user.idea_department.count(Max).title
+
+    def favourite_department(user):
+        return user.idea_department.count()
 
     # def __str__(self):
     #     return "£ " + str(self.estimated_cost)

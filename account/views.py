@@ -35,7 +35,7 @@ from formtools.wizard.views import SessionWizardView, NamedUrlWizardView
 import account.forms
 import requests, json
 import http.client
-from challenges.models import Idea
+from challenges.models import Idea, Department
 from django.db.models import Count
 from email.mime.multipart import MIMEMultipart
 from rest_framework import viewsets
@@ -221,12 +221,17 @@ def auth(request):
 
 def profile_main(request):
     user = request.user
+    # favourite_org = Department.
+    # (user)
+    # print(favourite_org)
     try:
         user_ideas = Idea.objects.filter(author=request.user).count()
         idea = Idea.objects.filter(author=request.user)
         stuff = Idea.total_likes_received(request.user)
         given_likes = Idea.total_likes_given(request.user)
         user_challenges = Post.objects.filter(author=request.user).count()
+        
+        
         print(given_likes)
         print(stuff)
     # print(Account.objects.annotate(num_likes=Count('author__likes')).order_by('-likes').filter()[:20])

@@ -27,6 +27,7 @@ import ideaportal.settings
 from django.conf import settings
 from orchaapi.views import GetDroplets
 from django.conf import settings
+from django.contrib.auth import views as auth_views
 
 named_contact_forms = (
     ('contactdata', CustomUserCreationForm),
@@ -45,6 +46,12 @@ urlpatterns = [
     path('index', views.index, name='index'),
     path('auth/', views.auth, name='auth'),
     path('sign-in/', views.sign_in, name='sign_in'),
+    path('reset-password/', auth_views.PasswordResetView.as_view(template_name='emails/password_reset.html'), name='reset_password'),
+    path('reset-password-sent/', auth_views.PasswordResetDoneView.as_view(template_name='emails/password_reset_confirm.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='emails/password_reset_done.html'), name='password_reset_confirm'),
+    path('reset-password-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='emails/password_reset_complete.html'), name='password_reset_complete' ),
+
+
     path('auth/create-an-account/', views.auth_username, name='auth_username'),
     path('auth/enter-your-nhs-number/', views.auth_number, name='auth_number'),
     path('auth/enter-your-date-of-birth/', views.auth_age, name='auth_age'),
