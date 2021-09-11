@@ -47,6 +47,7 @@ def search_idea(request):
     if request.method == "POST":
         searched = request.POST['searched']
         ideas = Idea.objects.filter(title__contains=searched)
+        
 
         return render(request, 'search/idea_search.html', {'searched': searched, 'ideas': ideas})
     else:
@@ -600,5 +601,36 @@ class IdeaDetail(generic.DetailView):
         context['orgslug'] = portal_slug
 
         return context
+
+class SelectedIdeaDetail(generic.DetailView):
+    model = Idea
+    template_name = 'blogs/selected_idea_detail.html'
+
+    # def get_context_data(self, *args, **kwargs):
+    #     context = super(SelectedIdeaDetail, self).get_context_data()
+
+    #     stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
+    #     idea_post = stuff.post.slug
+    #     idea_pk = stuff.post.id
+    #     print(idea_post)
+    #     context['slug'] = idea_post
+    #     context['pk'] = idea_pk
+    #     print(self.kwargs['pk'])
+    #     idea_comments = IdeaComment.objects.filter(idea=self.kwargs['pk'])
+    #     print(idea_comments)
+    #     context['idea_comments'] = idea_comments
+
+    #     total_likes = stuff.total_likes()
+
+    #     liked = False
+    #     if stuff.likes.filter(id=self.request.user.id).exists():
+    #         liked = True
+
+    #     context["total_likes"] = total_likes
+    #     context["liked"] = liked
+  
+
+        # return context
+
 
 

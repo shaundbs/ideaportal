@@ -70,7 +70,7 @@ class ChallengeForm(forms.ModelForm):
         super(ChallengeForm, self).__init__(*args, **kwargs)
         self.fields['department'].queryset = Department.objects.filter(is_approved=True)
         self.fields['additional_field'].required = False
-
+        self.fields['image'].required = False
 
     class Meta:
         model = Challenge

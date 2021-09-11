@@ -5,6 +5,8 @@ from blog.models import Post
 import ideaportal.settings as settings
 from django.utils.text import slugify 
 from django.db.models import Count
+import random
+
 # Create your models here.
 
 STATUS = (
@@ -17,6 +19,12 @@ BOOLEAN = (
     (1,"Publish")
 )
 
+health = ['heatlh1.jpg','heatlh2.jpg','heatlh3.jpg','heatlh4.jpg',]
+culture = ['culture01.jpg','culture02.jpg','culture03.jpg']
+data = ['data01.jpg','data02.jpg','data03.jpg','data04.jpg',]
+job_satisfaction = ['job satisfaction 01.jpg','job satisfaction 02.jpg','job satisfaction 03.jpg']
+relationships = ['relationship01.jpg','relationship02.jpg','relationship03.jpg','relationship04.jpg',]
+leadership = ['leadership01.jpeg', 'leadership02.jpg']
 
 class Department(models.Model):
     OPTIONS = [
@@ -55,8 +63,19 @@ class Challenge(models.Model):
     description = models.TextField(max_length=500,default='')
     created_on = models.DateTimeField(auto_now_add=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='category', null=True)
-    image = models.ImageField(null=True, blank=True, upload_to="images/challenges_images")
+    image = models.ImageField(null=True, blank=True)
     org_tag = models.ForeignKey("organisations.Organisation", on_delete=models.SET_NULL, related_name='challengeorgtag', null=True)
+    default_pic_mapping = { 'Health': random.choice(health), 'Culture': random.choice(culture), 'Job Satisfaction': random.choice(job_satisfaction),'Relationships': random.choice(relationships), 'Leadership': random.choice(leadership),  'Data': random.choice(data)}
+
+    def get_profile_pic_url(self):
+        if not self.image:
+            return self.default_pic_mapping[self.department.department]
+        return self.image
+
+    def save(self, *args, **kwargs):
+        self.image = self.get_profile_pic_url()
+        super(Challenge, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.title

@@ -4,7 +4,7 @@
 
 
 
-<div class="nhsuk-width-container">
+<div class="container">
         
 
 
@@ -45,6 +45,7 @@
   {% csrf_token %}
   <fieldset class="nhsuk-fieldset" aria-describedby="name-hint">
     <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
+      
       <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Submit a Challenge</h1>
     </legend>
     <div class="nhsuk-form-group " id="question_nhsnumber">
@@ -86,6 +87,12 @@
     
 
     <br>
+    <div class="nhsuk-form-group " id="question_nhsnumber">
+      {{ challengeform.image.label }} 
+      <div class="nhsuk-form-group " >
+      </div>
+      {{ challengeform.image }} 
+  </div>
     <!-- <div class="nhsuk-action-link">
         <a class="nhsuk-action-link__link" href="https://www.nhs.uk/service-search/minor-injuries-unit/locationsearch/551">
           <svg class="nhsuk-icon nhsuk-icon__arrow-right-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">

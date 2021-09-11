@@ -389,12 +389,12 @@ class History(generic.ListView):
 
         page = self.request.GET.get('page')
 
-        # portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        # portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        # print(portal_choice)
-        # print(portal_slug)
-        # context['org'] = Organisation.objects.get(slug=portal_slug)
-        # context['orgslug'] = portal_slug
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        print(portal_choice)
+        print(portal_slug)
+        context['org'] = Organisation.objects.get(slug=portal_slug)
+        context['orgslug'] = portal_slug
 
         try:
             file_exams = paginator.page(page)
@@ -473,9 +473,6 @@ def submit_challenge(request, slug):
     print(slug)
     org = slug
     orgobject = Organisation.objects.get(slug=slug)
-    current_site = get_current_site(request)
-    print(current_site)
-    print(str(current_site)[:9])
     
     if request.method == "POST":
         form = ChallengeForm(request.POST)
@@ -485,8 +482,9 @@ def submit_challenge(request, slug):
             form.author = request.user
             challenge = form.save()
             challenge.author = request.user
+            challenge.org_tag = orgobject
             challenge = form.save()
-            Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, challenge=challenge, description=challenge.description, org_tag=orgobject)
+            Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
 
             return redirect('submit_challenge_successful', slug=slug)
     
@@ -566,6 +564,14 @@ class ideaform(CreateView):
 
         return reverse_lazy('criteria', kwargs={'orgslug': orgslug, 'pk': pk, 'slug':slug,})
 
+def search_idea(request):
+    if request.method == "POST":
+        searched = request.POST['searched']
+        ideas = Idea.objects.filter(title__contains=searched, stage__isnull=False)
+
+        return render(request, 'search/selected_idea_search.html', {'searched': searched, 'ideas': ideas})
+    else:
+        return render(request, 'search/selected_idea_search.html', {})
 
 def idea_criteria_form(request, orgslug, pk, slug):
     print(pk)
@@ -579,8 +585,8 @@ def idea_criteria_form(request, orgslug, pk, slug):
     if org_name == 'Public':
         publish_publicly = True
     # idea = Idea.objects.filter(author=request.user).latest('created_on')
-    idea = Idea.objects.latest('created_on')
-    print(idea)
+    current_idea = Idea.objects.latest('created_on')
+    print(current_idea)
     print(post.title)
     form = CriteriaForm()
     data = '{"username" : "cnwl", "password":"K2Q5!ZqnJ!#RYV"}'
@@ -611,11 +617,11 @@ def idea_criteria_form(request, orgslug, pk, slug):
     for category in categories:
         category_list.append(category['subCategoryName'])
     print(category_list)
-    print(idea.description)
+    print(current_idea.description)
 
     # get idea title 
-    compare = idea.title
-    compare_desc = idea.description
+    compare = current_idea.title
+    compare_desc = current_idea.description
     title_list = []
     description_list = []
 
@@ -643,7 +649,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
     existing_ideas = ""
 
 
-    if (set(category_list_lower) & set(title_list_lower)):
+    if (set(category_list_lower) & set(title_list_lower) or set(description_list_lower)):
         print("This idea could be similar to an exisiting solution")
         is_similar = True
         print("MATCH ALERT")
@@ -707,21 +713,22 @@ def idea_criteria_form(request, orgslug, pk, slug):
         if form.is_valid():
             estimated_cost = form.cleaned_data.get('estimated_cost')
             print(estimated_cost)
-            idea.estimated_cost = estimated_cost
+            print("ABOVE HERE IS YOUR ESYIMATEEEEEEEE")
+            current_idea.estimated_cost = estimated_cost
             notes = form.cleaned_data.get('notes')
-            idea.notes = notes
+            current_idea.notes = notes
             is_user_led = form.cleaned_data.get('is_user_led')
             is_public = form.cleaned_data.get('is_public')
             # idea.org_tag = 
             public = Organisation.objects.get(name='Public')
             if is_public:
-                idea.org_tag.add(public)
-            idea.is_user_led = is_user_led
-            idea.author = request.user
-            idea.org_tag.add(org) 
-            idea.department = post.department
+                current_idea.org_tag.add(public)
+            current_idea.is_user_led = is_user_led
+            current_idea.author = request.user
+            current_idea.org_tag.add(org) 
+            current_idea.department = post.department
             # idea.author = request.id.user
-            idea.save()
+            current_idea.save()
 
             return redirect('submit_success', orgslug=orgslug, pk=pk, slug=slug)
 

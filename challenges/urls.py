@@ -25,7 +25,9 @@ urlpatterns = [
     path('<slug:orgslug>/<int:pk>/manage/<slug:slug>/reject', views.reject_idea, name='reject_idea'),
     path('router/', include(router.urls)),
     path('selected-ideas/', views.IdeaViewSet, name='selected_ideas'),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('search-selected-idea/', views.search_idea, name='search_selected_idea'),
+
 ]
 
 

@@ -69,6 +69,17 @@
     <br>
 
     <h1>Ideas Hub</h1>
+
+    
+    <form class="nhsuk-header__search-form beta-header__search-form" id="search" action="{% url 'search_selected_idea' %}" method="post" role="search">
+        {% csrf_token %}
+        <label class="nhsuk-u-visually-hidden" for="search-field">Search the NHS website</label>
+        <div class="autocomplete-container" id="autocomplete-container"></div>
+        <input class="nhsuk-search__input" id="search-field" name="searched" type="search" placeholder="Search" autocomplete="off" >
+
+          <span class="nhsuk-u-visually-hidden">Search</span>
+        </button>
+      </form>
   
     <div class="row">
         <!-- Blog Entries Column -->

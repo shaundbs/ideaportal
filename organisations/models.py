@@ -19,7 +19,7 @@ class Organisation(models.Model):
     is_active = models.BooleanField(max_length=50, null=True, blank=True)
     specialty = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='specialty', null=True, blank=True)
     created_on =  models.DateTimeField(auto_now_add=True)
-    description = models.CharField(max_length=300, null=True, blank=True)
+    description = models.CharField(max_length=500, null=True, blank=True)
     image = models.ImageField(null=True, blank=True,)
     post1 = models.ForeignKey("blog.Post", on_delete=models.SET_NULL, related_name='postorgtag1', null=True, blank=True)
     post2 = models.ForeignKey("blog.Post", on_delete=models.SET_NULL, related_name='postorgtag2', null=True, blank=True)
@@ -43,7 +43,7 @@ class Organisation(models.Model):
     def get_profile_pic_url(self):
         if not self.image:
             return self.default_pic_mapping[self.specialty.department]
-        return self.image.url
+        return self.image
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

@@ -459,6 +459,13 @@ class blogfeed_main(generic.DetailView):
         context['org'] = Organisation.objects.get(slug=portal_slug)
         return context
 
+    def get_success_url(self):
+        pk=self.kwargs['pk']
+        orgslug=self.kwargs['orgslug']
+        slug = self.kwargs['slug']
+
+        return reverse_lazy('challenge_history', kwargs={'orgslug': orgslug,})
+
 
 
 
