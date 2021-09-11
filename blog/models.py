@@ -33,7 +33,7 @@ class Post(models.Model):
     endDate =  models.DateField(null=True, blank=True)
     description = models.TextField(max_length=500,default='Type content here...')
     manager = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='challenge_manager', null=True, blank=True)
-    image = models.ImageField(null=True, blank=True, upload_to="images/challenges_images")
+    image = models.ImageField(null=True, blank=True)
     winner = models.ForeignKey('challenges.Idea', on_delete=models.SET_NULL, related_name='winner', null=True, blank=True)
     org_tag = models.ForeignKey('organisations.Organisation', on_delete=models.SET_NULL, related_name='postorgtag', null=True)
 

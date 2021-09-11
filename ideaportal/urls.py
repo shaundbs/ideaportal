@@ -26,6 +26,7 @@ from django.conf.urls.static import static
 import ideaportal.settings
 from django.conf import settings
 from orchaapi.views import GetDroplets
+from django.conf import settings
 
 named_contact_forms = (
     ('contactdata', CustomUserCreationForm),
@@ -80,4 +81,4 @@ urlpatterns = [
 #     'age':'age', 'employee':'employee' }), name='contact')
 ] 
 
-urlpatterns += static(ideaportal.settings.MEDIA_URL, document_root = ideaportal.settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

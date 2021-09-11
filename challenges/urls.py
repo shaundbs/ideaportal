@@ -1,6 +1,8 @@
 from . import views
 from django.urls import path, include 
 from rest_framework import routers
+from django.conf import settings
+from django.conf.urls.static import static
 router = routers.DefaultRouter()
 router.register(r'ideas', views.IdeaViewSet)
 
@@ -29,5 +31,7 @@ urlpatterns = [
     path('search-selected-idea/', views.search_idea, name='search_selected_idea'),
 
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

@@ -58,8 +58,18 @@
         <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
         <p class=" text-muted"> Severity: {{ object.severity| capfirst }}</p>
         <p class="card-text ">{{ object.description | safe }}</p>
+        {% if object.image %}
+        <center>
+        <div>
+          <img src="{{ object.image.url }}" style="max-width:50%;max-height:50%;">
+          {% else %}
+          {% endif %}
+        </div></center>
+      
         <hr>
+  
         {% if total_ideas != 0 %}
+        <br><br>
         <a href="{% url 'idea_post' orgslug winnerpk winnerslug %}">View the winning idea</a>
         <br><br>
 

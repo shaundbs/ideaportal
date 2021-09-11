@@ -57,7 +57,7 @@
 {% if object.post1 %}
   <div class="p-6 p-md-5 mb-4 text-white rounded bg-dark">
     <div class="col-md-6 px-7">
-      <p class="display-6">{{ object.post1.title|slice:"75" }}...</p>
+      <p class="display-6">{{ object.post1.title|slice:"75" }}</p>
       <p class="lead my-3">{{ object.post1.description|slice:":200" }}</p>
       <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post1.pk object.post1.slug %}" class="text-white fw-bold">Continue reading...</a></p>
       
@@ -87,7 +87,7 @@
         
         <div class="col p-4 d-flex flex-column position-static">
           <strong class="d-inline-block mb-2 text-primary">{{ object.post2.department }}</strong>
-         <p class="display-6">{{ object.post2.title|slice:"75" }}...</p>
+         <p class="display-6">{{ object.post2.title|slice:"75" }}</p>
         <div class="mb-1 text-muted">Last edited: {{ object.post2.updated_on}}</div>
           <p class="card-text mb-auto">{{ object.post2.description|slice:":300" }}...</p>
 
@@ -136,7 +136,7 @@
           
           <strong class="d-inline-block mb-2 text-primary">{{ object.post3.department }}</strong>
 
-          <p class="display-6">{{ object.post3.title|slice:"75" }}...</p>
+          <p class="display-6">{{ object.post3.title|slice:"75" }}</p>
    
         <div class="mb-1 text-muted">Last edited: {{ object.post3.updated_on}}</div>
 

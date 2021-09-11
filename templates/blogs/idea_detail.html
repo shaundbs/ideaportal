@@ -49,9 +49,13 @@
         <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
         <p class=" text-muted">{{ object.author }} | {{ object.created_on }}</p>
         <p class="card-text ">{{ object.description | safe }}</p>
-        {% if idea.image %}
-        <img src="{{ idea.image.url }}" style="max-width:30%;max-height:30%;">
-        {% endif %}
+        <br>
+        {% if object.image %}
+        <center>
+          <img src="{{ object.image.url }}" style="max-width:50%;max-height:50%;">
+          {% else %}
+          {% endif %}
+      </center>
         <hr>
                     <form action="{% url 'like_idea' orgslug idea.pk idea.slug %}" method="post">
                         {% csrf_token %}
