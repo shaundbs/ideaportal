@@ -67,6 +67,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
     profile_image=models.ImageField(max_length=255, upload_to= get_profile_image_filepath, null=True, blank=True, default=get_default_profile_image)
+    affiliated_with = models.ManyToManyField("organisations.Organisation", related_name='affiliate_tag', null=True)
+    # models.ForeignKey("organisation.Organisation", on_delete=models.SET_NULL, related_name='affiliated_with', null=True, blank=True)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']

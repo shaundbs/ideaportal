@@ -58,11 +58,6 @@
 														{% if request.user.is_authenticated  %}
                                                         <a href="{% url 'blogfeed_main' org.slug %}">Sign in</a>
 														<br>
-														{% if request.user|has_group:"admins" %}
-														<br>
-														<a href="{% url 'blogfeed_main_edit' org.slug %}">Sign in and customise your portal</a>
-														{% else %}
-														{% endif %}
 														{% endif %}
 
 														

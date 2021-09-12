@@ -41,6 +41,12 @@ contact_wizard = views.ContactWizard.as_view(named_contact_forms,
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home', views.home, name='home'),
+        path('info/admin-info', views.admin_info, name='admin_info'),
+    path('info/portal-manager-info', views.portal_manager_info, name='portal_manager_info'),
+    path('info/challenge-manager-info', views.challenge_manager_info, name='challenge_manager_info'),
+    path('info/nhs-staff-info', views.nhs_staff_info, name='nhs_staff_info'),
+    path('info/public-info', views.public_info, name='public_info'),
+
     path('', views.enter, name='enter'),
     path('logout', views.logoutUser, name='logout'),
     path('index', views.index, name='index'),
@@ -55,6 +61,10 @@ urlpatterns = [
     path('auth/create-an-account/', views.auth_username, name='auth_username'),
     path('auth/enter-your-nhs-number/', views.auth_number, name='auth_number'),
     path('auth/enter-your-date-of-birth/', views.auth_age, name='auth_age'),
+    path('<slug:slug>/edit-age/', views.edit_age, name='edit_age'),
+    path('<slug:slug>/edit-email/', views.edit_email, name='edit_email'),
+
+
     path('auth/are-you-an-employee?/', views.auth_employee, name='auth_employee'),
     path('auth/choose-your-interests/', views.choose_interests, name='choose_interests'),
     path('auth/registration-success/', views.success, name='registration_success'),
@@ -74,7 +84,7 @@ urlpatterns = [
 
 
     path('activate-user/<uidb64>/<token>', views.activate_user, name='activate'),
-    path('profile/profile-main', views.profile_main, name='profile_main'),
+    path('<slug:slug>/profile/profile-main', views.profile_main, name='profile_main'),
     path('auth/testform/', views.testing, name='testing'),
     path('auth/raindrops', GetDroplets.as_view(template_name='core/droplets.html'), name='Droplet View'),
 

@@ -38,7 +38,13 @@
           <a class="nhsuk-footer__list-item-link" href="/our-policies/coronavirus-vaccination-booking-accessibility-statement/">Help</a>
         </li>
         <li class="nhsuk-footer__list-item">
-          <a class="nhsuk-footer__list-item-link" href="/our-policies/cookies-policy/">Cookies</a>
+          <a class="nhsuk-footer__list-item-link" href="{% url 'select_org' %}">Sign in to another portal</a>
+        </li>
+        <li class="nhsuk-footer__list-item">
+          <a class="nhsuk-footer__list-item-link" href="{% url 'home' %}">Mission Statement</a>
+        </li>
+        <li class="nhsuk-footer__list-item">
+          <a class="nhsuk-footer__list-item-link" href="{% url 'logout' %}">Logout</a>
         </li>
       </ul>
       <p class="nhsuk-footer__copyright">&copy; Crown copyright</p>

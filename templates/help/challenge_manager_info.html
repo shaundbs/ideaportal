@@ -34,8 +34,8 @@
     <div class="nhsuk-grid-row">
       <div class="nhsuk-grid-column-two-thirds">
         <div class="nhsuk-hero-content">
-          <h1 class="nhsuk-u-margin-bottom-3">ML/AI Ideas Portal</h1>
-          <p class="nhsuk-body-l nhsuk-u-margin-bottom-0">A space for NHS staff and members of the public to work together to solve challenges facing modern-day healthcare.</p>
+          <h1 class="nhsuk-u-margin-bottom-3">Challenge Managers</h1>
+          <p class="nhsuk-body-l nhsuk-u-margin-bottom-0">Key to challenge/idea progression and identifying the most effective solutions</p>
           <span class="nhsuk-hero__arrow" aria-hidden="true"></span>
         </div>
       </div>
@@ -57,59 +57,9 @@
           
 
 
-      
-          
-
-<section class="nhsuk-section">
-<div class="nhsuk-width-container">
-  <div class="nhsuk-grid-row">
-    
-      <div class="nhsuk-grid-column-full app-section__content">
-         <div class="nhsuk-u-reading-width">
-           <br>
-           <br>
-
-          
-            <h2>Who are we?</h2>
-          
-          
-            <p class="app-section__description">This portal is a platform for people from a range of backgrounds and sectors within the NHS and beyond to contribute to and raise challenges facing modern-day healthcare in the U.K.</p>
-          
-          </div>
-          
-            
-              <div class="nhsuk-action-link">
-<a class="nhsuk-action-link__link" href="{% url 'auth_username' %}" >
-  <svg class="nhsuk-icon nhsuk-icon__arrow-right-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M0 0h24v24H0z" fill="none"></path>
-    <path d="M12 2a10 10 0 0 0-9.95 9h11.64L9.74 7.05a1 1 0 0 1 1.41-1.41l5.66 5.65a1 1 0 0 1 0 1.42l-5.66 5.65a1 1 0 0 1-1.41 0 1 1 0 0 1 0-1.41L13.69 13H2.05A10 10 0 1 0 12 2z"></path>
-  </svg>
-  <span class="nhsuk-action-link__text">Register with us</span>
-</a>
-</div>
-
-            
-          
+      <br>
 
 
-<div class="nhsuk-action-link">
-  <a class="nhsuk-action-link__link" href="{% url 'logout' %}" >
-    <svg class="nhsuk-icon nhsuk-icon__arrow-right-circle" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M0 0h24v24H0z" fill="none"></path>
-      <path d="M12 2a10 10 0 0 0-9.95 9h11.64L9.74 7.05a1 1 0 0 1 1.41-1.41l5.66 5.65a1 1 0 0 1 0 1.42l-5.66 5.65a1 1 0 0 1-1.41 0 1 1 0 0 1 0-1.41L13.69 13H2.05A10 10 0 1 0 12 2z"></path>
-    </svg>
-    <span class="nhsuk-action-link__text">Return to login menu</span>
-  </a>
-  </div>
-
-            
-          
-        </div>
-    
-  </div>
-</div>
-</section>
-      
           
 
 <section class="nhsuk-section">
@@ -119,7 +69,6 @@
       <div class="nhsuk-grid-column-full app-section__content">
          <div class="nhsuk-u-reading-width">
           
-            <h2>Mission statement</h2>
           
           
           </div>
@@ -127,11 +76,13 @@
             
               
               <div class="nhsuk-u-reading-width">
-                <p data-block-key="fd468">As a company - our goal is to increase engagement with our services in order to allow the community itself to shape the type of products that they require</p>
-                <ul><li data-block-key="xafhe">Encourage collaboration from a range of backgrounds to produce effective solutions to problems facing the NHS</li><li data-block-key="toevw">Create a fair, fun and engaging way for individuals and teams to work together</li><li data-block-key="712j8">Inreace transparency between communites and better understanding of the issues faced</li></ul><p data-block-key="71k3n">
+                <ul>
+                  <li data-block-key="712j8">Responsibility for challenge/idea management in their local portal. Can create, update and delete challenges, ideas and related comments</li>
+                  <li data-block-key="712j8">Must approve challenges and ideas  to start polls that are published within the organisation's portal</li>
+                    <li data-block-key="712j8">Should keep track of ideas progression in the idea hub </li></ul><p data-block-key="71k3n">
               </div>
             
-          
+
             
 
             
@@ -151,7 +102,7 @@
       <div class="nhsuk-grid-column-full app-section__content">
          <div class="nhsuk-u-reading-width">
           
-            <h2>User Types and Roles</h2>
+            <h2>Other User Types</h2>
           
           
           
@@ -164,15 +115,6 @@
 <ul class="app-list-signage app-list-signage--two-columns">
 
   <li>
-    <a href="{% url 'admin_info' %}">
-      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-      </svg>
-    Admins
-    </a>
-  </li>
-
-  <li>
     <a href="{% url 'portal_manager_info' %}">
       <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
@@ -182,11 +124,11 @@
   </li>
 
   <li>
-    <a href="{% url 'challenge_manager_info' %}">
+    <a href="{% url 'admin_info' %}">
       <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
       </svg>
-    Challenge managers
+    Admins
     </a>
   </li>
 

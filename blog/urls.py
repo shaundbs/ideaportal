@@ -8,6 +8,7 @@ urlpatterns = [
     path('<slug:slug>/culture/', views.PostListCulture.as_view(), name='bloghub_culture'),
     path('<slug:slug>/job-satisfaction/', views.PostListJobSatisfaction.as_view(), name='bloghub_job_satisfaction'),
     path('<slug:slug>/relationships/', views.PostListRelationships.as_view(), name='bloghub_relationships'),
+    path('<slug:slug>/<slug:month>/<int:int>', views.PostListMonth.as_view(), name='bloghub_month'),
 
     path('<slug:slug>/leadership/', views.PostListLeadership.as_view(), name='bloghub_leadership'),
     path('<slug:slug>/data/', views.PostListData.as_view(), name='bloghub_data'),

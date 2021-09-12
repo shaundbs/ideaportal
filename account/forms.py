@@ -10,6 +10,12 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = Account
         fields = ['username', 'email']
+
+class EmailForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ('email',)
+
         
 class AgeForm(forms.Form):
     AGE_RANGES = [

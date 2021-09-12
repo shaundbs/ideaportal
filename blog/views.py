@@ -127,6 +127,53 @@ class PostListHealth(generic.ListView):
         context['list_challenges'] = file_exams
         return context
 
+class PostListMonth(generic.ListView):
+    paginate_by = 4
+    template_name = 'blogs/index_archives.html'
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        datetime_object = datetime.datetime.strptime(self.kwargs['month'], "%B")
+        print(datetime_object.month)
+        print(datetime_object)
+        return Post.objects.filter(org_tag=portal_choice).filter(created_on__month = datetime_object.month).order_by("-created_on")
+
+    def get_context_data(self, **kwargs):
+        context = super(PostListMonth, self).get_context_data(**kwargs) 
+        list_challenges = Post.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        datetime_object = datetime.datetime.strptime(self.kwargs['month'], "%B")
+        print(datetime_object.month)
+        print(datetime_object)
+        context['month'] = self.kwargs['month']
+        
+     
+
+
+
+
+        
+
+        page = self.request.GET.get('page')
+
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        context['orgslug'] = portal_slug
+        print(portal_choice)
+        print(portal_slug)
+        context['org'] = Organisation.objects.get(slug=portal_slug)
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
 class PostListCulture(generic.ListView):
     paginate_by = 4
     template_name = 'blogs/index_culture.html'

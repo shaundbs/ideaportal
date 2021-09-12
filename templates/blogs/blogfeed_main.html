@@ -1,6 +1,8 @@
 {% load static %}
 {% load auth_extras %}
 
+
+
 <!doctype html>
 <html lang="en">
 
@@ -27,7 +29,6 @@
 <link rel="icon" href="/docs/5.0/assets/img/favicons/favicon.ico">
 <meta name="theme-color" content="#7952b3">
 
-
     
     <!-- Custom styles for this template -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
@@ -42,7 +43,7 @@
     {% include 'components/navbar_search.html' %}
     {% endif %}
 
-  
+
 
 <main class="container">
   <br>
@@ -56,21 +57,27 @@
  
 {% if object.post1 %}
   <div class="p-6 p-md-5 mb-4 text-white rounded bg-dark">
-    <div class="col-md-6 px-7">
+    <div class="col-md-12 px-7">
+      <center>
       <p class="display-6">{{ object.post1.title|slice:"75" }}</p>
       <p class="lead my-3">{{ object.post1.description|slice:":200" }}</p>
       <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post1.pk object.post1.slug %}" class="text-white fw-bold">Continue reading...</a></p>
-      
+    </center>
     </div>
     
   </div>
 
   {% else %}
 
-  <div class="p-6 p-md-5 mb-4 text-white rounded bg-dark">
-    <div class="col-md-6 px-7">
- <p class="display-4">Please submit some challenges to begin populating this portal</p>
-      
+
+ <div class="p-6 p-md-5 mb-4 text-white rounded bg-dark">
+  <div class="col-md-12 px-7">
+    <center>
+      <p class="display-4">Please submit some challenges to begin populating this portal</p>
+  </center>
+  </div>
+  
+</div>
     </div>
     
   </div>
@@ -87,12 +94,13 @@
         
         <div class="col p-4 d-flex flex-column position-static">
           <strong class="d-inline-block mb-2 text-primary">{{ object.post2.department }}</strong>
+          <center>
          <p class="display-6">{{ object.post2.title|slice:"75" }}</p>
         <div class="mb-1 text-muted">Last edited: {{ object.post2.updated_on}}</div>
           <p class="card-text mb-auto">{{ object.post2.description|slice:":300" }}...</p>
 
           <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post2.pk object.post2.slug %}" class="text-black fw-bold">Continue reading...</a></p>
-
+        </center>
         </div>
 
         <section class="nhsuk-hero nhsuk-hero--image nhsuk-hero--image-description">
@@ -133,16 +141,17 @@
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-280 position-relative">
         
         <div class="col p-4 d-flex flex-column position-static">
+  
           
           <strong class="d-inline-block mb-2 text-primary">{{ object.post3.department }}</strong>
-
+<center>
           <p class="display-6">{{ object.post3.title|slice:"75" }}</p>
    
         <div class="mb-1 text-muted">Last edited: {{ object.post3.updated_on}}</div>
 
           <p class="card-text mb-auto">{{ object.post3.description|slice:":300" }}...</p>
           <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post3.pk object.post3.slug %}" class="text-black fw-bold">Continue reading...</a></p>
-
+        </center>
         </div>
 
         <section class="nhsuk-hero nhsuk-hero--image nhsuk-hero--image-description">
@@ -256,8 +265,7 @@
         <hr>
 
       <nav class="blog-pagination" aria-label="Pagination">
-        <a class="btn btn-outline-primary" href="#">Older</a>
-        <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Newer</a>
+        <a class="btn btn-outline-primary" href="#">Return to top of page</a>
       </nav>
 
     </div>
@@ -276,8 +284,10 @@
         <div class="p-4">
           <p class="fst-italic">Archives</p>
           <ol class="list-unstyled mb-0">
-            <li><a href="#">March 2021</a></li>
-            <li><a href="#">February 2021</a></li>
+            {% for item1,item2 in date_list %}
+            <li><a href="{% url 'bloghub_month' orgslug item1 item2 %}">{{ item1| capfirst }}     {{ item2 }}</a></li>
+            {% endfor %}
+            <!-- <li><a href="#">February 2021</a></li>
             <li><a href="#">January 2021</a></li>
             <li><a href="#">December 2020</a></li>
             <li><a href="#">November 2020</a></li>
@@ -287,7 +297,7 @@
             <li><a href="#">July 2020</a></li>
             <li><a href="#">June 2020</a></li>
             <li><a href="#">May 2020</a></li>
-            <li><a href="#">April 2020</a></li>
+            <li><a href="#">April 2020</a></li> -->
           </ol>
         </div>
 

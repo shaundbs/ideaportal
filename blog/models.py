@@ -83,7 +83,7 @@ class Post(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='comment_author', null=True)
     updated_on = models.DateTimeField(auto_now=True)
-    comment = models.TextField(max_length=500,default='Type content here...')
+    comment = models.TextField(max_length=500)
     created_on = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(Account, related_name='comment_likes')
     image = models.ImageField(upload_to='images/', default='images/gender.png', null=True)

@@ -129,6 +129,9 @@ class Idea(models.Model):
     def total_likes_received(user):
         return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes'] or 0
 
+    def total_ideas_selected(user):
+        return user.idea_author.aggregate(total_wins=Count('winner'))['total_wins'] or 0
+
     def total_likes_given(user):
         return user.idea_likes.count()
 

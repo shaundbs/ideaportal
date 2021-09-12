@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.urls.base import reverse_lazy
 from requests.api import head
 from requests.models import HTTPBasicAuth
-from .forms import AgeForm, CustomUserCreationForm, EmployeeForm
+from .forms import AgeForm, CustomUserCreationForm, EmployeeForm, EmailForm
 from .decorators import  allowed_users, admin_only, unauthenticated_user
 from django.contrib.auth.models import Group, User
 from django.core.mail import EmailMessage
@@ -40,7 +40,12 @@ from django.db.models import Count
 from email.mime.multipart import MIMEMultipart
 from rest_framework import viewsets
 from requests.auth import HTTPDigestAuth
-
+import datetime
+from django.utils.timezone import make_aware
+import calendar
+import time
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 FORMS = [("contact", account.forms.CustomUserCreationForm),
          ("age", account.forms.AgeForm),
@@ -100,15 +105,9 @@ def home(request):
     'Accept':'application/json'
     } 
 
-    listio = ['hello','dome',7,8]
-    if 'dome' in listio:
-        print("domeeeeeeeeeeeeeee")   
-
     response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
     body = json.loads(response.text)
     access_token = body['result']['accessToken']
-    # print(response.headers)
-    # print(access_token)
 
     headers_2 = {"Authorization": "Bearer " + str(access_token)}
     headers_3 = {
@@ -116,90 +115,15 @@ def home(request):
     'Accept':'application/json',
     "Authorization": "Bearer " + str(access_token)
     }     
-    # print(headers_2)
     response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
-    # print(response_2.text)
     body_2 = json.loads(response_2.text)   
     categories =  body_2['result']
     category_list = []
     for category in categories:
         category_list.append(category['subCategoryName'])
     print(category_list)
-
-    # print(body_2['result'][0]['subCategoryName'])
     response_3 = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Review/SearchPagedReviews", data=data_2, headers=headers_3)
-    # print(response_3.status_code)
-    # print(response_3.text)
     json_str = json.loads(response_3.text)
-    # print(json_str)
-    # print(json_str['result']['items'][0]['description'])
-    
-
-
-    # print(response.raw)
-
-
-    # print(response["accessToken"])
-    
-    # endpoint = 'https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories'
-    # data_2 = {}
-    # headers_2 = {"Authorization"}
-
-
-
-      
-
-    # headers2 = {'Authorization' : 'Bearer {access_token}'}
-
-    # url = 'https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate'
-
-    # data = {"name": "Value"}
-
-    # resp = requests.post(url, data={}, auth=HTTPBasicAuth('cnwl', 'K2Q5!ZqnJ!#RYV'), json=data, headers=headers)
-    # resp2 = requests.get('https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories', data={}, auth=HTTPBasicAuth('cnwl', 'K2Q5!ZqnJ!#RYV'), json=data, headers=headers)
-
-    # body = json.loads(resp.content)
-    # token = body["accessToken"]
-    # print(body)
-    # print(resp)
-    # print(resp.status_code)
-    # print(resp.reason)
-    # print(resp.content)
-    # print(resp.url)
-    # print(resp.json)
-    # response = requests.get('https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories', headers=headers2)
-
-    # for i in resp.content:
-    #     print(i)
-    # print(resp.headers)
-    # json_store = resp.json()
-    # print(resp)
-    # dict = resp.json()
-    # print(resp.text)
-    
-    # print(dict)
-    # print(dict["result"])
-    # please = dict["result"][0]
-    # print(please)
-
-
-
-    # fish = resp.json()
-    # data_dict = json.dumps(fish)
-    # print(data_dict)
-    # print(data_dict["result"]["accessToken"])
-    # print(resp.content)
-
-    # print(resp.content[5])
-
-    # url2 = "https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories"
-
-    # payload={}
-    # headers2 = {}
-
-    # response = requests.request("GET", url2, headers=headers2, data=payload)
-    # print(response.text)
-    # print(response.status_code)
     return render(request, 'userauth/home.html')
 
 def index(request):
@@ -219,19 +143,42 @@ def activation_success(request):
 def auth(request):
     return render(request, 'userauth/userhub.html')
 
-def profile_main(request):
+def profile_main(request, slug):
+   
     user = request.user
+    x = 6
+    now = time.localtime()
+    date_list = [time.localtime(time.mktime((now.tm_year, now.tm_mon - n, 1, 0, 0, 0, 0, 0, 0)))[:2] for n in range(x)]
+    print(date_list)
+    # wins = Idea.total_ideas_selected(request.user)
+    # baseline = 3
+    # score = 0
+    # for i in range(0,wins):
+    #     score += 0.33
+    # print(score)
     # favourite_org = Department.
     # (user)
     # print(favourite_org)
+
     try:
         user_ideas = Idea.objects.filter(author=request.user).count()
         idea = Idea.objects.filter(author=request.user)
         stuff = Idea.total_likes_received(request.user)
         given_likes = Idea.total_likes_given(request.user)
         user_challenges = Post.objects.filter(author=request.user).count()
-        
-        
+        wins = Idea.total_ideas_selected(request.user)
+        # baseline = 3
+        # score = 0
+        # for i in wins:
+        #     score + 0.
+        baseline = 3
+        score = 0
+        for i in range(0,wins):
+            score += 20
+        print(score)
+        value = round(score * 0.35)
+
+
         print(given_likes)
         print(stuff)
     # print(Account.objects.annotate(num_likes=Count('author__likes')).order_by('-likes').filter()[:20])
@@ -242,6 +189,10 @@ def profile_main(request):
         'total_likes': stuff,
         'likes_given': given_likes,
         'total_challenges': user_challenges,
+        'wins': wins,
+        'score': score,
+        'value': value,
+        'orgslug' : slug,
     
         }
         posts = Post.objects.filter(author=request.user).count()
@@ -332,38 +283,45 @@ def auth_username(request):
             group = Group.objects.get(name='public')
             user.groups.add(group)
 
-            return redirect('auth_age')
+            return redirect('profile_main', slug=slug)
 
     context = {'customusercreationform': form}
 
     return render(request, 'userauth/auth_username.html', context)
 
-# def save_contact(request):
-#     form = CustomUserCreationForm()
-#     if request.method == "POST":
-#         form = CustomUserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             print('Succesfully saved')
-#             username = form.cleaned_data.get('username')
-#             email = form.cleaned_data.get('email')
-#             messages.success(request, 'Account was created for ' + username)
-#             group = Group.objects.get(name='public')
-#             user.groups.add(group)
-
-#             # sendEmail(username, email)
-#             send_action_email(user, request)
-
-#             return redirect('auth_age')
-
-#     context = {'customusercreationform': form}
-
-#     return render(request, 'userauth/auth_username.html', context)
+def edit_email(request, slug):
+    form = EmailForm()
+    id = request.user.id
+    user = Account.objects.get(id=id)
+    if request.method == "POST":
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            user.email = email
+            user.save()
 
 
+        return redirect('profile_main', slug=slug)
 
-    
-    
+    context = {'emailform': form, 'orgslug': slug}
+
+    return render(request, 'edit/edit_email.html', context)
+
+def admin_info(request):
+    return render(request, 'help/admin_info.html')
+
+def portal_manager_info(request):
+    return render(request, 'help/portal_manager_info.html')
+
+def challenge_manager_info(request):
+    return render(request, 'help/challenge_manager_info.html')
+
+def nhs_staff_info(request):
+    return render(request, 'help/nhs_staff_info.html')
+
+def public_info(request):
+    return render(request, 'help/public_info.html')
+
 def auth_number(request):
     return render(request, 'userauth/auth_number.html')
 
@@ -383,6 +341,24 @@ def auth_age(request):
     context = {'ageform': form}
 
     return render(request, 'userauth/auth_age.html', context)
+
+def edit_age(request, slug):
+    id = request.user.id
+    user = Account.objects.get(id=id)
+    form = AgeForm()
+    if request.method == "POST":
+        form = AgeForm(request.POST)
+        if form.is_valid():
+            age = form.cleaned_data.get('age')
+            user.age = age
+            user.save()
+
+            return redirect('profile_main', slug=slug)
+
+
+    context = {'ageform': form, "orgslug" : slug}
+
+    return render(request, 'edit/edit_age.html', context)
 
 def auth_employee(request):
     user = Account.objects.latest('date_joined')
@@ -462,6 +438,39 @@ class blogfeed_main(generic.DetailView):
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
+        context['orgslug'] = portal_slug
+        today = date.today()
+        six_months = today + relativedelta(months=-10)
+        print(six_months)
+
+        result = []
+        year_list = []
+        month_list = []
+        month_name_list = []
+
+        while today >= six_months:
+            result.append(today)
+            today -= relativedelta(months=1)
+
+        for i in result:
+            month_list.append(i.month)
+            year_list.append(i.year)
+
+        print(year_list)
+        print(month_list)
+
+        for i in year_list:
+            print(type(i))
+
+        for i in month_list:
+            print(calendar.month_name[i])
+            month_name_list.append(calendar.month_name[i].lower())
+
+        print(month_name_list)
+        month_name_list
+        zipped_values = zip(month_name_list, year_list)
+        context['date_list'] = zipped_values
+
         return context
 
     def get_success_url(self):
@@ -471,25 +480,13 @@ class blogfeed_main(generic.DetailView):
 
         return reverse_lazy('challenge_history', kwargs={'orgslug': orgslug,})
 
+    # def get_last_months(self):
+    # now = make_aware(datetime.datetime.now())
+    # result = [now.strftime("%B")]
+    # for _ in range(0, 10):
+    #     now = now.replace(day=1) - datetime.timedelta(days=1)
+    #     result.append(now.strftime("%B"))
 
-
-
-
-
-
-
-
-    
-    # post = Post.objects.all()
-    # chosen_post1 = random.choice(post)
-    # chosen_post2 = random.choice(post)
-    # chosen_post3 = random.choice(post)
-
-    # context = {"post1": chosen_post1,
-    #             "post2": chosen_post2,
-    #             "post3": chosen_post3 }
-
-    # return render(request, "blogs/blogfeed_main.html", context)
 
 
 class blogfeed_main_edit(generic.DetailView):
