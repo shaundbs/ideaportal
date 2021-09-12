@@ -144,9 +144,12 @@ class PostListMonth(generic.ListView):
         paginator = Paginator(list_challenges, self.paginate_by)
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         datetime_object = datetime.datetime.strptime(self.kwargs['month'], "%B")
+        # datetime_object_yr = datetime.datetime.strptime(self.kwargs['int'], "%Y")
+
         print(datetime_object.month)
         print(datetime_object)
         context['month'] = self.kwargs['month']
+        context['year'] = self.kwargs['int']
         
      
 

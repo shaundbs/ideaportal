@@ -83,7 +83,7 @@
             </div>
             {% endfor %}
             {% else %}
-            <h3>There are currently no active polls - check regularly for updates</h3>
+            <h3>No posts were made to your organisation during this month</h3>
             {% endif %}
         </div>
         {% block sidebar %} {% include 'components/sidebar.html' %} {% endblock sidebar %}
@@ -92,10 +92,10 @@
         <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
-                <a href="/blogs/post-feed/challenges/{{ org.slug }}/relationships/?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
+                <a href="/blogs/post-feed/challenges/{{ org.slug }}/{{ month}}/{{ year }}/?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
                 {% endif %}
                 {% if page_obj.has_next %}
-                    <a href="/blogs/post-feed/challenges/{{ org.slug }}/relationships/?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
+                    <a href="/blogs/post-feed/challenges/{{ org.slug }}/{{ month}}/{{ year }}/?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
                 {% endif %}
                 <span class="page-current">
                     <h2 class="card-title">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</h2>                    
