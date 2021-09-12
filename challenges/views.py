@@ -580,6 +580,10 @@ def idea_criteria_form(request, orgslug, pk, slug):
     post = Post.objects.get(slug=slug)
     org = Organisation.objects.get(slug=orgslug)
     org_name = org.name
+    activate_api = False
+    api_on = org.api_on
+    if api_on:
+        activate_api = True
     print(org.name)
     publish_publicly = False
     if org_name == 'Public':
@@ -589,120 +593,121 @@ def idea_criteria_form(request, orgslug, pk, slug):
     print(current_idea)
     print(post.title)
     form = CriteriaForm()
-    data = '{"username" : "cnwl", "password":"K2Q5!ZqnJ!#RYV"}'
+    if activate_api:
+        data = '{"username" : "cnwl", "password":"K2Q5!ZqnJ!#RYV"}'
 
-    headers = {
-    'Content-type':'application/json', 
-    'Accept':'application/json'
-    } 
+        headers = {
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+        } 
 
-    response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
-    body = json.loads(response.text)
-    access_token = body['result']['accessToken']
-    # print(response.headers)
-    # print(access_token)
+        response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
+        body = json.loads(response.text)
+        access_token = body['result']['accessToken']
+        # print(response.headers)
+        # print(access_token)
 
-    headers_2 = {"Authorization": "Bearer " + str(access_token)}
-    headers_3 = {
-    'Content-type':'application/json', 
-    'Accept':'application/json',
-    "Authorization": "Bearer " + str(access_token)
-    }     
-    # print(headers_2)
-    response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
-    # print(response_2.text)
-    body_2 = json.loads(response_2.text)   
-    categories =  body_2['result']
-    category_list = []
-    for category in categories:
-        category_list.append(category['subCategoryName'])
-    print(category_list)
-    print(current_idea.description)
+        headers_2 = {"Authorization": "Bearer " + str(access_token)}
+        headers_3 = {
+        'Content-type':'application/json', 
+        'Accept':'application/json',
+        "Authorization": "Bearer " + str(access_token)
+        }     
+        # print(headers_2)
+        response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
+        # print(response_2.text)
+        body_2 = json.loads(response_2.text)   
+        categories =  body_2['result']
+        category_list = []
+        for category in categories:
+            category_list.append(category['subCategoryName'])
+        print(category_list)
+        print(current_idea.description)
 
-    # get idea title 
-    compare = current_idea.title
-    compare_desc = current_idea.description
-    title_list = []
-    description_list = []
+        # get idea title 
+        compare = current_idea.title
+        compare_desc = current_idea.description
+        title_list = []
+        description_list = []
 
-    # append key words form title to list
-    for word in compare.split():
-        title_list.append(word)
-    print(title_list)
+        # append key words form title to list
+        for word in compare.split():
+            title_list.append(word)
+        print(title_list)
 
-    for word in compare_desc.split():
-        description_list.append(word)
+        for word in compare_desc.split():
+            description_list.append(word)
 
-    # initiate state variable
-    is_similar = False
-    category_names = []
+        # initiate state variable
+        is_similar = False
+        category_names = []
 
-    category_list_lower = [item.lower() for item in category_list]
-    title_list_lower = [item.lower() for item in title_list]
-    description_list_lower = [item.lower() for item in description_list]
-
-
-    # if the keywords from the idea match any sub category areas set state to True and create a list of the similar terms
-    comparers = (set(category_list_lower) & set(title_list_lower) or set(description_list_lower))
-    print(set(category_list_lower) & set(title_list_lower))
-    ranger = (set(category_list_lower) & set(title_list_lower))
-    existing_ideas = ""
+        category_list_lower = [item.lower() for item in category_list]
+        title_list_lower = [item.lower() for item in title_list]
+        description_list_lower = [item.lower() for item in description_list]
 
 
-    if (set(category_list_lower) & set(title_list_lower) or set(description_list_lower)):
-        print("This idea could be similar to an exisiting solution")
-        is_similar = True
-        print("MATCH ALERT")
-        category_names = list(set(category_list_lower) & set(title_list_lower) or set(description_list_lower))
-        print(category_names)
-    else:
-        print("This idea is not similar to an exisitng solution")
-
-    # append key words form title to list
-    keywords = []
-    keyterms = []
-    for name in category_names:
-        name.split()
-        keywords.append(name)
-    print(keywords)
+        # if the keywords from the idea match any sub category areas set state to True and create a list of the similar terms
+        comparers = (set(category_list_lower) & set(title_list_lower) or set(description_list_lower))
+        print(set(category_list_lower) & set(title_list_lower))
+        ranger = (set(category_list_lower) & set(title_list_lower))
+        existing_ideas = ""
 
 
-    appName = ''
-    clinicalAssuranceScore = ''
-    userExperienceScore = ''
-    publisherName = ''
-    description= ''
-    version= ''
-    downloadLink = ''
-    platform = ''
+        if (set(category_list_lower) & set(title_list_lower) or set(description_list_lower)):
+            print("This idea could be similar to an exisiting solution")
+            is_similar = True
+            print("MATCH ALERT")
+            category_names = list(set(category_list_lower) & set(title_list_lower) or set(description_list_lower))
+            print(category_names)
+        else:
+            print("This idea is not similar to an exisitng solution")
+
+        # append key words form title to list
+        keywords = []
+        keyterms = []
+        for name in category_names:
+            name.split()
+            keywords.append(name)
+        print(keywords)
 
 
-    for category in keywords:
-        data_2 = '{"searchTerm": "' + category + '","pageNumber": "1", "pageSize": "12", "costIds": [],"capabilityIds": [],"designedForIds": [],"countryIds": []}'
-        response_3 = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Review/SearchPagedReviews", data=data_2, headers=headers_3)
-        json_str = json.loads(response_3.text)
-        existing_ideas = json_str['result']['items']
-        counter = 0
-        for id in existing_ideas:
-            counter = counter + 1
-        print("Total isssssssss " + str(counter))
+        appName = ''
+        clinicalAssuranceScore = ''
+        userExperienceScore = ''
+        publisherName = ''
+        description= ''
+        version= ''
+        downloadLink = ''
+        platform = ''
 
-        # context_2 = {'existing_ideas': existing_ideas}
-        existing_idea_names = []
-        existing_publisher_names = []
-        existing_descriptions = []
-        existing_links = []
-        exisiting_platforms = []
 
-        for idea in existing_ideas:
-            existing_idea_names.append(idea['appName'])
-            existing_publisher_names.append(idea['publisherName'])
-            existing_descriptions.append(idea['description'])
-            existing_links.append(idea['downloadLink'])
-            exisiting_platforms.append(idea['platform'])
+        for category in keywords:
+            data_2 = '{"searchTerm": "' + category + '","pageNumber": "1", "pageSize": "12", "costIds": [],"capabilityIds": [],"designedForIds": [],"countryIds": []}'
+            response_3 = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Review/SearchPagedReviews", data=data_2, headers=headers_3)
+            json_str = json.loads(response_3.text)
+            existing_ideas = json_str['result']['items']
+            counter = 0
+            for id in existing_ideas:
+                counter = counter + 1
+            print("Total isssssssss " + str(counter))
 
-        zipped_values = zip(existing_idea_names, existing_publisher_names, existing_descriptions, existing_links,exisiting_platforms)
-        print(zipped_values)
+            # context_2 = {'existing_ideas': existing_ideas}
+            existing_idea_names = []
+            existing_publisher_names = []
+            existing_descriptions = []
+            existing_links = []
+            exisiting_platforms = []
+
+            for idea in existing_ideas:
+                existing_idea_names.append(idea['appName'])
+                existing_publisher_names.append(idea['publisherName'])
+                existing_descriptions.append(idea['description'])
+                existing_links.append(idea['downloadLink'])
+                exisiting_platforms.append(idea['platform'])
+
+            zipped_values = zip(existing_idea_names, existing_publisher_names, existing_descriptions, existing_links,exisiting_platforms)
+            print(zipped_values)
 
     # posts = Post.objects.filter(title__contains=searched)
     # contents = Post.objects.filter(description__contains=searched)
