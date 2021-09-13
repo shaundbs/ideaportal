@@ -16,6 +16,10 @@ class EmailForm(forms.ModelForm):
         model = Account
         fields = ('email',)
 
+class ProfilePic(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ('profile_image',)
         
 class AgeForm(forms.Form):
     AGE_RANGES = [

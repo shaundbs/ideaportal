@@ -4,7 +4,7 @@ from django.db.models.deletion import CASCADE, SET_NULL
 from django.db.models.fields import NullBooleanField
 from account.models import Account
 from django.utils.text import slugify 
-from django.db.models import Count
+from django.db.models import Count, Max
 # Create your models here.
 
 STATUS = (
@@ -51,17 +51,17 @@ class Post(models.Model):
     def total_likes_received(user):
         return user.posts.aggregate(total_likes=Count('likes'))['total_likes'] or 0
 
-    # def get_winner(post, pk):
-    #     range = post.winner.filter(post=pk)
-    #     chosen = range.order_by('likes')[:1]
-    #     return chosen
+
+    def total_likes_received(user):
+        return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes'] or 0
+
+
 
     def __str__(self):
         return self.title
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
-        # self.winner = self.winner.likes.count(max)
         super(Post, self).save(*args, **kwargs)
 
     def create_post(self, author, title, severity, department, challenge, description):
@@ -88,6 +88,7 @@ class Comment(models.Model):
     likes = models.ManyToManyField(Account, related_name='comment_likes')
     image = models.ImageField(null=True, blank=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', default=0)
+    
 
     # def __str__(self):
     #     return '%s - %s' % (self.post.title, self.post.content)

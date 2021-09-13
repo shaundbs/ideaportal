@@ -13,7 +13,7 @@ urlpatterns = [
     path('<slug:slug>/leadership/', views.PostListLeadership.as_view(), name='bloghub_leadership'),
     path('<slug:slug>/data/', views.PostListData.as_view(), name='bloghub_data'),
     path('<slug:slug>/search-blog/', views.search_blog, name='search_blog'),
-    path('search-idea/', views.search_idea, name='search_idea'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/search-idea/', views.search_idea, name='search_idea'),
     path('<int:pk>/<slug:slug>/comments-list', views.PostCommentList.as_view(), name='bloghub_post_comments'),
 
     path('<slug:orgslug>/<int:pk>/<slug:slug>/', views.PostDetail.as_view(), name='post_detail'),

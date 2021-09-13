@@ -7,6 +7,7 @@ from django.contrib.auth.models import Group
 
 # create a new user
 # create a superuser
+default = 'default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg'
 
 
 class MyAccountManager(BaseUserManager):
@@ -66,7 +67,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_email_verified = models.BooleanField(default=False)
-    profile_image=models.ImageField(max_length=255, upload_to= get_profile_image_filepath, null=True, blank=True, default=get_default_profile_image)
+    profile_image= models.ImageField(null=True, blank=True)
     affiliated_with = models.ManyToManyField("organisations.Organisation", related_name='affiliate_tag', null=True)
     # models.ForeignKey("organisation.Organisation", on_delete=models.SET_NULL, related_name='affiliated_with', null=True, blank=True)
 
@@ -86,6 +87,11 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     def get_profile_image_filename(self):
         return str(self.profile_image)[str(self.profile_image).index(f'profile_image/{self.pk}/'):]
+
+    def get_profile_pic_url(self):
+        if not self.profile_image:
+            return default
+        return self.profile_image
 
     def create_user(self, username, email, password):
     # "Create a user and insert into auth_user table"

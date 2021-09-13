@@ -32,8 +32,8 @@ def search_blog(request, slug):
 
     if request.method == "POST":
         searched = request.POST['searched']
-        posts = Post.objects.filter(title__contains=searched)
-        contents = Post.objects.filter(description__contains=searched)
+        posts = Post.objects.filter(title__icontains=searched)
+        contents = Post.objects.filter(description__icontains=searched)
         # print(orgslug)
         print("hello")
 
@@ -43,13 +43,15 @@ def search_blog(request, slug):
     else:
         return render(request, 'search/blog_search.html', {})
 
-def search_idea(request):
+def search_idea(request, orgslug, pk, slug):
     if request.method == "POST":
         searched = request.POST['searched']
-        ideas = Idea.objects.filter(title__contains=searched)
+        post = Post.objects.get(id = pk)
+        
+        ideas = Idea.objects.filter(post = post).filter(title__icontains=searched)
         
 
-        return render(request, 'search/idea_search.html', {'searched': searched, 'ideas': ideas})
+        return render(request, 'search/idea_search.html', {'searched': searched, 'ideas': ideas, 'orgslug': orgslug, 'pk' : pk, 'slug' : slug})
     else:
         return render(request, 'search/idea_search.html', {})
 
@@ -347,8 +349,9 @@ class PostDetail(generic.DetailView):
 
         stuff = get_object_or_404(Post, id=self.kwargs['pk'])
         total_likes = stuff.total_likes()
-        all_ideas = Idea.objects.filter(post=self.kwargs['pk'])
+        all_ideas = Idea.objects.filter(post=self.kwargs['pk']).order_by('-likes')
         context["total_ideas"] = all_ideas.count()
+        
 
         try:
             winning_idea = all_ideas.order_by("likes")[:1]
@@ -357,8 +360,11 @@ class PostDetail(generic.DetailView):
             print(winning_idea_slug)
             context['winnerpk'] = winning_idea_id
             context['winnerslug'] = winning_idea_slug
+            stuff.winner = Idea.objects.get(id = winning_idea_id)
+            stuff.save()
+            print(stuff.winner)
         except:
-            print("hello")
+            print("fail")
 
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
@@ -593,6 +599,10 @@ class idea_comment_view(CreateView):
         context['posty'] = stuff.slug
         context['postid'] = stuff.pk
         total_likes = stuff.total_likes()
+        title = stuff.title
+        desc = stuff.description
+        context['description'] = desc
+        context['title'] = title
 
 
         liked = False

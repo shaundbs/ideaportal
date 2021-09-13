@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.urls.base import reverse_lazy
 from requests.api import head
 from requests.models import HTTPBasicAuth
-from .forms import AgeForm, CustomUserCreationForm, EmployeeForm, EmailForm
+from .forms import AgeForm, CustomUserCreationForm, EmployeeForm, EmailForm, ProfilePic
 from .decorators import  allowed_users, admin_only, unauthenticated_user
 from django.contrib.auth.models import Group, User
 from django.core.mail import EmailMessage
@@ -46,6 +46,7 @@ import calendar
 import time
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from django.http.response import HttpResponseRedirect
 
 FORMS = [("contact", account.forms.CustomUserCreationForm),
          ("age", account.forms.AgeForm),
@@ -115,9 +116,22 @@ def activation_success(request):
 def auth(request):
     return render(request, 'userauth/userhub.html')
 
-def profile_main(request, slug):
-   
+def profile_main(request, slug):  
     user = request.user
+    dp = request.user.profile_image.url
+    print(dp)
+    form = ProfilePic()
+    if request.method == "POST":
+        form = ProfilePic(request.POST, request.FILES)
+        if form.is_valid():
+            user.profile_image = form.cleaned_data.get('profile_image')
+            dp = user.profile_image
+            print(dp)
+            print('Succesfully saved')
+            form.save()
+
+            return HttpResponseRedirect(reverse('profile_main', args=[slug]))
+
     x = 6
     now = time.localtime()
     date_list = [time.localtime(time.mktime((now.tm_year, now.tm_mon - n, 1, 0, 0, 0, 0, 0, 0)))[:2] for n in range(x)]
@@ -159,6 +173,8 @@ def profile_main(request, slug):
         'score': score,
         'value': value,
         'orgslug' : slug,
+        'dp' : dp,
+        'form':form,
     
         }
         posts = Post.objects.filter(author=request.user).count()
@@ -167,6 +183,8 @@ def profile_main(request, slug):
         context={
         'user':user,
         'orgslug' : slug,
+        'dp' : dp,
+        'form': form,
         }
         ValidationError("Nor signed in")
     return render(request, 'profile/profile_main.html', context)
@@ -416,17 +434,63 @@ class blogfeed_main(generic.DetailView):
         six_months = today + relativedelta(months=-10)
         print(six_months)
         affiliate = []
+        users = Account.objects.filter(affiliated_with=portal_choice)
+        # wins = Idea.total_ideas_selected(self.request.user)
+        print(users)
+        ranks = []
+        names = []
+        score = 0
+        for i in users:
+            score = Idea.total_ideas_selected(i)
+            ranks.append(score)
+            names.append(i.username)
+        print(ranks)
+        # ranks.sort()
+        print(names)
+        user_data = zip(names, ranks)
+        leaderboard_data = sorted(user_data)[:5]
+        print(leaderboard_data)
+        context['leaderboard_data'] = leaderboard_data
+        total_challenges = Post.objects.filter(org_tag = portal_choice).count()
+        total_ideas = Idea.objects.filter(org_tag = portal_choice).count()
+        context['total_challenges'] = total_challenges
+        context['total_ideas'] = total_ideas
+
+
+
+
+
+
+
 
         has_access = False
         is_auth = False
-        if not self.request.user.is_authenticated:
-            has_access = True
+
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        if portal_choice in affiliate:
-            has_access = True 
-        print(self.request.user.groups)
-        if self.request.user.groups.filter(name = 'admins').exists():
+        print(portal_choice)
+
+        if self.request.user.is_authenticated:
+            affiliate = self.request.user.affiliated_with.all()
+            print(affiliate)
+            try: 
+                if portal_choice in affiliate:
+                    has_access = True       
+                if self.request.user.groups.filter(name = 'admins').exists():
+                    has_access = True
+            except:
+                ValidationError("Auth issue")
+        else:
             has_access = True
+
+
+        # if portal_choice in affiliate:
+        #     has_access = True
+        # if self.request.user.groups.filter(name = 'admins').exists():
+        #     has_access = True
+        # else:
+        #     print("nothibf")
+        
+        
 
         print(has_access)
         context['has_access'] = has_access

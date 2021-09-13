@@ -66,7 +66,7 @@
         <hr>
   
         {% if total_ideas != 0 %}
-        <br><br>
+        <br>
         <a href="{% url 'idea_post' orgslug winnerpk winnerslug %}">View the winning idea</a>
         <br><br>
 
@@ -89,14 +89,14 @@
                       </form>
                       <hr>
                       
-                      <h2>Ideas:</h2>
+                      <h2>Popular Ideas:</h2>
                       <h3>Total number of ideas suggested: {{total_ideas}}</h3>
 
-                        <form class="nhsuk-header__search-form beta-header__search-form" id="search" action="{% url 'search_idea' %}" method="post" role="search">
+                        <form class="nhsuk-header__search-form beta-header__search-form" id="search" action="{% url 'search_idea' orgslug post.pk post.slug %}" method="post" role="search">
                           {% csrf_token %}
                           <label class="nhsuk-u-visually-hidden" for="search-field">Search the NHS website</label>
                           <div class="autocomplete-container" id="autocomplete-container"></div>
-                          <input class="nhsuk-search__input" id="search-field" name="searched" type="search" placeholder="Search" autocomplete="off" >
+                          <input class="nhsuk-search__input" id="search-field" name="searched" type="search" placeholder="Search for ideas" autocomplete="off" style="border: mediumturquoise;border-width: 5px;" >
   
                             <span class="nhsuk-u-visually-hidden">Search</span>
                           </button>

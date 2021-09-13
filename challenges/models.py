@@ -120,12 +120,6 @@ class Idea(models.Model):
     def total_likes(self):
         return self.likes.count()
 
-    # def get_winner(self, challenge):
-    #     return self.likes.count(max)
-
-    # def get_winner(post):
-    #     return post.id(post.)
-
     def total_likes_received(user):
         return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes'] or 0
 
