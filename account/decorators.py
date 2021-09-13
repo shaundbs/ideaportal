@@ -2,8 +2,9 @@ from django.contrib.auth import decorators
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from organisations.models import Organisation
-# from django import template
-# from django.contrib.auth.models import Group 
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.contrib.auth.decorators import user_passes_test
+
 
 # register = template.Library() 
 
@@ -49,3 +50,20 @@ def admin_only(view_func):
             else:
                 return redirect("public_landing")
         return wrapper_func
+
+# def has_org_access(user): 
+#     return True if user.affilated_with is True else False
+
+def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='enter'):
+    '''
+    Decorator for views that checks that the logged in user is a student,
+    redirects to the log-in page if necessary.
+    '''
+    actual_decorator = user_passes_test(
+        lambda u: u.is_active and u.is_affiliated,
+        login_url=login_url,
+        redirect_field_name=redirect_field_name
+    )
+    if function:
+        return actual_decorator(function)
+    return actual_decorator

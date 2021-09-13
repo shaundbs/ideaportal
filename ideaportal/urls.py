@@ -56,9 +56,8 @@ urlpatterns = [
     path('reset-password-sent/', auth_views.PasswordResetDoneView.as_view(template_name='emails/password_reset_confirm.html'), name='password_reset_done'),
     path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='emails/password_reset_done.html'), name='password_reset_confirm'),
     path('reset-password-complete/', auth_views.PasswordResetCompleteView.as_view(template_name='emails/password_reset_complete.html'), name='password_reset_complete' ),
-
-
-    path('auth/create-an-account/', views.auth_username, name='auth_username'),
+    path('access-denied/', views.access_denied, name='access_denied'),
+    path('auth/create-an-account/<slug:slug>', views.auth_username, name='auth_username'),
     path('auth/enter-your-nhs-number/', views.auth_number, name='auth_number'),
     path('auth/enter-your-date-of-birth/', views.auth_age, name='auth_age'),
     path('<slug:slug>/edit-age/', views.edit_age, name='edit_age'),
@@ -88,14 +87,6 @@ urlpatterns = [
     path('auth/testform/', views.testing, name='testing'),
     path('auth/raindrops', GetDroplets.as_view(template_name='core/droplets.html'), name='Droplet View'),
 
-
-    # re_path(r'^contact/(?P<step>.+)/$', contact_wizard, name='contact_step'),
-    # path('contact/', contact_wizard, name='contact'),
-
-    # path('auth/create-an-account/', views.ContactWizard.as_view([account.forms.CustomUserCreationForm,account.forms.AgeForm, account.forms.EmployeeForm]), name='contact'),
-
-#       path('auth/create-an-account', views.ContactWizard.as_view(views.FORMS, condition_dict={'contact':'contact',
-#     'age':'age', 'employee':'employee' }), name='contact')
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

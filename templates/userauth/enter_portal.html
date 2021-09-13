@@ -39,12 +39,7 @@
 		      	<h4 class="text-center mb-2">Already signed up?</h4>
 						<form method="post" action="" class="login-form">
 							{% csrf_token %}
-							<!-- {% for field in personform %}
-							<div class="form-group">
-								{{ field.label_tag }}
-								{% render_field field class="form-control rounded-left" autocomplete="given-name" data-val="true" %}
-							</div>
-							{% endfor %} -->
+					
 
 				<div class="form-group">
 					<input name="username" type="text" class="form-control rounded-left" placeholder="Username" required>

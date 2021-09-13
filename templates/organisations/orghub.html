@@ -46,12 +46,12 @@
 													<div class="pt-4">
                                                      														<p class="name mb-0">{{ org.name }}</p>
                                                       
-														{% if not request.user.is_authenticated  %}
+														{% if not request.user.is_authenticated %}
 														<br>
                                                         <a href="{% url 'blogfeed_main' org.slug %}">Sign in anonymously</a>
 														<br>
 														<br>
-														<a href="{% url 'home' %}">Register an account</a>
+														<a href="{% url 'auth_username' org.slug %}">Register an account</a>
 														<br>
 														{% endif %}
 														<br>

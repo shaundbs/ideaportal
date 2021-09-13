@@ -14,6 +14,8 @@ urlpatterns = [
     path('<slug:slug>/management-dashboard/', views.PostList.as_view(), name='dashboard'),
     path('<slug:slug>/completed-challenges/', views.PostListCompleted.as_view(), name='completed_challenges'),
     path('<slug:slug>/pending-ideas/', views.PendingIdeasList.as_view(), name='pending_ideas'),
+    path('<slug:slug>/statistics/', views.Statistics.as_view(), name='stats'),
+
     path('challenge-history/completed-challenges/', views.HistoryListCompleted.as_view(), name='history_completed'),
     path('challenge-history/ideas/open/<int:pk>', views.IdeaListOpen.as_view(), name='open_ideas'),
     path('challenge-history/ideas/under-review/<int:pk>', views.IdeaListReview.as_view(), name='in_review_ideas'),

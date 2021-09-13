@@ -137,6 +137,42 @@ class PendingIdeasList(generic.ListView):
         context['list_challenges'] = file_exams
         return context
 
+class Statistics(generic.ListView):
+    today = make_aware(datetime.datetime.now())
+    template_name = 'stats/stats.html'
+
+    model = Organisation
+    queryset = Organisation.objects.all()
+    paginate_by = 4
+
+    def get_context_data(self, **kwargs):
+        context = super(Statistics, self).get_context_data(**kwargs) 
+        list_challenges = Organisation.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+        # context['slug'] = Organisation.objects.get(slug=portal_slug)
+        # print(context['org'])
+        context['slug'] = self.kwargs['slug']
+
+
+        page = self.request.GET.get('page')
+
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        print(portal_choice)
+        print(portal_slug)
+        context['org'] = Organisation.objects.get(slug=portal_slug)
+        context['orgslug'] = portal_slug
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
 class IdeaManagementDetail(generic.DetailView):
     
     model = Idea

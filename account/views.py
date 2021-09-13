@@ -96,34 +96,6 @@ class BearerAuth(requests.auth.AuthBase):
         return r
 
 def home(request):
-
-    data = '{"username" : "cnwl", "password":"K2Q5!ZqnJ!#RYV"}'
-    data_2 = '{"searchTerm": "Back Pain","pageNumber": "1", "pageSize": "12", "costIds": [],"capabilityIds": [],"designedForIds": [],"countryIds": []}'
-
-    headers = {
-    'Content-type':'application/json', 
-    'Accept':'application/json'
-    } 
-
-    response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
-    body = json.loads(response.text)
-    access_token = body['result']['accessToken']
-
-    headers_2 = {"Authorization": "Bearer " + str(access_token)}
-    headers_3 = {
-    'Content-type':'application/json', 
-    'Accept':'application/json',
-    "Authorization": "Bearer " + str(access_token)
-    }     
-    response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
-    body_2 = json.loads(response_2.text)   
-    categories =  body_2['result']
-    category_list = []
-    for category in categories:
-        category_list.append(category['subCategoryName'])
-    print(category_list)
-    response_3 = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Review/SearchPagedReviews", data=data_2, headers=headers_3)
-    json_str = json.loads(response_3.text)
     return render(request, 'userauth/home.html')
 
 def index(request):
@@ -150,15 +122,8 @@ def profile_main(request, slug):
     now = time.localtime()
     date_list = [time.localtime(time.mktime((now.tm_year, now.tm_mon - n, 1, 0, 0, 0, 0, 0, 0)))[:2] for n in range(x)]
     print(date_list)
-    # wins = Idea.total_ideas_selected(request.user)
-    # baseline = 3
-    # score = 0
-    # for i in range(0,wins):
-    #     score += 0.33
-    # print(score)
-    # favourite_org = Department.
-    # (user)
-    # print(favourite_org)
+    
+    
 
     try:
         user_ideas = Idea.objects.filter(author=request.user).count()
@@ -181,6 +146,7 @@ def profile_main(request, slug):
 
         print(given_likes)
         print(stuff)
+        print(slug)
     # print(Account.objects.annotate(num_likes=Count('author__likes')).order_by('-likes').filter()[:20])
 
         context={
@@ -198,7 +164,10 @@ def profile_main(request, slug):
         posts = Post.objects.filter(author=request.user).count()
         print(posts)
     except:
-        context={}
+        context={
+        'user':user,
+        'orgslug' : slug,
+        }
         ValidationError("Nor signed in")
     return render(request, 'profile/profile_main.html', context)
 
@@ -270,9 +239,11 @@ def send_action_email(request, user):
 
     EmailThread(email).start()
 
+def access_denied(request):
+    return render(request, 'errors/access_denied.html')
 
 # @unauthenticated_user
-def auth_username(request):
+def auth_username(request, slug):
     form = CustomUserCreationForm()
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
@@ -281,9 +252,11 @@ def auth_username(request):
             username = form.cleaned_data.get('username')
             messages.success(request, 'Account was created for ' + username)
             group = Group.objects.get(name='public')
+            signup_org = Organisation.objects.get(slug=slug)
             user.groups.add(group)
+            user.affiliated_with.add(signup_org)
 
-            return redirect('profile_main', slug=slug)
+            return redirect('auth_age')
 
     context = {'customusercreationform': form}
 
@@ -442,7 +415,23 @@ class blogfeed_main(generic.DetailView):
         today = date.today()
         six_months = today + relativedelta(months=-10)
         print(six_months)
+        affiliate = []
 
+        has_access = False
+        is_auth = False
+        if not self.request.user.is_authenticated:
+            has_access = True
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        if portal_choice in affiliate:
+            has_access = True 
+        print(self.request.user.groups)
+        if self.request.user.groups.filter(name = 'admins').exists():
+            has_access = True
+
+        print(has_access)
+        context['has_access'] = has_access
+
+ 
         result = []
         year_list = []
         month_list = []
@@ -470,6 +459,7 @@ class blogfeed_main(generic.DetailView):
         month_name_list
         zipped_values = zip(month_name_list, year_list)
         context['date_list'] = zipped_values
+        
 
         return context
 
@@ -480,12 +470,18 @@ class blogfeed_main(generic.DetailView):
 
         return reverse_lazy('challenge_history', kwargs={'orgslug': orgslug,})
 
-    # def get_last_months(self):
-    # now = make_aware(datetime.datetime.now())
-    # result = [now.strftime("%B")]
-    # for _ in range(0, 10):
-    #     now = now.replace(day=1) - datetime.timedelta(days=1)
-    #     result.append(now.strftime("%B"))
+        
+    # def get(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     affiliate = request.user.affiliated_with.all()
+    #     print(affiliate)
+    #     portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+    #     if portal_choice not in affiliate:
+    #         return redirect('access_denied')    
+
+
+
+
 
 
 
@@ -508,6 +504,8 @@ class blogfeed_main_edit(generic.DetailView):
 
 def test_api(request):
     response = requests.post()
+    affiliate = request.user.is_affilated
+    print(affiliate)
     return render(request, 'home.html', {'response': response})
 
 
