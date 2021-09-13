@@ -51,6 +51,11 @@
                     {{ comment.created_on }} | {{ comment.author }} 
                     <br><br>
                               {{ comment.comment }} <br><br>
+                              {% if comment.image %}
+                             <a href="{{ comment.image.url }}">View attached image</a> 
+                             <br><br>
+                             {% else %}
+                             {% endif %}
         
                       
                   

@@ -547,6 +547,7 @@ class comment_view(CreateView):
 
     def form_valid(self, form):
         form.instance.post_id = self.kwargs['pk']
+        form.instance.author = self.request.user
         return super().form_valid(form)
 
     def get_context_data(self, *args, **kwargs):

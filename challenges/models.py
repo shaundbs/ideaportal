@@ -154,10 +154,10 @@ class Idea(models.Model):
 class IdeaComment(models.Model):
     author = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='idea_comment_author', null=True, blank=True)
     updated_on = models.DateTimeField(auto_now=True)
-    comment = models.TextField(max_length=500,default='Type content here...')
+    comment = models.TextField(max_length=500)
     created_on = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(Account, related_name='idea_comment_likes', blank=True)
-    image = models.ImageField(upload_to='images/', default='images/gender.png', null=True, blank=True)
+    image = models.ImageField(null=True, blank=True,)
     idea = models.ForeignKey(Idea, on_delete=models.CASCADE, related_name='comments', default=0, null=True, blank=True)
         
     class Meta:
