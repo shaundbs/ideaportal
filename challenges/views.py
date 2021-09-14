@@ -409,6 +409,7 @@ class IdeaListInDev(generic.ListView):
 class History(generic.ListView):
     today = make_aware(datetime.datetime.now())
     template_name = 'challenges/index_history.html'
+    
 
     model = Organisation
     queryset = Organisation.objects.all()
@@ -545,8 +546,7 @@ def orcha_api(request):
     response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
     body = json.loads(response.text)
     access_token = body['result']['accessToken']
-    # print(response.headers)
-    # print(access_token)
+
 
     headers_2 = {"Authorization": "Bearer " + str(access_token)}
     headers_3 = {
@@ -554,9 +554,7 @@ def orcha_api(request):
     'Accept':'application/json',
     "Authorization": "Bearer " + str(access_token)
     }     
-    # print(headers_2)
     response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
-    # print(response_2.text)
     body_2 = json.loads(response_2.text)   
     categories =  body_2['result']
     category_list = []
@@ -603,11 +601,26 @@ class ideaform(CreateView):
 def search_idea(request):
     if request.method == "POST":
         searched = request.POST['searched']
-        ideas = Idea.objects.filter(title__contains=searched, stage__isnull=False)
+        ideas = Idea.objects.filter(title__icontains=searched, stage__isnull=False,description__icontains=searched)
 
-        return render(request, 'search/selected_idea_search.html', {'searched': searched, 'ideas': ideas})
+        org_list = []
+        org_tag_list = []
+        for i in ideas:
+            org_list.append(i)
+            org_tag_list.append(i.org_tag)
+            print("Hellllo")
+            print(i.org_tag)
+        
+        zipped_values = zip(org_list, org_tag_list)
+
+
+
+
+
+        return render(request, 'search/selected_idea_search.html', {'searched': searched, 'ideas': ideas, 'zipped_values' : zipped_values})
     else:
         return render(request, 'search/selected_idea_search.html', {})
+
 
 def idea_criteria_form(request, orgslug, pk, slug):
     print(pk)

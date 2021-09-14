@@ -24,6 +24,7 @@ from organisations.models import Organisation
 from django.db import models
 from django.utils.timezone import make_aware
 import datetime
+from account.decorators import has_org_access
 
 
 def search_blog(request, slug):
@@ -54,6 +55,7 @@ def search_idea(request, orgslug, pk, slug):
         return render(request, 'search/idea_search.html', {'searched': searched, 'ideas': ideas, 'orgslug': orgslug, 'pk' : pk, 'slug' : slug})
     else:
         return render(request, 'search/idea_search.html', {})
+
 
 
 class MyDetailView(generic.DetailView):

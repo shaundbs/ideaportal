@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+from django.db import models
 from account.models import Account
 from django.contrib.auth.models import PermissionsMixin
+from . import models
 # Register your models here.
 
 
@@ -24,3 +26,13 @@ class AccountAdmin(UserAdmin):
 
 
 admin.site.register(Account, AccountAdmin)
+
+class UserAdminArea(admin.AdminSite):
+    site_header = 'User Database'
+
+class TestAdminPermissions(admin.ModelAdmin):
+    site_header = 'User Database'
+
+user_site = UserAdminArea(name='BlogAdmin')
+
+user_site.register(models.Account)

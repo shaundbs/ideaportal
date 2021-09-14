@@ -118,19 +118,9 @@ def auth(request):
 
 def profile_main(request, slug):  
     user = request.user
-    dp = request.user.profile_image.url
+    dp = request.user.profile_image
     print(dp)
-    form = ProfilePic()
-    if request.method == "POST":
-        form = ProfilePic(request.POST, request.FILES)
-        if form.is_valid():
-            user.profile_image = form.cleaned_data.get('profile_image')
-            dp = user.profile_image
-            print(dp)
-            print('Succesfully saved')
-            form.save()
-
-            return HttpResponseRedirect(reverse('profile_main', args=[slug]))
+ 
 
     x = 6
     now = time.localtime()
@@ -161,7 +151,25 @@ def profile_main(request, slug):
         print(given_likes)
         print(stuff)
         print(slug)
-    # print(Account.objects.annotate(num_likes=Count('author__likes')).order_by('-likes').filter()[:20])
+        # form = ProfilePic()
+        # if request.method == "POST":
+        #     form = ProfilePic(request.POST, request.FILES,)
+        #     if form.is_valid():
+        #         user.profile_image = form.cleaned_data.get('profile_image')
+        #         dp = user.profile_image
+        #         print(dp)
+        #         print('Succesfully saved')
+        #         user.save()
+                
+        #         context={
+        #             'user':user,
+        #             'orgslug' : slug,
+        #             'dp' : dp,
+        #             'form':form,
+        
+        #     }
+
+        #     return HttpResponseRedirect(reverse('profile_main', args=[slug]), context)
 
         context={
         'user':user,
@@ -174,7 +182,7 @@ def profile_main(request, slug):
         'value': value,
         'orgslug' : slug,
         'dp' : dp,
-        'form':form,
+        # 'form':form,
     
         }
         posts = Post.objects.filter(author=request.user).count()
@@ -184,7 +192,7 @@ def profile_main(request, slug):
         'user':user,
         'orgslug' : slug,
         'dp' : dp,
-        'form': form,
+        # 'form': form,
         }
         ValidationError("Nor signed in")
     return render(request, 'profile/profile_main.html', context)
@@ -297,6 +305,26 @@ def edit_email(request, slug):
     context = {'emailform': form, 'orgslug': slug}
 
     return render(request, 'edit/edit_email.html', context)
+
+def edit_profile(request, slug):
+    form = ProfilePic()
+    id = request.user.id
+    user = Account.objects.get(id=id)
+    profile_pic = user.profile_image
+    if request.method == "POST":
+        form = ProfilePic(request.POST)
+        if form.is_valid():
+            pic = form.cleaned_data.get('profile_image')
+            print(pic)
+            user.profile_image = pic
+            user.save()
+
+
+        return redirect('profile_main', slug=slug)
+
+    context = {'form': form, 'orgslug': slug, 'pic' : profile_pic}
+
+    return render(request, 'edit/edit_profile.html', context)
 
 def admin_info(request):
     return render(request, 'help/admin_info.html')

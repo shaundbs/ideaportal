@@ -37,21 +37,25 @@
                     <br>
                     <h3>Sorry - your seach returned no results</h5>
                     {% else %}
-                    {% for idea in ideas %}
-                    <div id="nhs-number-hint">
-                        <div class="nhsuk-hint" id="example-hint">
-                            {{ idea.author }} | {{ idea.created_on }}
-                          </div>
-                        
-                    </div>                    
-                    <h5><a href="{% url 'chosen_idea_post'  idea.pk idea.post.slug %}">{{ idea }}</a> <br> </h5>
+                    {% for item1, item2 in zipped_values %}
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h2 class="card-title">Idea: {{ item1.title }}</h2>
+                            <h4>{% block title %}Challenge: {{ item1.post.title }}{% endblock title %}</h4>
+                            <p class="card-text text-muted h6">{{ item1.author }} | {{ item1.created_on}} </p>
+        
 
+                       
+                            <p class="card-text">Summary:</p>
+                            <p class="card-text">{{item1.description|slice:":300" }}...</p>
+                            
+                        </div>
+                    </div>
 
                     {% endfor %}
                     {% endif %}
-
                     {% else %}
-                    <h1>Hey you forgot to search</h1>
+                    <h1>...You forgot to search</h1>
                     {% endif %}
                 </legend>
 

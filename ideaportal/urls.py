@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from account.admin import user_site
 from django.urls import path
 from django.urls.conf import re_path
 import account.views as views
@@ -40,6 +41,7 @@ contact_wizard = views.ContactWizard.as_view(named_contact_forms,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('blogadmin/', user_site.urls),
     path('home', views.home, name='home'),
         path('info/admin-info', views.admin_info, name='admin_info'),
     path('info/portal-manager-info', views.portal_manager_info, name='portal_manager_info'),
@@ -62,6 +64,7 @@ urlpatterns = [
     path('auth/enter-your-date-of-birth/', views.auth_age, name='auth_age'),
     path('<slug:slug>/edit-age/', views.edit_age, name='edit_age'),
     path('<slug:slug>/edit-email/', views.edit_email, name='edit_email'),
+    path('<slug:slug>/edit-profile-image/', views.edit_profile, name='edit_profile_image'),
 
 
     path('auth/are-you-an-employee?/', views.auth_employee, name='auth_employee'),

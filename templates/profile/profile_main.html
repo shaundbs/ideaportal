@@ -17,7 +17,7 @@
         <style>
 
 body{
-    background: #f7f7ff;
+  background: #f7f7ff;
 }
 .card {
     position: relative;
@@ -32,14 +32,15 @@ body{
     margin-bottom: 1.5rem;
     box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
 }
+.picture{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+}
 .me-2 {
     margin-right: .5rem!important;
 }
-img {
-  border-radius: 50%;
-  width: 200px;
-  height: 200px;
-}
+
 </style>
 
 
@@ -65,16 +66,12 @@ img {
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
                           {% if request.user.profile_image %}
-                            <img src="{{ dp.url }}"   width="160">
+                            <img src="{{ dp.url }}" width="160" class="picture" >
                             <div class="mt-3">
                                 <h4>{{ request.user }} </h4>
-                                <form method="POST" action="" >
-                                  {% csrf_token %}
-                                  {{ form.as_p }}
-                                  <input class="btn btn-primary" type="submit">Change profile picture</input>
+                                <a class="btn btn-primary" href="{% url 'edit_profile_image' orgslug %}">Change profile picture</a>
                                   {% if wins >= 5 %}
                                   <h4>**Certified Creative**</h4>
-                                </form>
                               {% endif %}
                             </div>
                         </div>
@@ -84,17 +81,12 @@ img {
                 </div>
             </div>
           {% else %}
-          <img src="{% static 'frontend/imgs/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg' %}" alt="Admin"  width="260">
+          <img src="{% static 'frontend/imgs/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg' %}" class="picture" alt="Admin"  width="260">
           <div class="mt-3">
             <h4>{{ request.user }} </h4>
-            <form method="POST" action="" >
-              {% csrf_token %}
-              {{ form.profile_image.url }}
-              <br><br>
-              <input class="btn btn-primary" type="submit" value="Change profile picture"></input>
-              {% if wins >= 5 %}
+            <a class="btn btn-primary" href="{% url 'edit_profile_image' orgslug %}">Change profile picture</a>
+            {% if wins >= 5 %}
               <h4>**Certified Creative**</h4>
-            </form>
           {% endif %}
 
           </div>

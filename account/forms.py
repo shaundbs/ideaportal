@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import AbstractUser, User
 from django.contrib.auth import get_user_model
+from django.db.models.fields.files import ImageField
 from .models import Account
 
 
@@ -20,6 +21,7 @@ class ProfilePic(forms.ModelForm):
     class Meta:
         model = Account
         fields = ('profile_image',)
+    
         
 class AgeForm(forms.Form):
     AGE_RANGES = [

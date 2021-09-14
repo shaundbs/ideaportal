@@ -51,6 +51,21 @@ def admin_only(view_func):
                 return redirect("public_landing")
         return wrapper_func
 
+def has_org_access(allowed_orgs=[]):
+    def decorator(view_func):
+        def wrapper_func(request, *args, **kwargs):
+            print('Working:', allowed_orgs)
+            org_tag = None 
+            if request.user.org_tag.exists():
+                org_tag = request.user.org_tag
+            if org_tag in allowed_orgs:
+                return view_func(request, *args, **kwargs)
+            else:
+                return render(request, 'errors/access_denied.html')
+            return view_func(request, *args, **kwargs)
+        return wrapper_func
+    return decorator
+
 # def has_org_access(user): 
 #     return True if user.affilated_with is True else False
 
