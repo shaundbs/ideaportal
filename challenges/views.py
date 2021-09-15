@@ -697,17 +697,17 @@ def idea_criteria_form(request, orgslug, pk, slug):
 
 
         # if the keywords from the idea match any sub category areas set state to True and create a list of the similar terms
-        comparers = (set(category_list_lower) & set(title_list_lower) or set(description_list_lower))
+        comparers = (set(category_list_lower) & set(title_list_lower))
         print(set(category_list_lower) & set(title_list_lower))
         ranger = (set(category_list_lower) & set(title_list_lower))
         existing_ideas = ""
 
 
-        if (set(category_list_lower) & set(title_list_lower) or set(description_list_lower)):
+        if (set(category_list_lower) & set(title_list_lower)):
             print("This idea could be similar to an exisiting solution")
             is_similar = True
             print("MATCH ALERT")
-            category_names = list(set(category_list_lower) & set(title_list_lower) or set(description_list_lower))
+            category_names = list(set(category_list_lower) & set(title_list_lower))
             print(category_names)
         else:
             print("This idea is not similar to an exisitng solution")

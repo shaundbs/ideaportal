@@ -70,6 +70,19 @@
 <html lang="en">
 
   <head>
+    <style>
+      div.scroll {
+          margin:5px, 5px;
+          padding:5px;
+          width: 800px;
+          height: 500px;
+          overflow-x: hidden;
+          overflow-y: auto;
+          text-align:justify;
+          align-self: center;                    
+      }
+  </style>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
@@ -259,6 +272,49 @@
 
   <div class="row g-5">
     <div class="col-md-8">
+        <p class="blog-post-title border-bottom">Notification Centre</p>
+        <br>
+        <p>*Latest updates*</p>
+        <div class="scroll">
+       <table class="table">
+          <thead>
+            <tr>
+              <th>Challenges</th>
+              <th>Updated on</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in notifications %}
+            <tr>
+              <td>{{ forloop.counter }}. <a href="{% url 'post_detail' orgslug item.pk item.slug %}">{{ item.title }}</a></td>
+              <td>{{ item.updated_on }}</td>
+            </tr>
+  
+            {% endfor %}
+          </tbody>
+        </table>
+        
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Ideas</th>
+              <th>Updated on</th>
+
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in idea_notifications %}
+            <tr>
+              <td>{{ forloop.counter }}. <a href="{% url 'idea_post' orgslug item.pk item.slug %}">{{ item.title }}</a></td>
+              <td>{{ item.updated_on }}</td>
+            </tr>
+  
+            {% endfor %}
+          </tbody>
+        </table>
+        <p></p>
+</div>
       <p class="blog-post-title border-bottom">Portal summary</p>
 
       <br>
@@ -306,7 +362,8 @@
             {% endfor %}
           </tbody>
         </table>
-
+        <br>
+        
       </article>
 
       <article class="blog-post">

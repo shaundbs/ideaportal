@@ -4,7 +4,7 @@ from .models import Challenge, Idea, Department, IdeaComment
 class ChallengeAdmin(admin.ModelAdmin):
     list_display = ('title','description','image', 'severity','author', 'department')
     list_filter = ("severity",)
-    search_fields = ['title', 'content']
+    search_fields = ['title', 'description']
     # prepopulated_fields = {'slug': ('title',)}
 
     # readonly_fields = ('id')

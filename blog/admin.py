@@ -5,7 +5,7 @@ class PostAdmin(admin.ModelAdmin):
     
     list_display = ('title', 'slug', 'status','created_on', 'severity', 'challenge', 'department', 'startDate', 'endDate',)
     list_filter = ("status",)
-    search_fields = ['title', 'content']
+    search_fields = ['title', 'description']
     prepopulated_fields = {'slug': ('title',)}
 
     filter_horizontal = ()

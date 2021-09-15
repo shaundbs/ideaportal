@@ -50,7 +50,7 @@ class Department(models.Model):
 
 
 class Challenge(models.Model):
-    title = models.CharField(max_length=200, unique=True)
+    title = models.CharField(max_length=200, unique=True, error_messages={'unique':"A challenge with this title already exists"})
     author = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='challenge_author', null=True)
     SEVERITY_CHOICES = [
     ('low', 'Low'),
@@ -60,7 +60,7 @@ class Challenge(models.Model):
 ]
     severity = models.CharField(max_length=32, choices=SEVERITY_CHOICES, default='low')
     updated_on = models.DateTimeField(auto_now=True)
-    description = models.TextField(max_length=500,default='')
+    description = models.TextField(max_length=500,default='',  unique=True, error_messages={'unique':"This challenge is too similar to an existing one"})
     created_on = models.DateTimeField(auto_now_add=True)
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='category', null=True)
     image = models.ImageField(null=True, blank=True)
@@ -83,13 +83,13 @@ class Challenge(models.Model):
 
 class Idea(models.Model):
     
-    title = models.CharField(max_length=200, unique=True, null=True)
+    title = models.CharField(max_length=200, unique=True, default=" ", error_messages={'unique':"Idea title is too similar to an existing one"})
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='ideas', null=True)
     slug = models.SlugField(max_length=200, null=True)
     author = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='idea_author', null=True)
     estimated_cost = models.DecimalField(max_digits=6, decimal_places=2, default=300, blank=True, null=True)
     updated_on = models.DateTimeField(auto_now=True)
-    description = models.TextField(max_length=500,default='')
+    description = models.TextField(max_length=500,unique=True, error_messages={'unique':"Idea description is too similar to an existing one"})
     notes = models.TextField(max_length=500,default='', null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)

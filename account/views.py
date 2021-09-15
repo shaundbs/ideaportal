@@ -468,12 +468,13 @@ class blogfeed_main(generic.DetailView):
         ranks = []
         names = []
         score = 0
+
         for i in users:
             score = Idea.total_ideas_selected(i)
             ranks.append(score)
             names.append(i.username)
+
         print(ranks)
-        # ranks.sort()
         print(names)
         user_data = zip(names, ranks)
         leaderboard_data = sorted(user_data)[:5]
@@ -484,12 +485,12 @@ class blogfeed_main(generic.DetailView):
         context['total_challenges'] = total_challenges
         context['total_ideas'] = total_ideas
 
+        post_notifs = Post.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id)[:5]
+        idea_notifs = Idea.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id)[:5]
 
-
-
-
-
-
+        # notifications = zip(post_notifs, idea_notifs)
+        context['notifications'] = post_notifs
+        context['idea_notifications'] = idea_notifs
 
         has_access = False
         is_auth = False
@@ -509,21 +510,10 @@ class blogfeed_main(generic.DetailView):
                 ValidationError("Auth issue")
         else:
             has_access = True
-
-
-        # if portal_choice in affiliate:
-        #     has_access = True
-        # if self.request.user.groups.filter(name = 'admins').exists():
-        #     has_access = True
-        # else:
-        #     print("nothibf")
         
-        
-
         print(has_access)
         context['has_access'] = has_access
 
- 
         result = []
         year_list = []
         month_list = []
@@ -561,18 +551,6 @@ class blogfeed_main(generic.DetailView):
         slug = self.kwargs['slug']
 
         return reverse_lazy('challenge_history', kwargs={'orgslug': orgslug,})
-
-        
-    # def get(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     affiliate = request.user.affiliated_with.all()
-    #     print(affiliate)
-    #     portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-    #     if portal_choice not in affiliate:
-    #         return redirect('access_denied')    
-
-
-
 
 
 
