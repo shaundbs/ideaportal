@@ -76,6 +76,13 @@
     <br>
       <button  id="submit-button" type="submit" class="nhsuk-button">Submit for Review</button>
 
+      <br><br>
+      <p>{{ form.errors }}</p>
+      {% for message in messages %}
+      <p>{{ message }}</p>
+  
+      {% endfor %}
+      
           
         </div>
       </div>

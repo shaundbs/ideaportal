@@ -36,8 +36,8 @@ class Department(models.Model):
     ('Data', 'Data'),
     ('Other', 'Other')
     ]
-    department = models.CharField(max_length=32, choices=OPTIONS, default='Other')
-    sub_department = models.CharField(max_length=50, unique=True, null=True, blank=True )
+    department = models.CharField(max_length=32, choices=OPTIONS, default='Other', unique=True)
+    sub_department = models.CharField(max_length=50, unique=True, null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     is_core = models.BooleanField(default=False)
 
@@ -160,24 +160,93 @@ class IdeaComment(models.Model):
     def __str__(self):
         return self.comment
 
-# class Custom(models.Model):
-#     organisation = models.ForeignKey("organisations.Organisation", on_delete=models.SET_NULL, related_name='idea_comment_author', null=True)
-#     creator = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='idea_comment_author', null=True)
-#     updated_on = models.DateTimeField(auto_now=True)
-#     field_1 = models.TextField(max_length=500,default='Type content here...')
-#     field_2= models.TextField(max_length=500,default='Type content here...')
-#     field_3 = models.TextField(max_length=500,default='Type content here...')
-#     field_4 = models.TextField(max_length=500,default='Type content here...')
-#     field_5 = models.TextField(max_length=500,default='Type content here...')
-#     field_6 = models.TextField(max_length=500,default='Type content here...')
-#     field_7 = models.TextField(max_length=500,default='Type content here...')
-#     field_8 = models.TextField(max_length=500,default='Type content here...')
-#     field_9 = models.TextField(max_length=500,default='Type content here...')
-#     field_10 = models.TextField(max_length=500,default='Type content here...')
-#     field_11 = models.TextField(max_length=500,default='Type content here...')
-#     field_12 = models.TextField(max_length=500,default='Type content here...')
-#     field_13 = models.TextField(max_length=500,default='Type content here...')
-#     field_14 = models.TextField(max_length=500,default='Type content here...')
-#     field_15 = models.TextField(max_length=500,default='Type content here...')
-#     field_16 = models.TextField(max_length=500,default='Type content here...')
-#     field_17 = models.TextField(max_length=500,default='Type content here...')
+class OrgForm(models.Model):
+    title = models.CharField(max_length=200, unique=True, default=" ", error_messages={'unique':"Idea title is too similar to an existing one"}, null=True, blank=True)
+    post = models.ForeignKey("blog.Post", on_delete=models.CASCADE, related_name='orgform_ideas', null=True)
+    slug = models.SlugField(max_length=200, null=True)
+    author = models.ForeignKey("account.Account", on_delete=models.CASCADE, related_name='orgform_author', null=True)
+    estimated_cost = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    description = models.TextField(max_length=500,unique=True, error_messages={'unique':"Idea description is too similar to an existing one"}, null=True, blank=True)
+    notes = models.TextField(max_length=500,default='', null=True, blank=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    status = models.IntegerField(choices=STATUS, default=0)
+    is_user_led = models.BooleanField(default=True)
+    is_similar = models.BooleanField(default=False, null=True)
+    is_approved = models.BooleanField(default=False, null=True)
+    image = models.ImageField(null=True, blank=True, upload_to="images/idea_images")
+    department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='orgform_department', null=True, blank=True)
+    sub_department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='orgform_sub_department', null=True, blank=True)
+    likes = models.ManyToManyField("account.Account", related_name='orgform_likes')
+    STAGES = [
+    ('open', 'Open'),
+    ('under review', 'Under Review'),
+    ('accepted', 'Accepted'),
+    ('rejected', 'Rejected'),
+    ('in development', 'In development'),
+    ('delivered', 'Delivered'),
+]
+    stage = models.CharField(max_length=2000, choices=STAGES, blank=True, null=True)
+    org_tag = models.ManyToManyField("organisations.Organisation", related_name='orgform_orgtag', null=True)
+
+    in_sandbox = models.BooleanField(default=False)
+    is_released_and_supported = models.BooleanField(default=False)
+    is_open_source_partnership = models.BooleanField(default=False)
+    NICE_Tier1_DTAC_evidence_in_place = models.BooleanField(default=False)
+    NICE_Tier2_DTAC_evidence_in_place = models.BooleanField(default=False)
+    risk_and_mitigations_are_public = models.BooleanField(default=False)
+    ce_mark_dcb_register = models.BooleanField(default=False)
+    safety_officer_stated = models.BooleanField(default=False)
+    iso_supplier = models.BooleanField(default=False)
+    user_kpis_is_an_ai_pathway_are_defined = models.BooleanField(default=False)
+    user_to_board_approval_obtained = models.BooleanField(default=False)
+    cost_of_dev_and_support_agreed = models.BooleanField(default=False)
+    ip_agreement_in_place = models.BooleanField(default=False)
+    ig_agreements_in_place = models.BooleanField(default=False)
+    data_and_model_agreed = models.BooleanField(default=False)
+    field_16 = models.BooleanField(default=False)
+    field_17 = models.BooleanField(default=False)
+    field_1_name = models.CharField(max_length=32, null=True, blank=True)
+    field_2_name= models.CharField(max_length=32, null=True, blank=True)
+    field_3_name = models.CharField(max_length=32, null=True, blank=True)
+    field_4_name = models.CharField(max_length=32, null=True, blank=True)
+    field_5_name = models.CharField(max_length=32, null=True, blank=True)
+    field_6_name = models.CharField(max_length=32, null=True, blank=True)
+    field_7_name = models.CharField(max_length=32, null=True, blank=True)
+    field_8_name = models.CharField(max_length=32, null=True, blank=True)
+    field_9_name = models.CharField(max_length=32, null=True, blank=True)
+    field_1_name = models.CharField(max_length=32, null=True, blank=True)
+    field_11_name = models.CharField(max_length=32, null=True, blank=True)
+    field_12_name = models.CharField(max_length=32, null=True, blank=True)
+    field_13_name = models.CharField(max_length=32, null=True, blank=True)
+    field_14_name = models.CharField(max_length=32, null=True, blank=True)
+    field_15_name = models.CharField(max_length=32, null=True, blank=True)
+    field_16_name = models.CharField(max_length=32, null=True, blank=True)
+    field_17_name = models.CharField(max_length=32, null=True, blank=True)
+
+
+    def __str__(self):
+        return str(self.title)
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_likes(self):
+        return self.likes.count()
+
+    def total_likes_received(user):
+        return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes'] or 0
+
+    def total_ideas_selected(user):
+        return user.idea_author.aggregate(total_wins=Count('winner'))['total_wins'] or 0
+
+    def total_likes_given(user):
+        return user.idea_likes.count()
+
+    def favourite_department(user):
+        return user.idea_department.count()
+
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super(OrgForm, self).save(*args, **kwargs)

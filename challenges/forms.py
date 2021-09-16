@@ -1,46 +1,72 @@
 from django import forms
+from django.db.models import fields
 from django.forms import  widgets
 from django.contrib.auth import get_user_model
 from django.forms.fields import BooleanField
-from .models import Idea, Challenge, Department, IdeaComment
+from .models import Idea, Challenge, Department, IdeaComment, OrgForm
 from blog.models import Post
 import datetime
 from django.utils.timezone import make_aware
 
 class IdeaForm(forms.ModelForm):
 
-    def __init__(self, *args, **kwargs):
-        super(IdeaForm, self).__init__(*args, **kwargs)
-        # self.fields['department'].queryset = Department.objects.filter(is_approved=True).distinct()
-        # self.fields['department'].required = True
-
-        
-    #     class TaskForm(forms.ModelForm):
-    # class Meta:
-    #     model = Task
-
-    # def handle_state(self, *args, **kwargs):
-    #     task = getattr(self, 'instance', None)
-    #     if task:     
-    #         if task.status = Task.ACCEPTED:
-    #              self.fields['datereceived'].disabled = True
-    #          elif task.status = Task.COMPLETED:
-    #              ...
-
-    # def __init__(self, *args, **kwargs):
-    #     super(TaskForm, self).__init__(*args, **kwargs)
-    #     self.handle_state(*args, **kwargs)   
-
-        # self.fields['sub_department'].queryset = Department.objects.filter(is_approved=True).distinct()
-
-    # class Meta:
-    #     model = Idea
-    #     fields = ['title','department', 'description', 'image']
-    #     labels = {'title':'Title', 'department':'Department', 'description': 'Description', 'image' :'Image'}
-
     class Meta:
         model = Idea
         fields = ('title', 'description', 'image')
+
+class OrgSpecificForm(forms.Form):
+
+    def __init__(self, *args, **kwargs):
+        super(OrgSpecificForm, self).__init__(*args, **kwargs)
+        self.fields['is_public'].required = False
+
+    notes = forms.CharField(label='Notes', max_length=500, widget=forms.Textarea)
+    is_user_led = BooleanField()
+    is_public = BooleanField()
+    estimated_cost = forms.DecimalField(required=False)
+    field_1 = BooleanField()
+    field_2= BooleanField()
+    field_3 = BooleanField()
+    field_4 = BooleanField()
+    field_5 = BooleanField()
+    field_6 = BooleanField()
+    field_7 = BooleanField()
+    field_8 = BooleanField()
+    field_9 = BooleanField()
+    field_10 = BooleanField()
+    field_11 = BooleanField()
+    field_12 = BooleanField()
+    field_13 = BooleanField()
+    field_14 = BooleanField()
+    field_15 = BooleanField()
+    field_16 = BooleanField()
+    field_17 = BooleanField()
+    field_1_name = forms.CharField(label='Notes', max_length=100)
+    field_2_name= forms.CharField(label='Notes', max_length=100)
+    field_3_name = forms.CharField(label='Notes', max_length=100)
+    field_4_name = forms.CharField(label='Notes', max_length=100)
+    field_5_name = forms.CharField(label='Notes', max_length=100)
+    field_6_name = forms.CharField(label='Notes', max_length=100)
+    field_7_name = forms.CharField(label='Notes', max_length=100)
+    field_8_name = forms.CharField(label='Notes', max_length=100)
+    field_9_name = forms.CharField(label='Notes', max_length=100)
+    field_10_name = forms.CharField(label='Notes', max_length=100)
+    field_11_name = forms.CharField(label='Notes', max_length=100)
+    field_12_name = forms.CharField(label='Notes', max_length=100)
+    field_13_name = forms.CharField(label='Notes', max_length=100)
+    field_14_name = forms.CharField(label='Notes', max_length=100)
+    field_15_name = forms.CharField(label='Notes', max_length=100)
+    field_16_name = forms.CharField(label='Notes', max_length=100)
+    field_17_name = forms.CharField(label='Notes', max_length=100)
+
+class PRIDARForm(forms.ModelForm):
+    class Meta:
+        model = OrgForm
+        # fields = '__all__'
+        fields = ['estimated_cost', 'notes', 'is_user_led', 'in_sandbox', 'is_released_and_supported','is_open_source_partnership','NICE_Tier1_DTAC_evidence_in_place','NICE_Tier2_DTAC_evidence_in_place','risk_and_mitigations_are_public','ce_mark_dcb_register','safety_officer_stated','iso_supplier','user_kpis_is_an_ai_pathway_are_defined','user_to_board_approval_obtained','cost_of_dev_and_support_agreed','ip_agreement_in_place','ig_agreements_in_place','data_and_model_agreed',]
+        labels = {'estimated_cost':'Estimated cost?', 'notes':'Notes', 'is_user_led':'Is user led?','in_sandbox':'Is in sandbox?','is_released_and_supported':'Is released and supported?','is_open_source_partnership':'Is an open source partnership?','NICE_Tier1_DTAC_evidence_in_place':'Has nice Tier 1+ DTAC evidence in place','NICE_Tier2_DTAC_evidence_in_place':'Has NICE Tier 2+ DTAC evidence in place','risk_and_mitigations_are_public':'Risks and mitigations are public?','ce_mark_dcb_register':'CE mark/DCB register?','ISO supplier':'ISO supplier?','safety_officer_stated':'Is safety officer stated?','user_kpis_is_an_ai_pathway_are_defined':'User KPIs in an AI Pathway are defined?','user_to_board_approval_obtained':'User to board approval obtained?','cost_of_dev_and_support_agreed':'Cost of dev and support agreed?','ip_agreement_in_place':'IP agreement in place?','ig_agreements_in_place':'IG agreements in place?','data_and_model_agreed':'Data and model is agreed?',}
+
+
 
 class CriteriaForm(forms.Form):
 
@@ -54,13 +80,17 @@ class CriteriaForm(forms.Form):
 
     # image = forms.ImageField()
     estimated_cost = forms.DecimalField(required=False)
-
    
 class DepartmentForm(forms.ModelForm):
     class Meta:
         model = Department
         fields = ['department','sub_department']
         labels = {'department':'Department', 'sub_department':'Sub-department', }
+
+    def __init__(self, *args, **kwargs):
+        super(DepartmentForm, self).__init__(*args, **kwargs)
+        self.fields['department'].queryset = Department.objects.filter(is_approved=True)
+        self.fields['sub_department'].required = False
 
 class ChallengeForm(forms.ModelForm):
 

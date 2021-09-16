@@ -206,7 +206,6 @@ def testing(request):
             print('Succesfully saved')
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
-            messages.success(request, 'Account was created for ' + username)
             group = Group.objects.get(name='public')
             user.groups.add(group)
 

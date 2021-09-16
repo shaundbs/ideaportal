@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Challenge, Idea, Department, IdeaComment
+from .models import Challenge, Idea, Department, IdeaComment, OrgForm
 
 class ChallengeAdmin(admin.ModelAdmin):
     list_display = ('title','description','image', 'severity','author', 'department')
@@ -39,7 +39,16 @@ class IdeaCommentAdmin(admin.ModelAdmin):
     filter_horizontal = ()
     fieldsets = ()
 
+class OrgFormAdmin(admin.ModelAdmin):
+    list_display = ('author', 'updated_on', 'title','created_on')
+    list_filter = ("author",)
+    search_fields = ['author', 'title', 'likes']
+
+    filter_horizontal = ()
+    fieldsets = ()
+
 admin.site.register(Challenge, ChallengeAdmin)
 admin.site.register(Idea, IdeasAdmin)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(IdeaComment, IdeaCommentAdmin)
+admin.site.register(OrgForm, OrgFormAdmin)

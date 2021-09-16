@@ -66,7 +66,10 @@
       <div class="nhsuk-form-group " >
         {{ criteriaform.estimated_cost.label_tag }}
         <br>
-        {% render_field criteriaform.estimated_cost class="nhsuk-input--width-20 nhsuk-input" autocomplete="given-name" data-val="true" placeholder="£" %}  
+        e.g. 300.50 = £300.50 etc.
+        <br>
+        <br>
+        {% render_field criteriaform.estimated_cost class="nhsuk-input--width-20 nhsuk-input" autocomplete="given-name" data-val="true" placeholder="£000.00" %}  
       </div>
     </div>
 
@@ -214,5 +217,3 @@
     closeButton.addEventListener("click", toggleModal);
     window.addEventListener("click", windowOnClick);
 </script>
-
-
