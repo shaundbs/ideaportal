@@ -44,6 +44,8 @@
                     <p class="card-text">Department: {{idea.department}}</p>
                     <p class="card-text">Estimated cost: £{{idea.estimated_cost}}</p>
 
+                   
+
 
                     <a href="{% url 'idea_management_detail' orgslug idea.pk idea.slug %}" class="nhsuk-button">Manage</a>
 
@@ -56,6 +58,22 @@
         </div>
         {% block sidebar %} {% include 'components/sidebar.html' %} {% endblock sidebar %}
     </div>
+    {% if is_paginated %}
+    <div class="pagination">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+            <a href="/challenges/{{ org.slug }}/pending-ideas/?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="/challenges/{{ org.slug }}/pending-ideas/?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
+            {% endif %}
+            <span class="page-current">
+                <h2 class="card-title">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</h2>                    
+            </span>
+        </span>
+    </div>
+{% endif %}
+</div>
 </div>
 {% include 'components/footer.html' %}
 {%endblock%}

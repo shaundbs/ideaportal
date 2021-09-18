@@ -40,7 +40,7 @@ class IdeaCommentAdmin(admin.ModelAdmin):
     fieldsets = ()
 
 class OrgFormAdmin(admin.ModelAdmin):
-    list_display = ('author', 'updated_on', 'title','created_on')
+    list_display = ('title', 'author', 'updated_on', 'description','created_on', 'is_user_led')
     list_filter = ("author",)
     search_fields = ['author', 'title', 'likes']
 

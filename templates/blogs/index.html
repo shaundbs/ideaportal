@@ -1,4 +1,8 @@
+{% if spec_on %}
+{% include 'components/navbar_custom.html' %}
+{% else %}
 {% include 'components/navbar_blog.html' %}
+{% endif %}
 
 <!DOCTYPE html>
 <html>
@@ -63,7 +67,7 @@
   
   </div>
 
-    <h1>Live Challenges</h1>
+    <h1>Latest Polls</h1>
     <div class="row">
         <!-- Blog Entries Column -->
         <div class="col-md-8 mt-3 left">

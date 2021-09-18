@@ -4,7 +4,7 @@ import re
 
 import challenges.models
 from challenges.forms import DepartmentForm, IdeaCommentForm, ApprovalForm
-from challenges.models import Idea, IdeaComment
+from challenges.models import Idea, IdeaComment, Department
 from django.contrib import messages
 from django.core.checks import messages
 from django.core.paginator import *
@@ -25,6 +25,7 @@ from django.db import models
 from django.utils.timezone import make_aware
 import datetime
 from account.decorators import has_org_access
+from challenges.models import OrgForm
 
 
 def search_blog(request, slug):
@@ -86,9 +87,13 @@ class PostList(generic.ListView):
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
         context['org'] = Organisation.objects.get(slug=portal_slug)
         print(context['org'].slug)
-        
-        
 
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
 
         try:
             file_exams = paginator.page(page)
@@ -106,12 +111,14 @@ class PostListHealth(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=1)
+        dept_id = Department.objects.get(department='Health').id
+        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=dept_id)
 
     def get_context_data(self, **kwargs):
         context = super(PostListHealth, self).get_context_data(**kwargs) 
         list_challenges = Post.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
+
 
         page = self.request.GET.get('page')
 
@@ -120,6 +127,13 @@ class PostListHealth(generic.ListView):
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
+
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
 
         try:
             file_exams = paginator.page(page)
@@ -130,6 +144,46 @@ class PostListHealth(generic.ListView):
             
         context['list_challenges'] = file_exams
         return context
+
+
+class PostListOrgSpecific(generic.ListView):
+    paginate_by = 4
+    template_name = 'blogs/index_org_specific.html'
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        return OrgForm.objects.filter(status=1).filter(org_tag=portal_choice)
+
+    def get_context_data(self, **kwargs):
+        context = super(PostListOrgSpecific, self).get_context_data(**kwargs) 
+        list_challenges = OrgForm.objects.all()
+        paginator = Paginator(list_challenges, self.paginate_by)
+
+        page = self.request.GET.get('page')
+
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        print(portal_choice)
+        print(portal_slug)
+        context['org'] = Organisation.objects.get(slug=portal_slug)
+        
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
+
+        try:
+            file_exams = paginator.page(page)
+        except PageNotAnInteger:
+            file_exams = paginator.page(1)
+        except EmptyPage:
+            file_exams = paginator.page(paginator.num_pages)
+            
+        context['list_challenges'] = file_exams
+        return context
+
 
 class PostListMonth(generic.ListView):
     paginate_by = 4
@@ -148,19 +202,11 @@ class PostListMonth(generic.ListView):
         paginator = Paginator(list_challenges, self.paginate_by)
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         datetime_object = datetime.datetime.strptime(self.kwargs['month'], "%B")
-        # datetime_object_yr = datetime.datetime.strptime(self.kwargs['int'], "%Y")
 
         print(datetime_object.month)
         print(datetime_object)
         context['month'] = self.kwargs['month']
         context['year'] = self.kwargs['int']
-        
-     
-
-
-
-
-        
 
         page = self.request.GET.get('page')
 
@@ -170,6 +216,13 @@ class PostListMonth(generic.ListView):
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
+        
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
 
         try:
             file_exams = paginator.page(page)
@@ -187,7 +240,8 @@ class PostListCulture(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=2)
+        dept_id = Department.objects.get(department='Culture').id
+        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=dept_id)
 
     def get_context_data(self, **kwargs):
         context = super(PostListCulture, self).get_context_data(**kwargs) 
@@ -201,6 +255,13 @@ class PostListCulture(generic.ListView):
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
+        
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
 
         try:
             file_exams = paginator.page(page)
@@ -218,7 +279,8 @@ class PostListJobSatisfaction(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=3)
+        dept_id = Department.objects.get(department='Job Satisfaction').id
+        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=dept_id)
 
     def get_context_data(self, **kwargs):
         context = super(PostListJobSatisfaction, self).get_context_data(**kwargs) 
@@ -232,6 +294,13 @@ class PostListJobSatisfaction(generic.ListView):
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
+        
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
 
         try:
             file_exams = paginator.page(page)
@@ -249,7 +318,8 @@ class PostListRelationships(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=4)
+        dept_id = Department.objects.get(department='Relationships').id
+        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=dept_id)
 
     def get_context_data(self, **kwargs):
         context = super(PostListRelationships, self).get_context_data(**kwargs) 
@@ -263,6 +333,13 @@ class PostListRelationships(generic.ListView):
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
+        
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
 
         try:
             file_exams = paginator.page(page)
@@ -280,7 +357,8 @@ class PostListLeadership(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=7)
+        dept_id = Department.objects.get(department='Leadership').id
+        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=dept_id)
 
     def get_context_data(self, **kwargs):
         context = super(PostListLeadership, self).get_context_data(**kwargs) 
@@ -294,6 +372,13 @@ class PostListLeadership(generic.ListView):
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
+
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
 
         try:
             file_exams = paginator.page(page)
@@ -311,7 +396,8 @@ class PostListData(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=5)
+        dept_id = Department.objects.get(department='Data').id
+        return Post.objects.filter(status=1).filter(org_tag=portal_choice).filter(department=dept_id)
 
     def get_context_data(self, **kwargs):
         context = super(PostListData, self).get_context_data(**kwargs) 
@@ -325,6 +411,13 @@ class PostListData(generic.ListView):
         print(portal_choice)
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
+        
+        spec_on = False
+        custom_form_on = portal_choice.custom_form_on
+        if custom_form_on:
+            spec_on = True
+
+        context['spec_on'] = spec_on
 
         try:
             file_exams = paginator.page(page)
@@ -336,10 +429,6 @@ class PostListData(generic.ListView):
         context['list_challenges'] = file_exams
         return context
     
-
-# def get_winning_idea():
-#     for idea in all_ideas:
-#                 print(idea.total_likes())
 
 class PostDetail(generic.DetailView):
     model = Post
@@ -639,6 +728,27 @@ class IdeaDetail(generic.DetailView):
         stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
         idea_post = stuff.post.slug
         idea_pk = stuff.post.id
+        idea_pridar = stuff.is_pridar
+        custom = False
+        if idea_pridar:
+            customised = OrgForm.objects.get(title = stuff.title)
+            custom = True
+            context['in_sandbox'] = customised.in_sandbox
+            context['is_released_and_supported'] = customised.is_released_and_supported
+            context['is_open_source_partnership'] = customised.is_open_source_partnership
+            context['NICE_Tier1_DTAC_evidence_in_place'] = customised.NICE_Tier1_DTAC_evidence_in_place
+            context['NICE_Tier2_DTAC_evidence_in_place'] = customised.NICE_Tier2_DTAC_evidence_in_place
+            context['risk_and_mitigations_are_public'] = customised.risk_and_mitigations_are_public
+            context['ce_mark_dcb_register'] = customised.ce_mark_dcb_register
+            context['safety_officer_stated'] = customised.safety_officer_stated
+            context['iso_supplier'] = customised.iso_supplier
+            context['user_kpis_is_an_ai_pathway_are_defined'] = customised.user_kpis_is_an_ai_pathway_are_defined
+            context['user_to_board_approval_obtained'] = customised.user_to_board_approval_obtained
+            context['cost_of_dev_and_support_agreed'] = customised.cost_of_dev_and_support_agreed
+            context['ip_agreement_in_place'] = customised.ip_agreement_in_place
+            context['ig_agreements_in_place'] = customised.ig_agreements_in_place
+            context['data_and_model_agreed'] = customised.data_and_model_agreed
+        context['custom'] = idea_pridar
         print(idea_post)
         context['slug'] = idea_post
         context['pk'] = idea_pk
@@ -662,6 +772,15 @@ class IdeaDetail(generic.DetailView):
         print(portal_choice)
         print(portal_slug)
         context['orgslug'] = portal_slug
+
+        # try:
+        #     customised = OrgForm.objects.get(title = stuff.title)
+        #     custom = True
+        #     context['custom'] = custom
+        # except:
+        #     custom = False
+        #     context['custom'] = custom
+
 
         return context
 

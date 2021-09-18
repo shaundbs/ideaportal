@@ -34,9 +34,10 @@ class Department(models.Model):
     ('Relationships', 'Relationships'),
     ('Leadership', 'Leadership'),
     ('Data', 'Data'),
-    ('Other', 'Other')
+    ('Custom', 'Custom'),
+    ('Other', 'Other'),
     ]
-    department = models.CharField(max_length=32, choices=OPTIONS, default='Other', unique=True)
+    department = models.CharField(max_length=32, choices=OPTIONS, default='Other')
     sub_department = models.CharField(max_length=50, unique=True, null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     is_core = models.BooleanField(default=False)
@@ -99,7 +100,8 @@ class Idea(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to="images/idea_images")
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='idea_department', null=True, blank=True)
     sub_department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='idea_sub_department', null=True, blank=True)
-    likes = models.ManyToManyField(Account, related_name='idea_likes')
+    likes = models.ManyToManyField(Account, related_name='idea_likes', null=True, blank=True)
+    is_pridar = models.BooleanField(default=False)
     STAGES = [
     ('open', 'Open'),
     ('under review', 'Under Review'),

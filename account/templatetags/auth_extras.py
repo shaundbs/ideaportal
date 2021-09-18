@@ -12,3 +12,4 @@ def has_group(user, group_name):
 @register.filter(name='has_access')
 def has_org_access(user): 
     return True if user.affilated_with is True else False
+

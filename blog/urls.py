@@ -9,6 +9,8 @@ urlpatterns = [
     path('<slug:slug>/job-satisfaction/', views.PostListJobSatisfaction.as_view(), name='bloghub_job_satisfaction'),
     path('<slug:slug>/relationships/', views.PostListRelationships.as_view(), name='bloghub_relationships'),
     path('<slug:slug>/<slug:month>/<int:int>', views.PostListMonth.as_view(), name='bloghub_month'),
+    path('<slug:slug>/pridar/', views.PostListOrgSpecific.as_view(), name='bloghub_org_specific'),
+
 
     path('<slug:slug>/leadership/', views.PostListLeadership.as_view(), name='bloghub_leadership'),
     path('<slug:slug>/data/', views.PostListData.as_view(), name='bloghub_data'),

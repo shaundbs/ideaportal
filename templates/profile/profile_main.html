@@ -65,6 +65,7 @@ body{
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
+                          {% if request.user.is_authenticated  %}
                           {% if request.user.profile_image %}
                             <img src="{{ dp.url }}" width="160" class="picture" >
                             <div class="mt-3">
@@ -72,10 +73,19 @@ body{
                                   {% if wins >= 5 %}
                                   <h4>**Certified Creative**</h4>
                               {% endif %}
+                              <form action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                          <button  id="submit-button" type="submit" class="nhsuk-button">Change profile picture</button>
+                          <br>
+                        <p>Attach an image:<br></p>
+                        {{ form.profile_image }}
+                         
+
+                              </form>
                             </div>
                         </div>
                         <hr class="my-4">
-                 
+
                     </div>
                 </div>
             </div>
@@ -86,6 +96,13 @@ body{
             {% if wins >= 5 %}
               <h4>**Certified Creative**</h4>
           {% endif %}
+          <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.profile_image }}<br><br>
+      <button  id="submit-button" type="submit" class="nhsuk-button">Change profile picture</button>
+          </form>
+
+
 
           </div>
       </div>
@@ -101,7 +118,7 @@ body{
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-body">
-                              {% if  request.user.is_authenticated  %}
+                              {% if request.user.is_authenticated  %}
                                 <h5 class="d-flex align-items-center mb-3">Details</h5>
 
                                 <dl class="nhsuk-summary-list">
@@ -317,3 +334,4 @@ body{
 </body>
 </html>
 {% include 'components/footer.html' %}
+                              {% endif %}

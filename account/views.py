@@ -118,10 +118,11 @@ def auth(request):
 
 def profile_main(request, slug):  
     user = request.user
-    dp = request.user.profile_image
-    print(dp)
- 
-
+    try:
+        dp = request.user.profile_image
+        print(dp)
+    except:
+        print("Unauthenticated")
     x = 6
     now = time.localtime()
     date_list = [time.localtime(time.mktime((now.tm_year, now.tm_mon - n, 1, 0, 0, 0, 0, 0, 0)))[:2] for n in range(x)]
@@ -151,26 +152,26 @@ def profile_main(request, slug):
         print(given_likes)
         print(stuff)
         print(slug)
-        # form = ProfilePic()
-        # if request.method == "POST":
-        #     form = ProfilePic(request.POST, request.FILES,)
-        #     if form.is_valid():
-        #         user.profile_image = form.cleaned_data.get('profile_image')
-        #         dp = user.profile_image
-        #         print(dp)
-        #         print('Succesfully saved')
-        #         user.save()
+        form = ProfilePic()
+        if request.method == "POST":
+            form = ProfilePic(request.POST, request.FILES,)
+            if form.is_valid():
+                user.profile_image = form.cleaned_data.get('profile_image')
+                dp = user.profile_image
+                print(dp)
+                print('Succesfully saved')
+                user.save()
                 
-        #         context={
-        #             'user':user,
-        #             'orgslug' : slug,
-        #             'dp' : dp,
-        #             'form':form,
+                context={
+                    'user':user,
+                    'orgslug' : slug,
+                    'dp' : dp,
+                    'form':form,
         
-        #     }
+            }
 
-        #     return HttpResponseRedirect(reverse('profile_main', args=[slug]), context)
-
+            return HttpResponseRedirect(reverse('profile_main', args=[slug]), context)
+        
         context={
         'user':user,
         'total_ideas': user_ideas,
@@ -182,7 +183,7 @@ def profile_main(request, slug):
         'value': value,
         'orgslug' : slug,
         'dp' : dp,
-        # 'form':form,
+        'form':form,
     
         }
         posts = Post.objects.filter(author=request.user).count()
@@ -191,8 +192,7 @@ def profile_main(request, slug):
         context={
         'user':user,
         'orgslug' : slug,
-        'dp' : dp,
-        # 'form': form,
+        'form': form,
         }
         ValidationError("Nor signed in")
     return render(request, 'profile/profile_main.html', context)

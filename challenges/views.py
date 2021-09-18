@@ -1,15 +1,13 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from requests.adapters import Response
-from rest_framework.views import APIView
 from .forms import IdeaForm, CriteriaForm, ChallengeForm, DepartmentForm, OrgSpecificForm, PRIDARForm
-from organisations.forms import OrgForm
 from django.shortcuts import redirect
 from operator import pos
 from django.core.checks import messages
 from django.http.response import HttpResponseRedirect
 from django.views import generic
-from .models import Challenge, Post, Idea, Department
+from .models import Challenge, Post, Idea, Department, OrgForm
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.contrib import messages
@@ -17,16 +15,14 @@ from django.http import HttpResponseRedirect
 from django.urls.base import reverse_lazy
 from django.views.generic.edit import CreateView
 import datetime
-from django.utils import timezone
 from django.utils.timezone import make_aware
 from organisations.models import Organisation
 from django.core.paginator import *
 from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
 from rest_framework import viewsets
 from .serializers import IdeaSerializer
 import requests, json
-from django.http import JsonResponse
+
 
 # Create your views here.
 
@@ -172,6 +168,33 @@ class IdeaManagementDetail(generic.DetailView):
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
         context['orgslug'] = portal_slug
+        stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
+        print(stuff.is_pridar)
+        idea_pridar = stuff.is_pridar
+        print(idea_pridar)
+        custom = False
+        if idea_pridar:
+            print("BOSSSSSSS")
+            customised = OrgForm.objects.get(title = stuff.title)
+            custom = True
+            context['in_sandbox'] = customised.in_sandbox
+            context['is_released_and_supported'] = customised.is_released_and_supported
+            context['is_open_source_partnership'] = customised.is_open_source_partnership
+            context['NICE_Tier1_DTAC_evidence_in_place'] = customised.NICE_Tier1_DTAC_evidence_in_place
+            context['NICE_Tier2_DTAC_evidence_in_place'] = customised.NICE_Tier2_DTAC_evidence_in_place
+            context['risk_and_mitigations_are_public'] = customised.risk_and_mitigations_are_public
+            context['ce_mark_dcb_register'] = customised.ce_mark_dcb_register
+            context['safety_officer_stated'] = customised.safety_officer_stated
+            context['iso_supplier'] = customised.iso_supplier
+            context['user_kpis_is_an_ai_pathway_are_defined'] = customised.user_kpis_is_an_ai_pathway_are_defined
+            context['user_to_board_approval_obtained'] = customised.user_to_board_approval_obtained
+            context['cost_of_dev_and_support_agreed'] = customised.cost_of_dev_and_support_agreed
+            context['ip_agreement_in_place'] = customised.ip_agreement_in_place
+            context['ig_agreements_in_place'] = customised.ig_agreements_in_place
+            context['data_and_model_agreed'] = customised.data_and_model_agreed
+        context['custom'] = custom
+        
+
         return context
 
 class PostListCompleted(generic.ListView):
@@ -212,8 +235,6 @@ class PostListCompleted(generic.ListView):
 class IdeaListOpen(generic.ListView):
     today = make_aware(datetime.datetime.now())
     print(today)
-    
-    queryset = Idea.objects.filter(stage='open')
     template_name = 'ideas/index_open.html'
 
     model = Idea
@@ -230,9 +251,11 @@ class IdeaListOpen(generic.ListView):
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
         print(self.kwargs['pk'])
+        context['slug'] = self.kwargs['slug']
         context['title'] = 'Open Ideas'
         context['pk'] = self.kwargs['pk']
         page = self.request.GET.get('page')
+
 
         try:
             file_exams = paginator.page(page)
@@ -248,7 +271,6 @@ class IdeaListDelivered(generic.ListView):
     today = make_aware(datetime.datetime.now())
     print(today)
     
-    queryset = Idea.objects.filter(stage='delivered')
     template_name = 'ideas/index_open.html'
 
     model = Idea
@@ -267,6 +289,7 @@ class IdeaListDelivered(generic.ListView):
         paginator = Paginator(list_challenges, self.paginate_by)
         print(self.kwargs['pk'])
         context['title'] = 'Delivered Ideas'
+        context['slug'] = self.kwargs['slug']
         context['pk'] = self.kwargs['pk']
 
         page = self.request.GET.get('page')
@@ -303,6 +326,7 @@ class IdeaListReview(generic.ListView):
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
         print(self.kwargs['pk'])
+        context['slug'] = self.kwargs['slug']
         context['title'] = 'Under-review Ideas'
         context['pk'] = self.kwargs['pk']
 
@@ -341,6 +365,7 @@ class IdeaListAccepted(generic.ListView):
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
         print(self.kwargs['pk'])
+        context['slug'] = self.kwargs['slug']
         context['title'] = 'Accepted Ideas'
         context['pk'] = self.kwargs['pk']
 
@@ -378,6 +403,7 @@ class IdeaListInDev(generic.ListView):
         context = super(IdeaListInDev, self).get_context_data(**kwargs) 
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
+        context['slug'] = self.kwargs['slug']
         print(self.kwargs['pk'])
         context['title'] = 'In-development Ideas'
         context['pk'] = self.kwargs['pk']
@@ -419,6 +445,7 @@ class History(generic.ListView):
         print(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         context['orgslug'] = portal_slug
+        context['current_org'] = portal_slug
 
         try:
             file_exams = paginator.page(page)
@@ -465,29 +492,32 @@ def submit_challenge_successful(request, slug):
 
 
 def submit_challenge(request, slug):
-    form = ChallengeForm()
-    print(slug)
-    org = slug
-    orgobject = Organisation.objects.get(slug=slug)
-    
-    if request.method == "POST":
-        form = ChallengeForm(request.POST)
+    if request.user.is_authenticated:
+        form = ChallengeForm()
+        print(slug)
+        org = slug
+        orgobject = Organisation.objects.get(slug=slug)
+        
+        if request.method == "POST":
+            form = ChallengeForm(request.POST)
 
-        # post_form = Blog
-        if form.is_valid():
-            form.author = request.user
-            challenge = form.save()
-            challenge.author = request.user
-            challenge.org_tag = orgobject
-            challenge = form.save()
-            Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
+            # post_form = Blog
+            if form.is_valid():
+                form.author = request.user
+                challenge = form.save()
+                challenge.author = request.user
+                challenge.org_tag = orgobject
+                challenge = form.save()
+                Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
 
-            return redirect('submit_challenge_successful', slug=slug)
-    
+                return redirect('submit_challenge_successful', slug=slug)
+        
 
-    context = {'challengeform': form, 'org': org}
+        context = {'challengeform': form, 'org': org}
 
-    return render(request,'challenges/submit_challenge.html', context)
+        return render(request,'challenges/submit_challenge.html', context)
+    else:
+        return redirect('access_denied')
 
 def orcha_api(request):
     
@@ -538,8 +568,10 @@ class ideaform(CreateView):
         context['orgslug'] = portal_slug
         print(portal_choice)
         print(portal_slug)
-   
-
+        has_access = False
+        if self.request.user.is_authenticated:
+            has_access = True
+        context['has_access'] = has_access
         context['challenge'] = Post.objects.get(slug=challenge_slug)
         return context
         
@@ -576,8 +608,6 @@ def search_idea(request):
 
 def idea_criteria_form(request, orgslug, pk, slug):
     print(pk)
-    
-    
     post = Post.objects.get(slug=slug)
     org = Organisation.objects.get(slug=orgslug)
     org_name = org.name
@@ -593,7 +623,8 @@ def idea_criteria_form(request, orgslug, pk, slug):
     current_idea = Idea.objects.latest('created_on')
     print(current_idea)
     print(post.title)
-    is_pridar = org.custom_form_on
+    is_pridar = current_idea.is_pridar
+    # is_pridar = org.custom_form_on
     print(is_pridar)
     if is_pridar is True:
         form = PRIDARForm()
@@ -713,29 +744,30 @@ def idea_criteria_form(request, orgslug, pk, slug):
 
         if request.method == "POST":
             form = PRIDARForm(request.POST)
-            linked_idea = Idea.objects.latest('created_on')
-            print("JELOOOOOOOOOOOOOOO")
-            print(linked_idea)
+            current_org = Organisation.objects.get(slug=orgslug)
             if form.is_valid():
                 pridar_idea = form.save()
-                pridar_idea.title = linked_idea.title
-                pridar_idea.description = linked_idea.description
-                pridar_idea.image = linked_idea.image
-
+                pridar_idea = OrgForm.objects.latest("created_on")
+                pridar_idea.title = current_idea.title
+                pridar_idea.description = current_idea.description
+                pridar_idea.image = current_idea.image
+                pridar_idea.author = request.user
+                current_idea.author = request.user
+                pridar_idea.post = current_idea.post
+                current_idea.org_tag.add(org) 
+                current_idea.department = post.department
+                pridar_idea.org_tag.add(org) 
+                pridar_idea.department = post.department
                 estimated_cost = form.cleaned_data.get('estimated_cost')
                 notes = form.cleaned_data.get('notes')
                 pridar_idea.notes = notes
+                current_idea.notes = notes
                 is_user_led = form.cleaned_data.get('is_user_led')
                 is_public = form.cleaned_data.get('is_public')
                 public = Organisation.objects.get(name='Public')
-                # if is_public:
-                #     current_idea.org_tag.add(public)
-                # current_idea.is_user_led = is_user_led
-                # current_idea.author = request.user
-                # current_idea.org_tag.add(org) 
-                # current_idea.department = post.department
-                # current_idea.save()
-
+                pridar_idea.save()
+                current_idea.save()
+        
                 return redirect('submit_success', orgslug=orgslug, pk=pk, slug=slug)
 
         try:
@@ -900,10 +932,10 @@ class IdeaViewSet(viewsets.ModelViewSet):
     serializer_class = IdeaSerializer
 
 
-def lifecycle(request, pk):
+def lifecycle(request, pk, slug):
     org = Organisation.objects.get(id=pk)
     org_slug = org.slug
-    context = {'pk':pk, 'slug': org_slug}
+    context = {'pk':pk, 'orgslug': org_slug, 'slug' : slug}
     return  render(request, 'challenges/lifecycle.html', context)
 
 class CommentList(generic.ListView):
@@ -931,18 +963,18 @@ class PostDetail(generic.DetailView):
         return context
 
     
-class add_category_view(CreateView):
-    model = Department
-    template_name = 'blogs/add_category.html' 
-    form_class = DepartmentForm
+# class add_category_view(CreateView):
+#     model = Department
+#     template_name = 'blogs/add_category.html' 
+#     form_class = DepartmentForm
 
-    def form_valid(self, form):
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super(add_category_view, self).get_context_data(**kwargs)
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super(add_category_view, self).get_context_data(**kwargs)
 
-    def get_success_url(self):
-        orgslug=self.kwargs['orgslug']
-        return reverse_lazy('bloghub', kwargs={'orgslug': orgslug,})
+#         return context
+
+#     def get_success_url(self):
+#         return HttpResponseRedirect(self.META.get('HTTP_REFERER', '/'))

@@ -56,7 +56,7 @@
     <br>
     
     <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
-        <a class="nhsuk-back-link__link" id="back_button_link"href="{% url 'blogfeed_main' slug %}">
+        <a class="nhsuk-back-link__link" id="back_button_link"href="{% url 'blogfeed_main' orgslug %}">
             <svg class="nhsuk-icon nhsuk-icon__chevron-left"
                  xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 24 24"
@@ -92,7 +92,7 @@
                     <p class="card-text"> Created on : {{organisation.created_on }} <br> Specialty: {{organisation.specialty  }}</p>
 
 
-                    <a href="{% url 'lifecycle' organisation.id %}" class="nhsuk-button nhsuk-button--secondary">View ideas in progress</a>
+                    <a href="{% url 'lifecycle' slug organisation.id %}" class="nhsuk-button nhsuk-button--secondary">View ideas in progress</a>
                 </div>
             </div>
             {% endfor %}

@@ -279,7 +279,7 @@
        <table class="table">
           <thead>
             <tr>
-              <th>Challenges</th>
+              <th>Live Challenges</th>
               <th>Updated on</th>
 
             </tr>
@@ -393,7 +393,7 @@
         </div>
 
         <div class="p-4">
-          <p class="fst-italic">Archives</p>
+          <p>Archives</p>
           <ol class="list-unstyled mb-0">
             {% for item1,item2 in date_list %}
             <li><a href="{% url 'bloghub_month' orgslug item1 item2 %}">{{ item1| capfirst }}     {{ item2 }}</a></li>

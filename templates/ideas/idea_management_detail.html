@@ -36,7 +36,7 @@
 <div class="container">
   <div class="row">
     
-    <div class="col-md-15 card mb-4  mt-5 left  top">
+    <div class="col-md-12 card mb-4  mt-5 left  top">
       
       <div class="card-body">
 
@@ -66,6 +66,222 @@
 {% endif %}
 <p class="card-text ">{{ object.description | safe }}</p>
 <hr>
+{% if custom %}
+<p class=" text-muted">PRIDAR Classification:</p>
+<br>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Criteria</th>
+      <th>True</th>
+      <th>False</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Is in sandbox?</td>
+      {% if in_sandbox %}
+      <td> <span>&#10004;</span> </td>
+      <td></td>
+
+    </tr>    <tr>
+      {% else %}
+      <td>  </td>
+      <td><span>&#10004;</span></td>
+    </tr>    <tr>
+      {% endif %}
+  </tr>
+  <tr>
+    <td>Is released and supported?</td>
+    {% if is_released_and_supported %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+  </tr>
+  <tr>
+    <td>Is an open source partnership?</td>
+    {% if is_open_source_partnership %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>Has Nice Tier 1+ DTAC evidence in place</td>
+    {% if NICE_Tier1_DTAC_evidence_in_place %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>Has NICE Tier 2+ DTAC evidence in place</td>
+    {% if NICE_Tier2_DTAC_evidence_in_place %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>Risks and mitigations are public?</td>
+    {% if risk_and_mitigations_are_public %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>CE mark/DCB register?</td>
+    {% if ce_mark_dcb_register %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+
+    <td>ISO supplier?</td>
+    {% if iso_supplier %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>Is safety officer stated?</td>
+    {% if safety_officer_stated %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+
+  </tr>    <tr>
+    <td>User KPIs in an AI Pathway are defined?</td>
+    {% if user_kpis_is_an_ai_pathway_are_defined %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>User to board approval obtained?</td>
+    {% if user_to_board_approval_obtained %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>Cost of dev and support agreed?</td>
+    {% if cost_of_dev_and_support_agreed %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>IP agreement in place?</td>
+    {% if ip_agreement_in_place %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>IG agreement in place?</td>
+    {% if ig_agreements_in_place %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+  </tr>    <tr>
+    <td>Data and model is agreed?</td>
+    {% if data_and_model_agreed %}
+    <td> <span>&#10004;</span> </td>
+    <td></td>
+
+  </tr>    <tr>
+    {% else %}
+    <td>  </td>
+    <td><span>&#10004;</span></td>
+  </tr>    <tr>
+    {% endif %}
+
+
+  </tr>
+ 
+    </tbody>
+</table>
+{% else %}
+{% endif %}
 
 
 

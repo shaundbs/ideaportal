@@ -12,7 +12,8 @@ class IdeaForm(forms.ModelForm):
 
     class Meta:
         model = Idea
-        fields = ('title', 'description', 'image')
+        fields = ('title', 'description', 'image', 'is_pridar')
+        labels = {'is_pridar': 'Technology-related?'}
 
 class OrgSpecificForm(forms.Form):
 
