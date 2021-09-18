@@ -129,73 +129,77 @@ def profile_main(request, slug):
     print(date_list)
     
     
+    if user.is_authenticated:
+        try:
+            user_ideas = Idea.objects.filter(author=request.user).count()
+            idea = Idea.objects.filter(author=request.user)
+            stuff = Idea.total_likes_received(request.user)
+            given_likes = Idea.total_likes_given(request.user)
+            user_challenges = Post.objects.filter(author=request.user).count()
+            wins = Idea.total_ideas_selected(request.user)
+            # baseline = 3
+            # score = 0
+            # for i in wins:
+            #     score + 0.
+            baseline = 3
+            score = 0
+            for i in range(0,wins):
+                score += 20
+            print(score)
+            value = round(score * 0.35)
 
-    try:
-        user_ideas = Idea.objects.filter(author=request.user).count()
-        idea = Idea.objects.filter(author=request.user)
-        stuff = Idea.total_likes_received(request.user)
-        given_likes = Idea.total_likes_given(request.user)
-        user_challenges = Post.objects.filter(author=request.user).count()
-        wins = Idea.total_ideas_selected(request.user)
-        # baseline = 3
-        # score = 0
-        # for i in wins:
-        #     score + 0.
-        baseline = 3
-        score = 0
-        for i in range(0,wins):
-            score += 20
-        print(score)
-        value = round(score * 0.35)
 
+            print(given_likes)
+            print(stuff)
+            print(slug)
+            form = ProfilePic()
+            if request.method == "POST":
+                form = ProfilePic(request.POST, request.FILES,)
+                if form.is_valid():
+                    user.profile_image = form.cleaned_data.get('profile_image')
+                    dp = user.profile_image
+                    print(dp)
+                    print('Succesfully saved')
+                    user.save()
+                    
+                    context={
+                        'user':user,
+                        'orgslug' : slug,
+                        'dp' : dp,
+                        'form':form,
+            
+                }
 
-        print(given_likes)
-        print(stuff)
-        print(slug)
-        form = ProfilePic()
-        if request.method == "POST":
-            form = ProfilePic(request.POST, request.FILES,)
-            if form.is_valid():
-                user.profile_image = form.cleaned_data.get('profile_image')
-                dp = user.profile_image
-                print(dp)
-                print('Succesfully saved')
-                user.save()
-                
-                context={
-                    'user':user,
-                    'orgslug' : slug,
-                    'dp' : dp,
-                    'form':form,
+                return HttpResponseRedirect(reverse('profile_main', args=[slug]), context)
+            
+            context={
+            'user':user,
+            'total_ideas': user_ideas,
+            'total_likes': stuff,
+            'likes_given': given_likes,
+            'total_challenges': user_challenges,
+            'wins': wins,
+            'score': score,
+            'value': value,
+            'orgslug' : slug,
+            'dp' : dp,
+            'form':form,
         
             }
+            posts = Post.objects.filter(author=request.user).count()
+            print(posts)
+        except:
+            form = ProfilePic()
+            context={
+            'user':user,
+            'orgslug' : slug,
+            'form': form,
+            }
+            ValidationError("Not signed in")
+        return render(request, 'profile/profile_main.html', context)
+    else:
+        return render(request, 'errors/access_denied.html',)
 
-            return HttpResponseRedirect(reverse('profile_main', args=[slug]), context)
-        
-        context={
-        'user':user,
-        'total_ideas': user_ideas,
-        'total_likes': stuff,
-        'likes_given': given_likes,
-        'total_challenges': user_challenges,
-        'wins': wins,
-        'score': score,
-        'value': value,
-        'orgslug' : slug,
-        'dp' : dp,
-        'form':form,
-    
-        }
-        posts = Post.objects.filter(author=request.user).count()
-        print(posts)
-    except:
-        context={
-        'user':user,
-        'orgslug' : slug,
-        # 'form': form,
-        }
-        ValidationError("Nor signed in")
-    return render(request, 'profile/profile_main.html', context)
 
 def testing(request):
     form = CustomUserCreationForm()

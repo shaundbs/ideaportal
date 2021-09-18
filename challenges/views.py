@@ -174,7 +174,6 @@ class IdeaManagementDetail(generic.DetailView):
         print(idea_pridar)
         custom = False
         if idea_pridar:
-            print("BOSSSSSSS")
             customised = OrgForm.objects.get(title = stuff.title)
             custom = True
             context['in_sandbox'] = customised.in_sandbox
@@ -501,19 +500,19 @@ def submit_challenge(request, slug):
         if request.method == "POST":
             form = ChallengeForm(request.POST)
 
-            # post_form = Blog
             if form.is_valid():
                 form.author = request.user
                 challenge = form.save()
                 challenge.author = request.user
                 challenge.org_tag = orgobject
+                cnwl = False
                 challenge = form.save()
                 Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
 
                 return redirect('submit_challenge_successful', slug=slug)
         
 
-        context = {'challengeform': form, 'org': org}
+        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on }
 
         return render(request,'challenges/submit_challenge.html', context)
     else:

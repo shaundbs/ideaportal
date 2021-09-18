@@ -98,7 +98,7 @@
 
     <div class="nhsuk-checkboxes">
 
-      
+      {% if custom_on %}
       
       <div class="nhsuk-checkboxes__item">
         {% render_field form.is_pridar class="nhsuk-checkboxes__input"  id="example-3" name="example" type="checkbox" value="text message" %} 
@@ -108,7 +108,8 @@
       </div>
         
  <br>
-
+{% else %}
+{% endif %}
     
     <div class="nhsuk-form-group">
       <label class="nhsuk-label" for="select-1">
