@@ -192,7 +192,7 @@ def profile_main(request, slug):
         context={
         'user':user,
         'orgslug' : slug,
-        'form': form,
+        # 'form': form,
         }
         ValidationError("Nor signed in")
     return render(request, 'profile/profile_main.html', context)

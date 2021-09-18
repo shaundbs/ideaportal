@@ -15,7 +15,7 @@
     <div class="nhsuk-grid-column-two-thirds">
   
     
-      <form method="get" action="{% url 'enter' %}">
+      <form method="get" action="{% url 'logout' %}">
         {% csrf_token %}
   
         <div class="nhsuk-form-group">
@@ -40,7 +40,7 @@
 
         
         </div>
-        <a id="submit-button" type="submit" class="nhsuk-button" href="{% url 'enter' %}">Login</a>
+        <a id="submit-button" type="submit" class="nhsuk-button" href="{% url 'logout' %}">Login</a>
   
       <!-- <input name="__RequestVerificationToken" type="hidden" value="CfDJ8FTFIt_4U2pNpv3VDtvSAxZpzKN5Q5mcKb0jzaXKDbM-lyrg9BbLo4YJZRq2Zaiebr-tT0bhvby73IhfDVyJ6TSKClfQB5Y1tHmxWGvI20kZlnYxgIxSk_Rcs_DE2nbYN2YMq-nf4iNGy3GvqRKWnf8" /></form> -->
   
