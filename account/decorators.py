@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from organisations.models import Organisation
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
-
+import logging
 
 # register = template.Library() 
 
@@ -27,7 +27,7 @@ def unauthenticated_user(view_func):
 def allowed_users(allowed_roles=[]):
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):
-            print('Working:', allowed_roles)
+            logging.error('Working:', allowed_roles)
 
             group = None 
             if request.user.groups.exists():
@@ -54,7 +54,7 @@ def admin_only(view_func):
 def has_org_access(allowed_orgs=[]):
     def decorator(view_func):
         def wrapper_func(request, *args, **kwargs):
-            print('Working:', allowed_orgs)
+            logging.error('Working:', allowed_orgs)
             org_tag = None 
             if request.user.org_tag.exists():
                 org_tag = request.user.org_tag

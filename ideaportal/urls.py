@@ -41,7 +41,7 @@ contact_wizard = views.ContactWizard.as_view(named_contact_forms,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('blogadmin/', user_site.urls),
+    path('ideaportal-management/', user_site.urls),
     path('home', views.home, name='home'),
         path('info/admin-info', views.admin_info, name='admin_info'),
     path('info/portal-manager-info', views.portal_manager_info, name='portal_manager_info'),
@@ -76,19 +76,15 @@ urlpatterns = [
     path('blogs/post-feed/<slug:slug>/', views.blogfeed_main.as_view(), name='blogfeed_main'),
     path('blogs/post-feed/<slug:slug>/edit', views.blogfeed_main_edit.as_view(), name='blogfeed_main_edit'),
 
-    # path('challenges/<slug:slug>/', bviews.PostDetail.as_view, name='post_detail'),
     path('blogs/post-feed/challenges/', include('blog.urls'), name='feed'),
-    # path('blogs/post-feed/challenges/likes/', include('blog.urls'), name='likes'),
     path('challenges/', include('challenges.urls'), name='challengehub'),
     path('organisations/', include('organisations.urls'), name='organisations'),
-
     path('orchaapi/', include('orchaapi.urls'), name='apihub'),
 
 
     path('activate-user/<uidb64>/<token>', views.activate_user, name='activate'),
     path('<slug:slug>/profile/profile-main', views.profile_main, name='profile_main'),
     path('auth/testform/', views.testing, name='testing'),
-    path('auth/raindrops', GetDroplets.as_view(template_name='core/droplets.html'), name='Droplet View'),
 
 ] 
 

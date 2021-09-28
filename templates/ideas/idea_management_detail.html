@@ -50,8 +50,9 @@
 </div>
 <form action="" method="post">
   {% csrf_token %}
-
+<center>
 <h1>{% block title %}{{ object.title }}{% endblock title %}</h1>
+</center>
 <h3 class=" text-muted"> Challenge: {{ idea.post.title }} </h3>
 <p class=" text-muted">{{ idea.author }} | {{ idea.created_on }}</p>
 
@@ -275,6 +276,15 @@
   </tr>    <tr>
     {% endif %}
 
+    <br>
+    {% if idea.image %}
+    
+    <center>
+      <img src="{{ idea.image.url }}" style="max-width:50%;max-height:50%;">
+      {% else %}
+      {% endif %}
+  </center>
+
 
   </tr>
  
@@ -283,6 +293,14 @@
 {% else %}
 {% endif %}
 
+<br>
+{% if idea.image %}
+
+<center>
+  <img src="{{ idea.image.url }}" style="max-width:50%;max-height:50%;">
+  {% else %}
+  {% endif %}
+</center>
 
 
 <button formaction="{% url 'approve_idea' orgslug idea.pk idea.slug %}" type="submit" name="idea_id" value="{{ idea.id }}" class="nhsuk-button"  onclick="return confirm('Are you sure you want to approve this item?');">Approve</button>

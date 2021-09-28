@@ -50,8 +50,9 @@
 </div>
 <form action="" method="post">
   {% csrf_token %}
-
+<center>
 <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
+</center>
 <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
 <p class=" text-muted"> Severity: {{ object.severity| capfirst }}</p>
 {% if object.status %}

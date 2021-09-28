@@ -7,6 +7,7 @@ from .models import Idea, Challenge, Department, IdeaComment, OrgForm
 from blog.models import Post
 import datetime
 from django.utils.timezone import make_aware
+import logging
 
 class IdeaForm(forms.ModelForm):
 
@@ -63,7 +64,6 @@ class OrgSpecificForm(forms.Form):
 class PRIDARForm(forms.ModelForm):
     class Meta:
         model = OrgForm
-        # fields = '__all__'
         fields = ['estimated_cost', 'notes', 'is_user_led', 'in_sandbox', 'is_released_and_supported','is_open_source_partnership','NICE_Tier1_DTAC_evidence_in_place','NICE_Tier2_DTAC_evidence_in_place','risk_and_mitigations_are_public','ce_mark_dcb_register','safety_officer_stated','iso_supplier','user_kpis_is_an_ai_pathway_are_defined','user_to_board_approval_obtained','cost_of_dev_and_support_agreed','ip_agreement_in_place','ig_agreements_in_place','data_and_model_agreed',]
         labels = {'estimated_cost':'Estimated cost?', 'notes':'Notes', 'is_user_led':'Is user led?','in_sandbox':'Is in sandbox?','is_released_and_supported':'Is released and supported?','is_open_source_partnership':'Is an open source partnership?','NICE_Tier1_DTAC_evidence_in_place':'Has nice Tier 1+ DTAC evidence in place','NICE_Tier2_DTAC_evidence_in_place':'Has NICE Tier 2+ DTAC evidence in place','risk_and_mitigations_are_public':'Risks and mitigations are public?','ce_mark_dcb_register':'CE mark/DCB register?','ISO supplier':'ISO supplier?','safety_officer_stated':'Is safety officer stated?','user_kpis_is_an_ai_pathway_are_defined':'User KPIs in an AI Pathway are defined?','user_to_board_approval_obtained':'User to board approval obtained?','cost_of_dev_and_support_agreed':'Cost of dev and support agreed?','ip_agreement_in_place':'IP agreement in place?','ig_agreements_in_place':'IG agreements in place?','data_and_model_agreed':'Data and model is agreed?',}
 
@@ -147,7 +147,7 @@ class ApprovalForm(forms.ModelForm):
         
     def clean_start_date(self):
         date = self.cleaned_data['startDate']
-        print(date)
+        logging.error(date)
         if date < make_aware(datetime.date.today()):
             raise forms.ValidationError("The date cannot be in the past!")
         return date

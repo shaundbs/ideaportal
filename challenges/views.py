@@ -22,7 +22,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from rest_framework import viewsets
 from .serializers import IdeaSerializer
 import requests, json
-
+import logging
 
 # Create your views here.
 
@@ -47,8 +47,8 @@ class PostList(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         context['orgslug'] = portal_slug
 
@@ -64,19 +64,19 @@ class PostList(generic.ListView):
 
 def approve_idea(request, pk, slug, orgslug):
     idea = get_object_or_404(Idea, id=request.POST.get('idea_id'))
-    print(idea.status)
+    logging.error(idea.status)
     idea.status = 1
     idea.stage = 'open'
-    print(idea.status)
+    logging.error(idea.status)
     idea.save()
 
     return HttpResponseRedirect(reverse('idea_management_detail', args=[orgslug, str(pk), slug]))
 
 def reject_idea(request, pk, slug, orgslug):
     idea = get_object_or_404(Idea, id=request.POST.get('idea_id'))
-    print(idea.status)
+    logging.error(idea.status)
     idea.status = 0
-    print(idea.status)
+    logging.error(idea.status)
     idea.save()
 
     return HttpResponseRedirect(reverse('idea_management_detail', args=[orgslug, str(pk), slug]))
@@ -94,7 +94,7 @@ class PendingIdeasList(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = self.kwargs['slug']
-        print(portal_choice)
+        logging.error(portal_choice)
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         return Idea.objects.filter(status=0).filter(org_tag=portal_choice)
 
@@ -107,8 +107,8 @@ class PendingIdeasList(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         context['orgslug'] = portal_slug
         
@@ -143,8 +143,8 @@ class Statistics(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         context['orgslug'] = portal_slug
 
@@ -169,9 +169,9 @@ class IdeaManagementDetail(generic.DetailView):
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
         context['orgslug'] = portal_slug
         stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
-        print(stuff.is_pridar)
+        logging.error(stuff.is_pridar)
         idea_pridar = stuff.is_pridar
-        print(idea_pridar)
+        logging.error(idea_pridar)
         custom = False
         if idea_pridar:
             customised = OrgForm.objects.get(title = stuff.title)
@@ -198,7 +198,7 @@ class IdeaManagementDetail(generic.DetailView):
 
 class PostListCompleted(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    print(today)
+    logging.error(today)
     queryset = Post.objects.filter(status=1).filter(endDate__lte=today)
     template_name = 'blogs/completed_challenges.html'
 
@@ -216,8 +216,8 @@ class PostListCompleted(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         context['orgslug'] = portal_slug
 
@@ -233,7 +233,7 @@ class PostListCompleted(generic.ListView):
 
 class IdeaListOpen(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    print(today)
+    logging.error(today)
     template_name = 'ideas/index_open.html'
 
     model = Idea
@@ -249,7 +249,7 @@ class IdeaListOpen(generic.ListView):
         context = super(IdeaListOpen, self).get_context_data(**kwargs) 
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
-        print(self.kwargs['pk'])
+        logging.error(self.kwargs['pk'])
         context['slug'] = self.kwargs['slug']
         context['title'] = 'Open Ideas'
         context['pk'] = self.kwargs['pk']
@@ -268,7 +268,7 @@ class IdeaListOpen(generic.ListView):
 
 class IdeaListDelivered(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    print(today)
+    logging.error(today)
     
     template_name = 'ideas/index_open.html'
 
@@ -286,7 +286,7 @@ class IdeaListDelivered(generic.ListView):
         context = super(IdeaListDelivered, self).get_context_data(**kwargs) 
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
-        print(self.kwargs['pk'])
+        logging.error(self.kwargs['pk'])
         context['title'] = 'Delivered Ideas'
         context['slug'] = self.kwargs['slug']
         context['pk'] = self.kwargs['pk']
@@ -305,7 +305,7 @@ class IdeaListDelivered(generic.ListView):
 
 class IdeaListReview(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    print(today)
+    logging.error(today)
     
     queryset = Idea.objects.filter(stage='under review')
     template_name = 'ideas/index_open.html'
@@ -324,7 +324,7 @@ class IdeaListReview(generic.ListView):
         context = super(IdeaListReview, self).get_context_data(**kwargs) 
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
-        print(self.kwargs['pk'])
+        logging.error(self.kwargs['pk'])
         context['slug'] = self.kwargs['slug']
         context['title'] = 'Under-review Ideas'
         context['pk'] = self.kwargs['pk']
@@ -344,7 +344,7 @@ class IdeaListReview(generic.ListView):
 
 class IdeaListAccepted(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    print(today)
+    logging.error(today)
     
     queryset = Idea.objects.filter(stage='accepted')
     template_name = 'ideas/index_open.html'
@@ -363,7 +363,7 @@ class IdeaListAccepted(generic.ListView):
         context = super(IdeaListAccepted, self).get_context_data(**kwargs) 
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
-        print(self.kwargs['pk'])
+        logging.error(self.kwargs['pk'])
         context['slug'] = self.kwargs['slug']
         context['title'] = 'Accepted Ideas'
         context['pk'] = self.kwargs['pk']
@@ -383,7 +383,7 @@ class IdeaListAccepted(generic.ListView):
 
 class IdeaListInDev(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    print(today)
+    logging.error(today)
     
     queryset = Idea.objects.filter(stage='in development')
     template_name = 'ideas/index_open.html'
@@ -403,7 +403,7 @@ class IdeaListInDev(generic.ListView):
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
         context['slug'] = self.kwargs['slug']
-        print(self.kwargs['pk'])
+        logging.error(self.kwargs['pk'])
         context['title'] = 'In-development Ideas'
         context['pk'] = self.kwargs['pk']
 
@@ -440,8 +440,8 @@ class History(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         context['orgslug'] = portal_slug
         context['current_org'] = portal_slug
@@ -458,7 +458,7 @@ class History(generic.ListView):
 
 class HistoryListCompleted(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    print(today)
+    logging.error(today)
     queryset = Post.objects.filter(status=1).filter(endDate__lte=today)
     template_name = 'challenges/index_completed.html'
 
@@ -493,7 +493,7 @@ def submit_challenge_successful(request, slug):
 def submit_challenge(request, slug):
     if request.user.is_authenticated:
         form = ChallengeForm()
-        print(slug)
+        logging.error(slug)
         org = slug
         orgobject = Organisation.objects.get(slug=slug)
         
@@ -507,12 +507,13 @@ def submit_challenge(request, slug):
                 challenge.org_tag = orgobject
                 cnwl = False
                 challenge = form.save()
-                Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
+                Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, 
+                challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
 
                 return redirect('submit_challenge_successful', slug=slug)
         
 
-        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on }
+        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on, 'orgslug' : slug}
 
         return render(request,'challenges/submit_challenge.html', context)
     else:
@@ -545,7 +546,7 @@ def orcha_api(request):
     category_list = []
     for category in categories:
         category_list.append(category['subCategoryName'])
-    print(category_list)
+    logging.error(category_list)
     return render(request)
 
 class ideaform(CreateView):
@@ -560,18 +561,26 @@ class ideaform(CreateView):
         context['object'] = context['post'] = obj
         challenge_choice = Post.objects.get(slug=self.kwargs['slug'])
         challenge_slug = Post.objects.get(slug=self.kwargs['slug']).slug
-        print(challenge_slug)
+        logging.error(challenge_slug)
         
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
         context['orgslug'] = portal_slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
+        custom_on = portal_choice.custom_form_on
+        logging.error(custom_on)
+        is_pridar = False
+        if custom_on:
+            is_pridar = True
         has_access = False
         if self.request.user.is_authenticated:
             has_access = True
         context['has_access'] = has_access
         context['challenge'] = Post.objects.get(slug=challenge_slug)
+        context['custom_on'] = is_pridar
+
+        context
         return context
         
     def form_valid(self, form):
@@ -595,8 +604,8 @@ def search_idea(request):
         for i in ideas:
             org_list.append(i)
             org_tag_list.append(i.org_tag)
-            print("Hellllo")
-            print(i.org_tag)
+            logging.error("Hellllo")
+            logging.error(i.org_tag)
         
         zipped_values = zip(org_list, org_tag_list)
 
@@ -606,7 +615,7 @@ def search_idea(request):
 
 
 def idea_criteria_form(request, orgslug, pk, slug):
-    print(pk)
+    logging.error(pk)
     post = Post.objects.get(slug=slug)
     org = Organisation.objects.get(slug=orgslug)
     org_name = org.name
@@ -614,52 +623,60 @@ def idea_criteria_form(request, orgslug, pk, slug):
     api_on = org.api_on
     if api_on:
         activate_api = True
-    print(org.name)
+    logging.error(org.name)
     publish_publicly = False
     if org_name == 'Public':
         publish_publicly = True
     # idea = Idea.objects.filter(author=request.user).latest('created_on')
     current_idea = Idea.objects.latest('created_on')
-    print(current_idea)
-    print(post.title)
+    logging.error(current_idea)
+    logging.error(post.title)
     is_pridar = current_idea.is_pridar
     # is_pridar = org.custom_form_on
-    print(is_pridar)
+    logging.error(is_pridar)
     if is_pridar is True:
         form = PRIDARForm()
         if activate_api:
+            # authentication credential for ORCHA API
             data = '{"username" : "cnwl", "password":"K2Q5!ZqnJ!#RYV"}'
 
+            # header configuration to define format of data
             headers = {
             'Content-type':'application/json', 
             'Accept':'application/json'
             } 
 
+            # authentication end point call to generate an access token to peform other REST API calls
             response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
+            # create a JSON from the string generated from the response
             body = json.loads(response.text)
+            # parse the JSON to extract the access token and save as its own variable
             access_token = body['result']['accessToken']
-            # print(response.headers)
-            # print(access_token)
 
+
+            # configure another header that uses the access token from the authentication end point
             headers_2 = {"Authorization": "Bearer " + str(access_token)}
             headers_3 = {
             'Content-type':'application/json', 
             'Accept':'application/json',
             "Authorization": "Bearer " + str(access_token)
             }     
-            # print(headers_2)
+            # sub-category endpoint call to extract all categories that ORCHA use to define its applications
             response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
-            # print(response_2.text)
-            body_2 = json.loads(response_2.text)   
+            # create a JSON from the string generated from the response
+            body_2 = json.loads(response_2.text) 
+            # parse the JSON to extract the list of categories
             categories =  body_2['result']
             category_list = []
+            # append the list of categories to a list format to make it easy to operate on
             for category in categories:
                 category_list.append(category['subCategoryName'])
-            print(category_list)
-            print(current_idea.description)
 
-            # get idea title 
+
+                
+            # get user idea title 
             compare = current_idea.title
+            # get user idea title 
             compare_desc = current_idea.description
             title_list = []
             description_list = []
@@ -667,7 +684,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
             # append key words form title to list
             for word in compare.split():
                 title_list.append(word)
-            print(title_list)
+            logging.info(title_list)
 
             for word in compare_desc.split():
                 description_list.append(word)
@@ -680,48 +697,37 @@ def idea_criteria_form(request, orgslug, pk, slug):
             title_list_lower = [item.lower() for item in title_list]
             description_list_lower = [item.lower() for item in description_list]
 
-
             # if the keywords from the idea match any sub category areas set state to True and create a list of the similar terms
-            comparers = (set(category_list_lower) & set(title_list_lower))
-            print(set(category_list_lower) & set(title_list_lower))
-            ranger = (set(category_list_lower) & set(title_list_lower))
             existing_ideas = ""
 
-
-            if (set(category_list_lower) & set(title_list_lower)):
-                print("This idea could be similar to an exisiting solution")
+            if (set(category_list_lower) & set(title_list_lower) ) & set(description_list_lower):
+                logging.info("This idea could be similar to an exisiting solution")
                 is_similar = True
-                print("MATCH ALERT")
-                category_names = list(set(category_list_lower) & set(title_list_lower))
-                print(category_names)
+                logging.info("MATCH ALERT")
+                category_names = list(set(category_list_lower) & set(title_list_lower) & set(description_list_lower))
+                logging.info(category_names)
             else:
-                print("This idea is not similar to an exisitng solution")
+                logging.info("This idea is not similar to an exisitng solution")
 
-            # append key words form title to list
+            # append key words from title and description to list
             keywords = []
             keyterms = []
             for name in category_names:
                 name.split()
                 keywords.append(name)
-            print(keywords)
+            logging.info(keywords)
 
-
-            appName = ''
-            clinicalAssuranceScore = ''
-            userExperienceScore = ''
-            publisherName = ''
-            description= ''
-            version= ''
-            downloadLink = ''
-            platform = ''
-
+            # for each key word identified search in ORCHA for an application with the same keyword in title 
 
             for category in keywords:
                 data_2 = '{"searchTerm": "' + category + '","pageNumber": "1", "pageSize": "12", "costIds": [],"capabilityIds": [],"designedForIds": [],"countryIds": []}'
                 response_3 = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Review/SearchPagedReviews", data=data_2, headers=headers_3)
+                # create a JSON from the string generated from the response
                 json_str = json.loads(response_3.text)
+                # parse the JSON to extract the applications
                 existing_ideas = json_str['result']['items']
                 counter = 0
+                # count the number of applications that the algorithm recorgnises as similar solutions
                 for id in existing_ideas:
                     counter = counter + 1
 
@@ -731,6 +737,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
                 existing_links = []
                 exisiting_platforms = []
 
+                # for each application extract the name, download link, platform etc.
                 for idea in existing_ideas:
                     existing_idea_names.append(idea['appName'])
                     existing_publisher_names.append(idea['publisherName'])
@@ -739,7 +746,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
                     exisiting_platforms.append(idea['platform'])
 
                 zipped_values = zip(existing_idea_names, existing_publisher_names, existing_descriptions, existing_links,exisiting_platforms)
-                print(zipped_values)
+                logging.info(zipped_values)
 
         if request.method == "POST":
             form = PRIDARForm(request.POST)
@@ -788,8 +795,8 @@ def idea_criteria_form(request, orgslug, pk, slug):
             response = requests.post("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/Token/Authenticate", data=data, headers=headers)
             body = json.loads(response.text)
             access_token = body['result']['accessToken']
-            # print(response.headers)
-            # print(access_token)
+            # logging.error(response.headers)
+            # logging.error(access_token)
 
             headers_2 = {"Authorization": "Bearer " + str(access_token)}
             headers_3 = {
@@ -797,16 +804,16 @@ def idea_criteria_form(request, orgslug, pk, slug):
             'Accept':'application/json',
             "Authorization": "Bearer " + str(access_token)
             }     
-            # print(headers_2)
+            # logging.error(headers_2)
             response_2 = requests.get("https://app-library-builder-api.orchahealth.co.uk/api/orcha/v1/SubCategory/GetSubCategories", headers=headers_2)
-            # print(response_2.text)
+            # logging.error(response_2.text)
             body_2 = json.loads(response_2.text)   
             categories =  body_2['result']
             category_list = []
             for category in categories:
                 category_list.append(category['subCategoryName'])
-            print(category_list)
-            print(current_idea.description)
+            logging.error(category_list)
+            logging.error(current_idea.description)
 
             # get idea title 
             compare = current_idea.title
@@ -817,7 +824,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
             # append key words form title to list
             for word in compare.split():
                 title_list.append(word)
-            print(title_list)
+            logging.error(title_list)
 
             for word in compare_desc.split():
                 description_list.append(word)
@@ -833,19 +840,19 @@ def idea_criteria_form(request, orgslug, pk, slug):
 
             # if the keywords from the idea match any sub category areas set state to True and create a list of the similar terms
             comparers = (set(category_list_lower) & set(title_list_lower))
-            print(set(category_list_lower) & set(title_list_lower))
+            logging.error(set(category_list_lower) & set(title_list_lower))
             ranger = (set(category_list_lower) & set(title_list_lower))
             existing_ideas = ""
 
 
             if (set(category_list_lower) & set(title_list_lower)):
-                print("This idea could be similar to an exisiting solution")
+                logging.error("This idea could be similar to an exisiting solution")
                 is_similar = True
-                print("MATCH ALERT")
+                logging.error("MATCH ALERT")
                 category_names = list(set(category_list_lower) & set(title_list_lower))
-                print(category_names)
+                logging.error(category_names)
             else:
-                print("This idea is not similar to an exisitng solution")
+                logging.error("This idea is not similar to an exisitng solution")
 
             # append key words form title to list
             keywords = []
@@ -853,7 +860,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
             for name in category_names:
                 name.split()
                 keywords.append(name)
-            print(keywords)
+            logging.error(keywords)
 
 
             appName = ''
@@ -874,7 +881,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
                 counter = 0
                 for id in existing_ideas:
                     counter = counter + 1
-                print("Total isssssssss " + str(counter))
+                logging.error("Total isssssssss " + str(counter))
 
                 # context_2 = {'existing_ideas': existing_ideas}
                 existing_idea_names = []
@@ -891,13 +898,13 @@ def idea_criteria_form(request, orgslug, pk, slug):
                     exisiting_platforms.append(idea['platform'])
 
                 zipped_values = zip(existing_idea_names, existing_publisher_names, existing_descriptions, existing_links,exisiting_platforms)
-                print(zipped_values)
+                logging.error(zipped_values)
 
         if request.method == "POST":
             form = CriteriaForm(request.POST)
             if form.is_valid():
                 estimated_cost = form.cleaned_data.get('estimated_cost')
-                print(estimated_cost)
+                logging.error(estimated_cost)
                 current_idea.estimated_cost = estimated_cost
                 notes = form.cleaned_data.get('notes')
                 current_idea.notes = notes
@@ -927,8 +934,15 @@ def submit_success(request, orgslug, pk, slug):
     return  render(request, 'ideas/submit_success.html', context)
 
 class IdeaViewSet(viewsets.ModelViewSet):
-    queryset = Idea.objects.all().order_by('title')
+    queryset = Idea.objects.all().filter(stage__isnull=False).order_by('title')
     serializer_class = IdeaSerializer
+
+
+class CNWLIdeaViewSet(viewsets.ModelViewSet):
+    cnwl_id = Organisation.objects.get(name = 'CNWL').id
+    queryset = Idea.objects.filter(org_tag = cnwl_id).filter(stage__isnull=False).order_by('title')
+    serializer_class = IdeaSerializer
+
 
 
 def lifecycle(request, pk, slug):

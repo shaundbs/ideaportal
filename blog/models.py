@@ -26,7 +26,7 @@ class Post(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
-    department = models.ForeignKey('challenges.Department', on_delete=SET_NULL, related_name='dept', null=True)
+    department = models.ForeignKey('challenges.Department', on_delete=CASCADE, related_name='dept', null=True)
     likes = models.ManyToManyField(Account, related_name='post_likes', null=True, blank=True)
     challenge = models.ForeignKey('challenges.Challenge', related_name='post_to_challenge', on_delete=CASCADE, null=True)
     startDate = models.DateField(null=True, blank=True)
@@ -37,14 +37,6 @@ class Post(models.Model):
     winner = models.ForeignKey('challenges.Idea', on_delete=models.SET_NULL, related_name='winner', null=True, blank=True)
     org_tag = models.ForeignKey('organisations.Organisation', on_delete=models.SET_NULL, related_name='postorgtag', null=True)
 
-    # winning_idea = models.OneToOneField('challenges.Idea', on_delete=models.SET_NULL, related_name='winning_idea', null=True, blank=True)
-    #  winning_idea = all_ideas.order_by("likes")[:1]
-    #         winning_idea_id = winning_idea.values('id')[0]['id']
-    #         winning_idea_slug = winning_idea.values('slug')[0]['slug']
-    #         print(winning_idea_slug)
-    #         context['winnerpk'] = winning_idea_id
-    #         context['winnerslug'] = winning_idea_slug
-
     def total_likes(self):
         return self.likes.count()
 
@@ -54,7 +46,6 @@ class Post(models.Model):
 
     def total_likes_received(user):
         return user.idea_author.aggregate(total_likes=Count('likes'))['total_likes'] or 0
-
 
 
     def __str__(self):

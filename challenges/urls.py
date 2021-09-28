@@ -4,7 +4,8 @@ from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
 router = routers.DefaultRouter()
-router.register(r'ideas', views.IdeaViewSet)
+router.register(r'all-ideas', views.IdeaViewSet)
+router.register(r'cnwl', views.CNWLIdeaViewSet)
 
 
 urlpatterns = [

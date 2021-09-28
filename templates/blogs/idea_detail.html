@@ -46,8 +46,9 @@
     </svg>
     Go back</a>
 </div>
-
+<center>
         <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
+      </center>
         <p class=" text-muted">{{ object.author }} | {{ object.created_on }}</p>
         <p class="card-text ">{{ object.description | safe }}</p>
         {% if custom %}
@@ -268,8 +269,9 @@
         {% endif %}
         <br>
         {% if object.image %}
+        
         <center>
-          <a href="{{ object.image.url }}">View attached image</a> 
+          <img src="{{ object.image.url }}" style="max-width:50%;max-height:50%;">
           {% else %}
           {% endif %}
       </center>
@@ -321,7 +323,7 @@
 
 
 
-                      {{ comment.comment }} <br>
+                      {{ comment.comment }} <br><br>
                       {% if comment.image %}
                       <br>
                       <a href="{{ comment.image.url }}">View attached image</a>

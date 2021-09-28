@@ -23,7 +23,8 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12 text-center">
-						<h2 class="heading-section mb-5">Select a portal to sign in to</h2>
+						<h2 class="heading-section mb-5">Select a portal to enter <a href="{% url 'logout' %}">or click here to logout</a></h2>
+	
 					</div>
 					<div class="col-md-12">
 						<div class="featured-carousel owl-carousel">
@@ -48,38 +49,40 @@
                                                       
 														{% if not request.user.is_authenticated %}
 														<br>
-                                                        <a href="{% url 'blogfeed_main' org.slug %}">Enter anonymously</a>
+                                                        <a href="{% url 'blogfeed_main' org.slug %}">Enter as a guest</a>
 														<br>
 														<br>
 														<a href="{% url 'auth_username' org.slug %}">Register an account</a>
 														<br>
 														<br>
 													
-														<a href="{% url 'logout' %}">Logout</a>
-														<br>
 
 														{% endif %}
 														<br>
 														{% if request.user.is_authenticated  %}
+														<br><br>
                                                         <a href="{% url 'blogfeed_main' org.slug %}">Enter</a>
 														<br>
-														<br>
-														<a href="{% url 'logout' %}">Logout</a>
+													
 														<br>
 														{% endif %}
 
 														
 													</div>
+
 												</div>
                                                 </form>
 											</div>
 
 										</div>
-
+										<br><br>
+					
 									</div>
-
+								
 								</div>
+
 							</div>
+
                             {% endfor %}
 						</div>
 					</div>
@@ -93,4 +96,5 @@
     <script src="{% static 'carousel-08/js/owl.carousel.min.js' %}"></script>
     <script src="{% static 'carousel-08/js/main.js' %}"></script>
   </body>
+
 </html>

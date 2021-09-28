@@ -4,7 +4,8 @@ from selenium import webdriver
 import time
 import random
 from faker import Faker
-
+import logging
+from .forms import CustomUserCreationForm
 fakegen = Faker()
 
 class FunctionalTestCase(TestCase):
@@ -23,10 +24,10 @@ class FunctionalTestCase(TestCase):
 
     
 
-    # def test_there_is_homepage(self):
-    #     self.browser.get('http://localhost:8000')
-    #     self.assertIn('Sign In', self.browser.page_source)
-    #     time.sleep(5)
+    def test_there_is_homepage(self):
+        self.browser.get('http://localhost:8000')
+        self.assertIn('Sign In', self.browser.page_source)
+        time.sleep(5)
 
     def test_registration(self):
 
@@ -91,45 +92,31 @@ class FunctionalTestCase(TestCase):
         portalLogin.click()
         time.sleep(10)
         if self.browser.find_element_by_xpath("//header[@class='nhsuk-header']"):
-            print('ELEMENT LOCATED - Login Successful')
+            logging.error('ELEMENT LOCATED - Login Successful')
         else:
-            print('ERROR - element not located')
+            logging.error('ERROR - element not located')
         
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
+    
+    
         
     def tearDown(self):
         self.browser.quit()
 
 
-# class UnitTestCase(TestCase):
+class UnitTestCase(TestCase):
 
-    # def test_home_homepage_template(self):
-    #     response = self.client.get('/')
-    #     self.assertTemplateUsed(response, 'authentication/home.html')
+    def test_home_homepage_template(self):
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'authentication/home.html')
 
-    # def test_registration_template(self):
-    #     response = self.client.get('/register/')
-    #     self.assertTemplateUsed(response, 'userauth/register.html')
+    def test_registration_template(self):
+        response = self.client.get('/register/')
+        self.assertTemplateUsed(response, 'userauth/register.html')
 
-    # def test_sign_in_template(self):
-    #     response = self.client.get('/sign_in/')
-    #     self.assertTemplateUsed(response, 'userauth/sign_in.html')
+    def test_sign_in_template(self):
+        response = self.client.get('/sign_in/')
+        self.assertTemplateUsed(response, 'userauth/sign_in.html')
 
-    # def test_hash_form(self):
-    #     form = UserauthForm(data={'text':'hello'})
-    #     self.assertTrue(form.is_valid())
+    def test_hash_form(self):
+        form = CustomUserCreationForm(data={'text':'hello'})
+        self.assertTrue(form.is_valid())

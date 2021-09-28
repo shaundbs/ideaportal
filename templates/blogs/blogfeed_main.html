@@ -114,6 +114,8 @@
   <body>
     {% if request.user|has_group:"admins" %}
     {% include 'components/navbar_portalmanager.html' %}
+    {% elif request.user|has_group:"challenge_managers" %}
+    {% include 'components/navbar_portalmanager.html' %}
     {% else %}
     {% include 'components/navbar_search.html' %}
     {% endif %}
@@ -138,13 +140,12 @@
     <div class="col-md-12 px-7">
       <center>
       <p class="display-6">{{ object.post1.title|slice:"75" }}</p>
-      <p class="lead my-3">{{ object.post1.description|slice:":200" }}</p>
+      <p class="lead my-3">{{ object.post1.description|slice:":500" }}</p>
       <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post1.pk object.post1.slug %}" class="text-white fw-bold">Continue reading...</a></p>
     </center>
     </div>
     
   </div>
-
   {% else %}
 
 
@@ -165,18 +166,18 @@
   
   {% if object.post2 %}
 
-
   <div class="row mb-2">
     <div class="col-md-6">
 
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-280 position-relative">
         
         <div class="col p-4 d-flex flex-column position-static">
+
           <strong class="d-inline-block mb-2 text-primary">{{ object.post2.department }}</strong>
           <center>
-         <p class="display-6">{{ object.post2.title|slice:"75" }}</p>
+          <p class="display-6">{{ object.post2.title|slice:"500" }}</p>
         <div class="mb-1 text-muted">Last edited: {{ object.post2.updated_on}}</div>
-          <p class="card-text mb-auto">{{ object.post2.description|slice:":300" }}...</p>
+          <p class="card-text mb-auto">{{ object.post2.description|slice:":500" }}...</p>
 
           <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post2.pk object.post2.slug %}" class="text-black fw-bold">Continue reading...</a></p>
         </center>
@@ -225,11 +226,11 @@
           
           <strong class="d-inline-block mb-2 text-primary">{{ object.post3.department }}</strong>
 <center>
-          <p class="display-6">{{ object.post3.title|slice:"75" }}</p>
+          <p class="display-6">{{ object.post3.title|slice:"500" }}</p>
    
         <div class="mb-1 text-muted">Last edited: {{ object.post3.updated_on}}</div>
 
-          <p class="card-text mb-auto">{{ object.post3.description|slice:":300" }}...</p>
+          <p class="card-text mb-auto">{{ object.post3.description|slice:":500" }}...</p>
           <p class="lead mb-0"><a href="{% url 'post_detail' org.slug object.post3.pk object.post3.slug %}" class="text-black fw-bold">Continue reading...</a></p>
         </center>
         </div>

@@ -9,5 +9,4 @@ def select_org(request):
       'orgs':orgs,
     }
 
-
     return  render(request, 'organisations/orghub.html', context)

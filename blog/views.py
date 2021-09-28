@@ -26,6 +26,7 @@ from django.utils.timezone import make_aware
 import datetime
 from account.decorators import has_org_access
 from challenges.models import OrgForm
+import logging
 
 
 def search_blog(request, slug):
@@ -36,8 +37,7 @@ def search_blog(request, slug):
         searched = request.POST['searched']
         posts = Post.objects.filter(title__icontains=searched)
         contents = Post.objects.filter(description__icontains=searched)
-        # print(orgslug)
-        print("hello")
+        logging.error("hello")
 
         
 
@@ -86,7 +86,6 @@ class PostList(generic.ListView):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
         context['org'] = Organisation.objects.get(slug=portal_slug)
-        print(context['org'].slug)
 
         spec_on = False
         custom_form_on = portal_choice.custom_form_on
@@ -124,8 +123,8 @@ class PostListHealth(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
 
         spec_on = False
@@ -163,8 +162,8 @@ class PostListOrgSpecific(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         
         spec_on = False
@@ -192,8 +191,8 @@ class PostListMonth(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         datetime_object = datetime.datetime.strptime(self.kwargs['month'], "%B")
-        print(datetime_object.month)
-        print(datetime_object)
+        logging.error(datetime_object.month)
+        logging.error(datetime_object)
         return Post.objects.filter(org_tag=portal_choice).filter(created_on__month = datetime_object.month).order_by("-created_on")
 
     def get_context_data(self, **kwargs):
@@ -203,8 +202,8 @@ class PostListMonth(generic.ListView):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         datetime_object = datetime.datetime.strptime(self.kwargs['month'], "%B")
 
-        print(datetime_object.month)
-        print(datetime_object)
+        logging.error(datetime_object.month)
+        logging.error(datetime_object)
         context['month'] = self.kwargs['month']
         context['year'] = self.kwargs['int']
 
@@ -213,8 +212,8 @@ class PostListMonth(generic.ListView):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
         context['orgslug'] = portal_slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         
         spec_on = False
@@ -252,8 +251,8 @@ class PostListCulture(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         
         spec_on = False
@@ -291,8 +290,8 @@ class PostListJobSatisfaction(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         
         spec_on = False
@@ -330,8 +329,8 @@ class PostListRelationships(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         
         spec_on = False
@@ -369,8 +368,8 @@ class PostListLeadership(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
 
         spec_on = False
@@ -408,8 +407,8 @@ class PostListData(generic.ListView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         
         spec_on = False
@@ -448,14 +447,14 @@ class PostDetail(generic.DetailView):
             winning_idea = all_ideas.order_by("likes")[:1]
             winning_idea_id = winning_idea.values('id')[0]['id']
             winning_idea_slug = winning_idea.values('slug')[0]['slug']
-            print(winning_idea_slug)
+            logging.error(winning_idea_slug)
             context['winnerpk'] = winning_idea_id
             context['winnerslug'] = winning_idea_slug
             stuff.winner = Idea.objects.get(id = winning_idea_id)
             stuff.save()
-            print(stuff.winner)
+            logging.error(stuff.winner)
         except:
-            print("fail")
+            logging.error("fail")
 
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
@@ -487,7 +486,7 @@ class PostManagementDetail(generic.DetailView):
             liked = True
 
         # today = datetime.date.today()
-        # print(today)
+        # logging.error(today)
         active = False
         
         if stuff.endDate == None:
@@ -522,17 +521,17 @@ class PostCommentList(generic.ListView):
         context["liked"] = liked
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
 
         return context
 
 def approve_challenge(request, pk, slug, orgslug):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    print(post.status)
+    logging.error(post.status)
     post.status = True
-    print(post.status)
+    logging.error(post.status)
     post.save()
 
     return HttpResponseRedirect(reverse('post_management_detail', args=[orgslug, str(pk), slug]))
@@ -540,25 +539,25 @@ def approve_challenge(request, pk, slug, orgslug):
 
 def add_dates(request, pk, slug):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    print(post.status)
+    logging.error(post.status)
     post.status = True
-    print(post.status)
+    logging.error(post.status)
     post.save()
 
     return HttpResponseRedirect(reverse('post_management_detail', args=[str(pk), slug]))
 
 def reject_challenge(request, pk, slug, orgslug):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    print(post.status)
+    logging.error(post.status)
     post.status = False
-    print(post.status)
+    logging.error(post.status)
     post.save()
 
     return HttpResponseRedirect(reverse('post_management_detail', args=[orgslug, str(pk), slug]))
 
 def like_view(request, pk, slug, orgslug):
     post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    print(post.slug)
+    logging.error(post.slug)
     liked = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
@@ -581,19 +580,19 @@ def like_view_idea(request, pk, slug, orgslug):
     return HttpResponseRedirect(reverse('idea_post', args=[orgslug, str(pk), slug]))
 
 def approval_view(request, pk, slug, orgslug):
-    print(pk)
+    logging.error(pk)
     form = ApprovalForm()
     idea = Post.objects.get(id=pk)
-    print(idea.title)
+    logging.error(idea.title)
     if request.method == "POST":
         form = ApprovalForm(request.POST)
         if form.is_valid():
             startDate = form.cleaned_data.get('startDate')
-            print(startDate)
+            logging.error(startDate)
             endDate = form.cleaned_data.get('endDate')
-            print(endDate)
+            logging.error(endDate)
             status = form.cleaned_data.get('status')
-            print(status)
+            logging.error(status)
             idea.startDate = startDate
             idea.endDate = endDate
             idea.status = status
@@ -629,8 +628,8 @@ def approval_view(request, pk, slug, orgslug):
         # context["liked"] = liked
         # portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         # portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        # print(portal_choice)
-        # print(portal_slug)
+        # logging.error(portal_choice)
+        # logging.error(portal_slug)
         # context['org'] = Organisation.objects.get(slug=portal_slug)
 
         # return context
@@ -656,8 +655,8 @@ class comment_view(CreateView):
         title = post.title
         desc = post.description
 
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['orgslug'] = portal_slug
         context['description'] = desc
         context['title'] = title
@@ -667,7 +666,7 @@ class comment_view(CreateView):
         return context
 
     def get_success_url(self):
-        print(self.kwargs['orgslug'])
+        logging.error(self.kwargs['orgslug'])
         return reverse_lazy('post_detail', kwargs={'orgslug': self.kwargs['orgslug'], 'pk' : self.kwargs['pk'], 'slug' : self.kwargs['slug'] })
 
 
@@ -705,15 +704,15 @@ class idea_comment_view(CreateView):
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
 
-        print(stuff.slug)
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(stuff.slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['orgslug'] = portal_slug
 
         return context
 
     def get_success_url(self):
-        print(self.kwargs['orgslug'])
+        logging.error(self.kwargs['orgslug'])
         return reverse_lazy('idea_post', kwargs={'orgslug': self.kwargs['orgslug'], 'pk' : self.kwargs['pk'], 'slug' : self.kwargs['slug'] })
 
 
@@ -749,12 +748,12 @@ class IdeaDetail(generic.DetailView):
             context['ig_agreements_in_place'] = customised.ig_agreements_in_place
             context['data_and_model_agreed'] = customised.data_and_model_agreed
         context['custom'] = idea_pridar
-        print(idea_post)
+        logging.error(idea_post)
         context['slug'] = idea_post
         context['pk'] = idea_pk
-        print(self.kwargs['pk'])
+        logging.error(self.kwargs['pk'])
         idea_comments = IdeaComment.objects.filter(idea=self.kwargs['pk'])
-        print(idea_comments)
+        logging.error(idea_comments)
         context['idea_comments'] = idea_comments
 
 
@@ -769,18 +768,9 @@ class IdeaDetail(generic.DetailView):
         context["liked"] = liked
         portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['orgslug'] = portal_slug
-
-        # try:
-        #     customised = OrgForm.objects.get(title = stuff.title)
-        #     custom = True
-        #     context['custom'] = custom
-        # except:
-        #     custom = False
-        #     context['custom'] = custom
-
 
         return context
 
@@ -794,12 +784,12 @@ class SelectedIdeaDetail(generic.DetailView):
     #     stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
     #     idea_post = stuff.post.slug
     #     idea_pk = stuff.post.id
-    #     print(idea_post)
+    #     logging.error(idea_post)
     #     context['slug'] = idea_post
     #     context['pk'] = idea_pk
-    #     print(self.kwargs['pk'])
+    #     logging.error(self.kwargs['pk'])
     #     idea_comments = IdeaComment.objects.filter(idea=self.kwargs['pk'])
-    #     print(idea_comments)
+    #     logging.error(idea_comments)
     #     context['idea_comments'] = idea_comments
 
     #     total_likes = stuff.total_likes()

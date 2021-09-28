@@ -47,6 +47,7 @@ import time
 from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.http.response import HttpResponseRedirect
+import logging
 
 FORMS = [("contact", account.forms.CustomUserCreationForm),
          ("age", account.forms.AgeForm),
@@ -120,13 +121,13 @@ def profile_main(request, slug):
     user = request.user
     try:
         dp = request.user.profile_image
-        print(dp)
+        logging.error(dp)
     except:
-        print("Unauthenticated")
+        logging.error("Unauthenticated")
     x = 6
     now = time.localtime()
     date_list = [time.localtime(time.mktime((now.tm_year, now.tm_mon - n, 1, 0, 0, 0, 0, 0, 0)))[:2] for n in range(x)]
-    print(date_list)
+    logging.error(date_list)
     
     
     if user.is_authenticated:
@@ -137,29 +138,26 @@ def profile_main(request, slug):
             given_likes = Idea.total_likes_given(request.user)
             user_challenges = Post.objects.filter(author=request.user).count()
             wins = Idea.total_ideas_selected(request.user)
-            # baseline = 3
-            # score = 0
-            # for i in wins:
-            #     score + 0.
+
             baseline = 3
             score = 0
             for i in range(0,wins):
                 score += 20
-            print(score)
+            logging.error(score)
             value = round(score * 0.35)
 
 
-            print(given_likes)
-            print(stuff)
-            print(slug)
+            logging.error(given_likes)
+            logging.error(stuff)
+            logging.error(slug)
             form = ProfilePic()
             if request.method == "POST":
                 form = ProfilePic(request.POST, request.FILES,)
                 if form.is_valid():
                     user.profile_image = form.cleaned_data.get('profile_image')
                     dp = user.profile_image
-                    print(dp)
-                    print('Succesfully saved')
+                    logging.error(dp)
+                    logging.error('Succesfully saved')
                     user.save()
                     
                     context={
@@ -187,7 +185,7 @@ def profile_main(request, slug):
         
             }
             posts = Post.objects.filter(author=request.user).count()
-            print(posts)
+            logging.error(posts)
         except:
             form = ProfilePic()
             context={
@@ -207,7 +205,7 @@ def testing(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            print('Succesfully saved')
+            logging.error('Succesfully saved')
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             group = Group.objects.get(name='public')
@@ -318,7 +316,7 @@ def edit_profile(request, slug):
         form = ProfilePic(request.POST)
         if form.is_valid():
             pic = form.cleaned_data.get('profile_image')
-            print(pic)
+            logging.error(pic)
             user.profile_image = pic
             user.save()
 
@@ -411,19 +409,19 @@ def activate_user(request, uidb64, token):
 
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
-        print("Your uid is: ", uid)
+        logging.info("Your uid is: ", uid)
 
         user = Account.objects.get(pk=uid)
-        print(user)
+        logging.info(user)
 
     except Exception as e:
         user = None
 
     if user and generate_token.check_token(user, token):
         user.is_email_verified = True
-        print(user.is_email_verified)
+        logging.info(user.is_email_verified)
         user.save()
-        print("good path")
+        logging.info("good path")
 
         return redirect(reverse('activation_success'))
 
@@ -457,17 +455,17 @@ class blogfeed_main(generic.DetailView):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
         context['slug'] = portal_slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         context['orgslug'] = portal_slug
         today = date.today()
         six_months = today + relativedelta(months=-10)
-        print(six_months)
+        logging.error(six_months)
         affiliate = []
         users = Account.objects.filter(affiliated_with=portal_choice)
         # wins = Idea.total_ideas_selected(self.request.user)
-        print(users)
+        logging.error(users)
         ranks = []
         names = []
         score = 0
@@ -477,19 +475,19 @@ class blogfeed_main(generic.DetailView):
             ranks.append(score)
             names.append(i.username)
 
-        print(ranks)
-        print(names)
+        logging.error(ranks)
+        logging.error(names)
         user_data = zip(names, ranks)
-        leaderboard_data = sorted(user_data)[:5]
-        print(leaderboard_data)
+        leaderboard_data = sorted(user_data, key=lambda x: x[1], reverse=True)[:5]
+        logging.error(leaderboard_data)
         context['leaderboard_data'] = leaderboard_data
         total_challenges = Post.objects.filter(org_tag = portal_choice).count()
         total_ideas = Idea.objects.filter(org_tag = portal_choice).count()
         context['total_challenges'] = total_challenges
         context['total_ideas'] = total_ideas
 
-        post_notifs = Post.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id)[:5]
-        idea_notifs = Idea.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id)[:5]
+        post_notifs = Post.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id).order_by("-updated_on")[:5]
+        idea_notifs = Idea.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id).order_by("-updated_on")[:5]
 
         # notifications = zip(post_notifs, idea_notifs)
         context['notifications'] = post_notifs
@@ -499,11 +497,11 @@ class blogfeed_main(generic.DetailView):
         is_auth = False
 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        print(portal_choice)
+        logging.error(portal_choice)
 
         if self.request.user.is_authenticated:
             affiliate = self.request.user.affiliated_with.all()
-            print(affiliate)
+            logging.error(affiliate)
             try: 
                 if portal_choice in affiliate:
                     has_access = True       
@@ -514,7 +512,7 @@ class blogfeed_main(generic.DetailView):
         else:
             has_access = True
         
-        print(has_access)
+        logging.error(has_access)
         context['has_access'] = has_access
 
         result = []
@@ -530,17 +528,17 @@ class blogfeed_main(generic.DetailView):
             month_list.append(i.month)
             year_list.append(i.year)
 
-        print(year_list)
-        print(month_list)
+        logging.error(year_list)
+        logging.error(month_list)
 
         for i in year_list:
-            print(type(i))
+            logging.error(type(i))
 
         for i in month_list:
-            print(calendar.month_name[i])
+            logging.error(calendar.month_name[i])
             month_name_list.append(calendar.month_name[i].lower())
 
-        print(month_name_list)
+        logging.error(month_name_list)
         month_name_list
         zipped_values = zip(month_name_list, year_list)
         context['date_list'] = zipped_values
@@ -569,8 +567,8 @@ class blogfeed_main_edit(generic.DetailView):
         context = super(blogfeed_main_edit, self).get_context_data(*args, **kwargs)
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        print(portal_choice)
-        print(portal_slug)
+        logging.error(portal_choice)
+        logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
         return context
 
@@ -578,7 +576,7 @@ class blogfeed_main_edit(generic.DetailView):
 def test_api(request):
     response = requests.post()
     affiliate = request.user.is_affilated
-    print(affiliate)
+    logging.error(affiliate)
     return render(request, 'home.html', {'response': response})
 
 

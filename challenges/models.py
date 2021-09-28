@@ -1,11 +1,12 @@
 from django.db import models
-from django.db.models.deletion import SET_NULL
+from django.db.models.deletion import CASCADE, SET_NULL
 from account.models import Account
 from blog.models import Post
 import ideaportal.settings as settings
 from django.utils.text import slugify 
 from django.db.models import Count, Max
 import random
+import logging
 
 # Create your models here.
 
@@ -38,7 +39,7 @@ class Department(models.Model):
     ('Other', 'Other'),
     ]
     department = models.CharField(max_length=32, choices=OPTIONS, default='Other')
-    sub_department = models.CharField(max_length=50, unique=True, null=True, blank=True)
+    sub_department = models.CharField(max_length=50, null=True, blank=True)
     is_approved = models.BooleanField(default=False)
     is_core = models.BooleanField(default=False)
 
@@ -63,7 +64,7 @@ class Challenge(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
     description = models.TextField(max_length=500,default='',  unique=True, error_messages={'unique':"This challenge is too similar to an existing one"})
     created_on = models.DateTimeField(auto_now_add=True)
-    department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='category', null=True)
+    department = models.ForeignKey(Department, on_delete=CASCADE, related_name='category', null=True)
     image = models.ImageField(null=True, blank=True)
     org_tag = models.ForeignKey("organisations.Organisation", on_delete=models.SET_NULL, related_name='challengeorgtag', null=True)
     default_pic_mapping = { 'Health': random.choice(health), 'Culture': random.choice(culture), 'Job Satisfaction': random.choice(job_satisfaction),'Relationships': random.choice(relationships), 'Leadership': random.choice(leadership),  'Data': random.choice(data)}
@@ -143,7 +144,7 @@ class Idea(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         # self.winner = self.get_winner()
-        print(self.winner)
+        logging.error(self.winner)
         super(Idea, self).save(*args, **kwargs)
 
 
@@ -206,6 +207,7 @@ class OrgForm(models.Model):
     ip_agreement_in_place = models.BooleanField(default=False)
     ig_agreements_in_place = models.BooleanField(default=False)
     data_and_model_agreed = models.BooleanField(default=False)
+    
     field_16 = models.BooleanField(default=False)
     field_17 = models.BooleanField(default=False)
     field_1_name = models.CharField(max_length=32, null=True, blank=True)
