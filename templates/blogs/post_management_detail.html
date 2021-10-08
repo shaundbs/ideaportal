@@ -4,7 +4,7 @@
 <html>
 
     <head>
-        <title>Django Central</title>
+        <title>NHS x IXN Ideas Portal</title>
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
         <meta name="google" content="notranslate" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -64,7 +64,14 @@
 {% else %}
 <p class=" text-muted">Status: Not approved</p>
 {% endif %}
-<p class="card-text ">{{ object.description | safe }}</p>
+<p class="card-text ">{{ object.description | safe }}</p> 
+<br>
+{% if object.image %}
+<center>
+  <img src="{{ object.image.url }}" style="max-width:50%;max-height:50%;">
+  {% else %}
+  {% endif %}
+</center>
 <hr>
 
 {% if is_active %}

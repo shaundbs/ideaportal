@@ -4,7 +4,7 @@
 <html>
 
     <head>
-        <title>Django Central</title>
+        <title>NHS x IXN Ideas Portal</title>
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
         <meta name="google" content="notranslate" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -94,7 +94,7 @@
                       <h2>Popular Ideas:</h2>
                       <h3>Total number of ideas suggested: {{total_ideas}}</h3>
 
-                        <form class="nhsuk-header__search-form beta-header__search-form" id="search" action="{% url 'search_idea' orgslug post.pk post.slug %}" method="post" role="search">
+                        <form action="{% url 'search_idea' orgslug post.pk post.slug %}" method="post" role="search">
                           {% csrf_token %}
                           <label class="nhsuk-u-visually-hidden" for="search-field">Search the NHS website</label>
                           <div class="autocomplete-container" id="autocomplete-container"></div>
@@ -110,7 +110,6 @@
                       No ideas yet to display:<br><br>
 
                       <a href="{% url 'ideaform' post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
-
                       {% else %}
                       {% for idea in post.ideas.all %}
                       <div class="col-md-12 card mb-4  mt-5 left  top">
@@ -120,10 +119,6 @@
                       <h3>{{ idea.title }} </h3>
                       <p class="card-text ">{{ idea.created_on }} | {{ idea.author }} 
                       </p>
-
-
-
-
                       {{ idea.description }} <br><br>
                       <a href="{% url 'idea_post' orgslug idea.pk idea.slug %}" class="nhsuk-button nhsuk-button--primary">Read More</a>
               

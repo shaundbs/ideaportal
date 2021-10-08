@@ -273,7 +273,7 @@ class PostListCulture(generic.ListView):
         return context
 
 class PostListJobSatisfaction(generic.ListView):
-    paginate_by = 1
+    paginate_by = 4
     template_name = 'blogs/index_job_sat.html'
 
     def get_queryset(self, *args, **kwargs):
@@ -441,7 +441,6 @@ class PostDetail(generic.DetailView):
         total_likes = stuff.total_likes()
         all_ideas = Idea.objects.filter(post=self.kwargs['pk']).order_by('-likes')
         context["total_ideas"] = all_ideas.count()
-        
 
         try:
             winning_idea = all_ideas.order_by("likes")[:1]
@@ -484,9 +483,6 @@ class PostManagementDetail(generic.DetailView):
         liked = False
         if stuff.likes.filter(id=self.request.user.id).exists():
             liked = True
-
-        # today = datetime.date.today()
-        # logging.error(today)
         active = False
         
         if stuff.endDate == None:
@@ -605,37 +601,6 @@ def approval_view(request, pk, slug, orgslug):
 
     return render(request, 'blogs/approval.html', context)
 
-# class approval_view(CreateView):
-#     model = Post
-#     template_name = 'blogs/approval.html' 
-#     form_class = ApprovalForm
-
-    # def form_valid(self, form):
-    #     form.instance.post_id = self.kwargs['pk']
-    #     return super().form_valid(form)
-
-    # def get_context_data(self, *args, **kwargs):
-    #     context = super(PostCommentList, self).get_context_data()
-
-    #     stuff = get_object_or_404(Comment, id=self.kwargs['pk'])
-    #     total_likes = stuff.total_likes()
-
-        # liked = False
-        # if stuff.likes.filter(id=self.request.user.id).exists():
-        #     liked = True
-
-        # context["total_likes"] = total_likes
-        # context["liked"] = liked
-        # portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        # portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        # logging.error(portal_choice)
-        # logging.error(portal_slug)
-        # context['org'] = Organisation.objects.get(slug=portal_slug)
-
-        # return context
-
-    success_url = reverse_lazy('profile_main')
-
 class comment_view(CreateView):
     model = Comment
     template_name = 'blogs/comment.html' 
@@ -669,6 +634,9 @@ class comment_view(CreateView):
         logging.error(self.kwargs['orgslug'])
         return reverse_lazy('post_detail', kwargs={'orgslug': self.kwargs['orgslug'], 'pk' : self.kwargs['pk'], 'slug' : self.kwargs['slug'] })
 
+
+def search_idea_page(request, orgslug, pk, slug):
+    return render(request, 'blogs/searchidea.html')
 
 class idea_comment_view(CreateView):
     model = IdeaComment

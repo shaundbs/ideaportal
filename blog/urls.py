@@ -36,6 +36,8 @@ urlpatterns = [
     path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/approval-view/', views.approval_view, name='approval_view'),
     path('ideas/<slug:orgslug>/<int:pk>/<slug:slug>/', views.IdeaDetail.as_view(), name='idea_post'),
     path('ideas/selected-ideas/<int:pk>/<slug:slug>/', views.SelectedIdeaDetail.as_view(), name='chosen_idea_post'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/search-idea-main/', views.search_idea_page, name='search_idea_main'),
+
 
     path('ideas/<slug:orgslug>/likes/<int:pk>/<slug:slug>/', views.like_view_idea, name='like_idea'),
     path('ideas/<slug:orgslug>/<int:pk>/<slug:slug>/comment', views.idea_comment_view.as_view(), name='comment_idea'),

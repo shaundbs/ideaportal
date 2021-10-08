@@ -43,10 +43,10 @@ class Organisation(models.Model):
     ('Data', 'Data'),
     ('Other', 'Other')
     ]
-    section1 = models.CharField(max_length=1000, null=True, blank=True)
-    section2 = models.CharField(max_length=1000, null=True, blank=True)
-    section3 = models.CharField(max_length=1000, null=True, blank=True)
-    about = models.CharField(max_length=1000, null=True, blank=True)
+    section1 = models.CharField(max_length=5000, null=True, blank=True)
+    section2 = models.CharField(max_length=5000, null=True, blank=True)
+    section3 = models.CharField(max_length=5000, null=True, blank=True)
+    about = models.CharField(max_length=5000, null=True, blank=True)
 
     def get_profile_pic_url(self):
         if not self.image:

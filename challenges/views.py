@@ -498,7 +498,7 @@ def submit_challenge(request, slug):
         orgobject = Organisation.objects.get(slug=slug)
         
         if request.method == "POST":
-            form = ChallengeForm(request.POST)
+            form = ChallengeForm(request.POST, request.FILES)
 
             if form.is_valid():
                 form.author = request.user

@@ -4,7 +4,7 @@
 <html>
 
     <head>
-        <title>Django Central</title>
+        <title>NHS x IXN Ideas Portal</title>
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">
         <meta name="google" content="notranslate" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -293,15 +293,6 @@
 {% else %}
 {% endif %}
 
-<br>
-{% if idea.image %}
-
-<center>
-  <img src="{{ idea.image.url }}" style="max-width:50%;max-height:50%;">
-  {% else %}
-  {% endif %}
-</center>
-
 
 <button formaction="{% url 'approve_idea' orgslug idea.pk idea.slug %}" type="submit" name="idea_id" value="{{ idea.id }}" class="nhsuk-button"  onclick="return confirm('Are you sure you want to approve this item?');">Approve</button>
 
@@ -343,10 +334,3 @@
 <br>
 
 {% include 'components/footer.html' %}
-
-<!-- <script>
-var result = confirm("Want to delete?");
-if (result) {
-    //Logic to delete the item
-}
-</script> -->
