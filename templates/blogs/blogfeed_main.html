@@ -343,6 +343,17 @@
         <br>
         {% endif %}
 
+        <article class="blog-post">
+        <br>
+        {% if organisation.section3 is not None %}
+        <p class="mb-0">{{ organisation.section3 }}</p>
+        <br>
+
+        {% else %}
+        <p class="mb-0">Portal Managers please fill out this section</p>
+        <br>
+        {% endif %}
+
         <p class="blog-post-title border-bottom">Leaderboard</p>
         <br>
 
