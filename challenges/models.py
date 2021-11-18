@@ -65,6 +65,7 @@ class Challenge(models.Model):
     description = models.TextField(max_length=500,default='',  unique=True, error_messages={'unique':"This challenge is too similar to an existing one"})
     created_on = models.DateTimeField(auto_now_add=True)
     department = models.ForeignKey(Department, on_delete=CASCADE, related_name='category', null=True)
+    anonymous = models.BooleanField(null=True)
     image = models.ImageField(null=True, blank=True, upload_to="images/challenge_images_lib")
     org_tag = models.ForeignKey("organisations.Organisation", on_delete=models.SET_NULL, related_name='challengeorgtag', null=True)
     default_pic_mapping = { 'Health': random.choice(health), 'Culture': random.choice(culture), 'Job Satisfaction': random.choice(job_satisfaction),'Relationships': random.choice(relationships), 'Leadership': random.choice(leadership),  'Data': random.choice(data)}

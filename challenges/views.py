@@ -491,33 +491,74 @@ def submit_challenge_successful(request, slug):
 
 
 def submit_challenge(request, slug):
+    """
+    Called for both getting the challenge submission page and submitting a challenge
+    
+    Keyword Arguments:
+    request -- the HTTP request that calls this.
+    slug -- the url slug; identifies the organization that this challenge is being submitted in.
+    
+    Returns either the submit challenge page, or a redirect to the success page
+    """
+    # if the user is logged in, we can tag the request to the user (and should give an option to post anonymously anyway)
     if request.user.is_authenticated:
+        # Generates a new form to store the challenge data
         form = ChallengeForm()
         logging.error(slug)
         org = slug
         orgobject = Organisation.objects.get(slug=slug)
         
+        # If the type of request we're getting is a POST request then we're being given a completed form to send
         if request.method == "POST":
             form = ChallengeForm(request.POST, request.FILES)
 
             if form.is_valid():
                 form.author = request.user
                 challenge = form.save()
-                challenge.author = request.user
                 challenge.org_tag = orgobject
+                # If the challenge is NOT flagged to be anonymous, we need to get the user from the request
+                if challenge.anonymous != True:
+                    challenge.author = request.user
                 cnwl = False
+                # Save the challenge form again, because we've made changes
                 challenge = form.save()
                 Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, 
                 challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
 
                 return redirect('submit_challenge_successful', slug=slug)
         
-
-        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on, 'orgslug' : slug}
+        # Else if the type of request ISN'T POST, the request it to get the webpage, so we format the context and render the page
+        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on, 'orgslug' : slug, 'logged_in' : True}
 
         return render(request,'challenges/submit_challenge.html', context)
+    # Else the user isn't logged in, so the challenge is anonymous by default
     else:
-        return redirect('access_denied')
+        # Generates a new form to store the challenge data
+        form = ChallengeForm()
+        logging.error(slug)
+        org = slug
+        orgobject = Organisation.objects.get(slug=slug)
+        
+        # If the type of request we're getting is a POST request then we're being given a completed form to send
+        if request.method == "POST":
+            form = ChallengeForm(request.POST, request.FILES)
+
+            if form.is_valid():
+                challenge = form.save()
+                challenge.org_tag = orgobject
+                cnwl = False
+                # Save the challenge form again, because we've made changes
+                challenge = form.save()
+                Post.objects.create(title=challenge.title, severity=challenge.severity, department=challenge.department, 
+                challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
+
+                return redirect('submit_challenge_successful', slug=slug)
+        
+        # Else if the type of request ISN'T POST, the request it to get the webpage, so we format the context and render the page
+        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on, 'orgslug' : slug, 'logged_in' : False}
+
+        return render(request,'challenges/submit_challenge.html', context)
+
 
 def orcha_api(request):
     
