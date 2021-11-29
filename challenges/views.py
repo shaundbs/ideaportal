@@ -525,6 +525,7 @@ def submit_challenge(request, slug):
                 Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, 
                 challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
 
+                # Redirect the user to the success page
                 return redirect('submit_challenge_successful', slug=slug)
         
         # Else if the type of request ISN'T POST, the request it to get the webpage, so we format the context and render the page
@@ -552,6 +553,7 @@ def submit_challenge(request, slug):
                 Post.objects.create(title=challenge.title, severity=challenge.severity, department=challenge.department, 
                 challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
 
+                # Redirect the user to the success page
                 return redirect('submit_challenge_successful', slug=slug)
         
         # Else if the type of request ISN'T POST, the request it to get the webpage, so we format the context and render the page

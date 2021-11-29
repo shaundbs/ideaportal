@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'organisations',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,8 +50,8 @@ INSTALLED_APPS = [
     'orchaapi',
     'rest_framework.authtoken',
     'dotenv',
-    'organisations',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,7 +88,7 @@ WSGI_APPLICATION = 'ideaportal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
+""" DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ideasdb',
@@ -96,8 +97,18 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432'
     }
-}
+} """
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'djangotest',
+        'USER': 'djangotest',
+        'PASSWORD': '%Petrol.Real.42%',
+        'HOST': 'MYSQL01',
+        'PORT': '3306',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
