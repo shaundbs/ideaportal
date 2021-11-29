@@ -1,0 +1,20 @@
+{% autoescape off %}
+
+{% if email == "" %}
+recieved feedback from anonymous user
+{% else %}
+recieved feedback from user with email address {{email}}
+{% endif %}
+
+User gave the site a rating of {{rating}}
+
+{% if message == "" %}
+User decided to not give a message with their feedback.
+{% else %}
+User also supplied the following message to their feedback:
+
+{{message}}
+
+{% endif %}
+
+{% endautoescape %}

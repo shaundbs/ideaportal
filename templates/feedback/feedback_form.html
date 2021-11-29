@@ -1,0 +1,82 @@
+{% include 'components/navbar_reg.html' %}
+
+{% load static %}
+
+
+  
+  <div class="nhsuk-width-container">
+          
+      
+      
+  
+      <main class="nhsuk-main-wrapper" id="main-content" role="main">
+
+        
+  
+          
+  
+  <div class="nhsuk-grid-row">
+      <div class="nhsuk-grid-column-two-thirds">
+  
+        <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
+            <a class="nhsuk-back-link__link" id="back_button_link" href="{% url 'blogfeed_main' orgslug %}">
+                <svg class="nhsuk-icon nhsuk-icon__chevron-left"
+                     xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+                </svg>
+                Go back
+            </a>
+          </div> 
+  
+          <form method="post" action="">
+            {% csrf_token %}
+              <input type="hidden" id="CorrelationId" name="CorrelationId" value="68ce81df-f1ad-44c7-8694-84290784601e" />
+              <div class="nhsuk-form-group " id="question_date">
+                <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-hint">
+                    <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
+                        <h1 id="page_h1_title" class="nhsuk-fieldset__heading">
+                            Please give your feedback to us!
+                        </h1>
+                    </legend>
+                    <div id="nhs-number-hint">
+                        <p> </p>
+                        <div class="nhsuk-hint" id="example-hint">
+                            <p>This website is still in development so we'd love your feedback to help us</p>
+                        </div>
+                        
+                    </div>
+
+                                        {{ feedbackform }}
+
+                    
+  
+              <button id="submit-button" type="submit" class="nhsuk-button">Continue</button>
+  
+  
+      </div>
+  </div>
+  
+      </main>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+ 
+
+
+  
+  {% include 'components/footer.html' %}
+  
+  </body>
+  </html>

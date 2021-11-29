@@ -86,6 +86,10 @@ urlpatterns = [
     path('<slug:slug>/profile/profile-main', views.profile_main, name='profile_main'),
     path('auth/testform/', views.testing, name='testing'),
 
+    # FOR BETA ONLY
+    path('<slug:slug>/feedback/', views.feedback, name='feedback'),
+    path('<slug:slug>/feedback-successful/', views.feedback_successful, name='feedback_successful'),
+
 ] 
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

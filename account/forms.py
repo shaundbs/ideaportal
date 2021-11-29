@@ -42,6 +42,16 @@ class EmployeeForm(forms.Form):
     is_staff = forms.ChoiceField(choices=BOOLEAN, widget=forms.RadioSelect)
 
     
-
+class FeedbackForm(forms.Form):
+    USER_RATING = [
+        ('terrible', 'Berrible'),
+        ('bad', 'Bad'),
+        ('normal', 'Okay'),
+        ('good', 'Good'),
+        ('great', 'Great'),
+    ]
+    rating = forms.ChoiceField(choices = USER_RATING, widget=forms.RadioSelect, label="How would you rate your time on this site?")
+    feedback_message = forms.CharField(max_length=1000, help_text='1000 characters maximum.', label="Please provide any feedback you have", required=False)
+    email = forms.EmailField(max_length=254, label="If you want, please leave your email here for us to get back to you. If not, you'll remain anonymous.", required=False)
 
 # 'interests', 'department', 'sub-department',, 'is_staff',  'is_active', 'date_joined'
