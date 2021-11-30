@@ -30,6 +30,9 @@ go to the file ideasportal.settings and scroll down to the section containing th
 and comment out what's currently there, and then copy paste it below.
 Edit the values of the new default database to match the database you're using.
 
+Check your project for any __pycahce__ or migrations folders; you'll need to delete those folders before
+continuing.
+
 
 STEP TWO:
 go to the following files and comment out the following lines.

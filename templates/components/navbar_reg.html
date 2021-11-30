@@ -80,12 +80,12 @@
         <header class="nhsuk-header nhsuk-header--transactional" role="banner">
     <div class="nhsuk-width-container nhsuk-header__container">
       <div class="nhsuk-header__logo">
-        <a id="link_nhs_uk_logo_home" class="nhsuk-header__link" href="/blogs/post-feed/{{orgslug}}" aria-label="NHS homepage">
+        <a id="link_nhs_uk_logo_home" class="nhsuk-header__link" href="{% url 'home' %}" aria-label="NHS homepage">
           <image style="height: 40px; width: 85px; align-self: flex-start;" src="{% static 'frontend/imgs/ixn2.png' %}" xlink:href=""></image>
         </a>
       </div>
       <div class="nhsuk-header__transactional-service-name nhsuk-header__transactional-service-name--long">
-        <a id="link_repeat_prescriptions_start_page" class="nhsuk-header__transactional-service-name--link" href="/blogs/post-feed/{{orgslug}}">
+        <a id="link_repeat_prescriptions_start_page" class="nhsuk-header__transactional-service-name--link" href="{% url 'home' %}">
         Ideas Portal
         </a>
 
