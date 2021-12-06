@@ -250,7 +250,7 @@ class IdeaListOpen(generic.ListView):
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
         logging.error(self.kwargs['pk'])
-        context['slug'] = self.kwargs['slug']
+        context['orgslug'] = self.kwargs['slug']
         context['title'] = 'Open Ideas'
         context['pk'] = self.kwargs['pk']
         page = self.request.GET.get('page')

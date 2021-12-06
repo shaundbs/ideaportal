@@ -641,8 +641,11 @@ def feedback(request, slug):
             # We need to build the email to give to the feedback email address.
             feedback_email_content = render_to_string('feedback/feedback_email.html', {
                 'email': form.cleaned_data['email'],
-                'rating': form.cleaned_data['rating'],
-                'message': form.cleaned_data['feedback_message'],
+                'experience_rating': form.cleaned_data['experience_rating'],
+                'use_rating': form.cleaned_data['use_rating'],
+                'improvement_message': form.cleaned_data['improvement_message'],
+                'next_feature_message': form.cleaned_data['next_feature_message'],
+                'other_feedback': form.cleaned_data['feedback_message'],
             })
 
             print(feedback_email_content)
