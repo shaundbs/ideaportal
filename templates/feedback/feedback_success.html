@@ -1,4 +1,4 @@
-{% include 'components/navbar_reg.html' %}
+{% include 'components/navbar_limited.html' %}
 
 {% load static %}
 
@@ -15,7 +15,7 @@
     <div class="nhsuk-grid-column-two-thirds">
   
     
-      <form method="get" action="{% url 'blogfeed_main' slug %}">
+      <form method="get" action="{% url 'blogfeed_main' orgslug %}">
         {% csrf_token %}
   
         <div class="nhsuk-form-group">

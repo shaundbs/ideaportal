@@ -198,7 +198,8 @@ def profile_main(request, slug):
             ValidationError("Not signed in")
         return render(request, 'profile/profile_main.html', context)
     else:
-        return render(request, 'errors/access_denied.html',)
+        context={'orgslug': slug}
+        return render(request, 'errors/access_denied.html', context)
 
 
 def testing(request):
@@ -663,5 +664,5 @@ def feedback(request, slug):
     return render(request,'feedback/feedback_form.html', context)
 
 def feedback_successful(request, slug):
-    context = { 'slug': slug}
+    context = { 'orgslug': slug}
     return render(request,'feedback/feedback_success.html', context)
