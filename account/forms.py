@@ -60,7 +60,7 @@ class FeedbackForm(forms.Form):
     ]
 
     experience_rating = forms.ChoiceField(choices = USER_RATING, widget=forms.RadioSelect, label="How would you rate your overall experience on our site?")
-    use_rating = forms.ChoiceField(choices = USER_RATING, widget=forms.RadioSelect, label="How easy was the site to use?")
+    use_rating = forms.ChoiceField(choices = EASE_OF_USE_RATING, widget=forms.RadioSelect, label="How easy was the site to use?")
     improvement_message = forms.CharField(max_length=1000, help_text='1000 characters maximum.', label="What can we do to make the Ideas Portal better?", required=False)
     next_feature_message = forms.CharField(max_length=1000, help_text='1000 characters maximum.', label="What’s the next feature we should build?", required=False)
     feedback_message = forms.CharField(max_length=1000, help_text='1000 characters maximum.', label="Please provide any other feedback you have", required=False)

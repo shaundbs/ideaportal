@@ -10,7 +10,7 @@
       
   
       <main class="nhsuk-main-wrapper" id="main-content" role="main">
-
+        {% load widget_tweaks %}
         
   
           
@@ -30,32 +30,69 @@
             </a>
           </div> 
   
-          <form method="post" action="">
+          <form method="post" action="" enctype="multipart/form-data">
             {% csrf_token %}
-              <input type="hidden" id="CorrelationId" name="CorrelationId" value="68ce81df-f1ad-44c7-8694-84290784601e" />
-              <div class="nhsuk-form-group " id="question_date">
-                <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-hint">
-                    <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
-                        <h1 id="page_h1_title" class="nhsuk-fieldset__heading">
-                            Please give your feedback to us!
-                        </h1>
-                    </legend>
-                    <div id="nhs-number-hint">
-                        <p> </p>
-                        <div class="nhsuk-hint" id="example-hint">
-                            <p>This website is still in development so we'd love your feedback to help us</p>
-                        </div>
-                        
+            <fieldset class="nhsuk-fieldset" aria-describedby="name-hint">
+              <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
+                
+                <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Please give your feedback to us!</h1>
+              </legend>
+              <div class="nhsuk-form-group " id="question_nhsnumber">
+          
+                <div class="nhsuk-form-group " id="question_nhsnumber">
+                    {{ feedbackform.experience_rating.label_tag }}
+                    <div class="nhsuk-form-group " >
                     </div>
+                    {% render_field feedbackform.experience_rating data-val="true" %}
+                  </div>
+                
+                <div class="nhsuk-form-group " id="question_nhsnumber">
+                    {{ feedbackform.use_rating.label_tag }}
+                    <div class="nhsuk-form-group " >
+                    </div>
+                    {% render_field feedbackform.use_rating data-val="true" %}
+                  </div>
 
-                                        {{ feedbackform }}
-
-                    
-  
-              <button id="submit-button" type="submit" class="nhsuk-button">Continue</button>
-  
-  
-      </div>
+                <div class="nhsuk-form-group " id="question_nhsnumber">
+                    {{ feedbackform.improvement_message.label_tag }}
+                    <div class="nhsuk-form-group " >
+                    </div>
+                    {% render_field feedbackform.improvement_message class="nhsuk-textarea" rows="5" autocomplete="given-name" data-val="true" %}
+                  </div>
+                
+                <div class="nhsuk-form-group " id="question_nhsnumber">
+                    {{ feedbackform.next_feature_message.label_tag }}
+                    <div class="nhsuk-form-group " >
+                    </div>
+                    {% render_field feedbackform.next_feature_message class="nhsuk-textarea" rows="5" autocomplete="given-name" data-val="true" %}
+                  </div>
+                
+                <div class="nhsuk-form-group " id="question_nhsnumber">
+                    {{ feedbackform.feedback_message.label_tag }}
+                    <div class="nhsuk-form-group " >
+                    </div>
+                    {% render_field feedbackform.feedback_message class="nhsuk-textarea" rows="5" autocomplete="given-name" data-val="true" %}
+                  </div>
+                
+                  <div class="nhsuk-form-group " id="question_nhsnumber">
+                    {{ feedbackform.email.label_tag }}
+                    <div class="nhsuk-form-group " >
+                    </div>
+                    {% render_field feedbackform.email class="nhsuk-textarea" autocomplete="given-name" data-val="true" %}
+                  </div>
+          
+              </div>
+            
+          
+          
+                
+          
+          
+          </fieldset>
+            <button id="submit-button" type="submit" class="nhsuk-button">Submit</button>
+          
+          <input name="__RequestVerificationToken" type="hidden" value="CfDJ8FTFIt_4U2pNpv3VDtvSAxYKrXrwGy8fzb2FaRMh-uITyPVdopJQfX2Av8ilk6wVUq6mX-4vQ0S4_lFrEojdDQD47eTOzxtWlNC9Tn4cbVhhzWGQtLWDhiYmvOyxODo-Gv5M66j0cLNkGdvzJa3WoWQ" /></form>
+          </form>
   </div>
   
       </main>
