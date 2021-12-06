@@ -68,7 +68,11 @@ STEP FOUR:
 now you need to add a few default values to the database.
 In organisations_organisation you need to add the organisations we're using. at a BARE MINIMUM the CNWL
 organisation needs to be in there. Remember to set them as active and give them a slug!
+
 In the auth_group table you need to add "public", "admins", "challenge_managers", and "portal_managers"
+
+In the challenges_departments table you will need to put in all the departments. This includes "health",
+"culture", "Job Satisfaction", "Relationships", "Leadership", and "Data"
 
 You could probably just do this step with a SQL script, let's be real, but this took me 20 hours to
 troubleshoot so I'll come back and write that script later...
