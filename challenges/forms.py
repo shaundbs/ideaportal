@@ -102,11 +102,15 @@ class ChallengeForm(forms.ModelForm):
         self.fields['department'].queryset = Department.objects.filter(is_approved=True)
         self.fields['additional_field'].required = False
         self.fields['image'].required = False
+        self.fields['anonymous'].required = False
 
     class Meta:
+        # The model that this object uses to build a webpage form
         model = Challenge
-        fields = ['title','department', 'description', 'severity', 'additional_field', 'image']
-        labels = {'title':'Title', 'department':'Department', 'description': 'Description', 'severity': 'Severity', 'additional_field': 'Extra', 'image':'Add an attachment'}
+        # The model's fields that are gathered by the form
+        fields = ['title','department', 'description', 'severity', 'anonymous', 'additional_field', 'image']
+        # labels for each field, corresponds to text on the webpage that tell you what each form item is
+        labels = {'title':'Title', 'department':'Department', 'description': 'Description', 'severity': 'Severity', 'anonymous': 'Post anonymously?', 'additional_field': 'Extra', 'image':'Add an attachment'}
 
 
 # class ChallengeManagementForm(forms.ModelForm):

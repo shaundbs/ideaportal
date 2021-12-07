@@ -1,0 +1,42 @@
+{% autoescape off %}
+
+{% if email == "" %}
+recieved feedback from anonymous user
+{% else %}
+recieved feedback from user with email address {{email}}
+{% endif %}
+
+User rated the experience of the website as: {{experience_rating}}
+
+User rated the ease of use of the website as: {{use_rating}}
+
+{% if improvement_message == "" %}
+User decided to not give any feedback on what can be improved.
+{% else %}
+User also supplied the following message as to what can be improved:
+
+{{improvement_message}}
+
+{% endif %}
+
+
+{% if next_feature_message == "" %}
+User decided to not give any feedback on what to work on next.
+{% else %}
+User also supplied the following message as to what to work on next:
+
+{{next_feature_message}}
+
+{% endif %}
+
+
+{% if other_feedback == "" %}
+User decided to not give any additional feedback.
+{% else %}
+User also supplied the additional feedback:
+
+{{other_feedback}}
+
+{% endif %}
+
+{% endautoescape %}

@@ -5,7 +5,6 @@
   
   <div class="nhsuk-width-container">
           
-
       
   
       <main class="nhsuk-main-wrapper" id="main-content" role="main">
@@ -16,7 +15,7 @@
     <div class="nhsuk-grid-column-two-thirds">
   
     
-      <form method="get" action="{% url 'bloghub' orgslug %}">
+      <form method="get" action="{% url 'blogfeed_main' orgslug %}">
         {% csrf_token %}
   
         <div class="nhsuk-form-group">
@@ -24,13 +23,13 @@
             <fieldset class="nhsuk-fieldset" aria-describedby="nhs-number-hint">
                 <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
                     <h1 id="page_h1_title" class="nhsuk-fieldset__heading">
-                        Idea submitted
+                        Feedback submitted succesfully!
                     </h1>
                 </legend>
                 <div id="nhs-number-hint">
-                    <p>You will receive a notification from a challenge manager on the status of your idea in due course</p>
+                    <p>Thank you for submitting your feedback; we'll be sure to read it!</p>
                     <div class="nhsuk-hint" id="example-hint">
-                        Click the button to return to the challenge feed
+                        Click the button to return to the main menu
                       </div>
                     
                 </div>
@@ -39,7 +38,7 @@
 
         
         </div>
-        <button id="submit-button" type="submit" class="nhsuk-button">Return to challenge Feed</button>
+        <button id="submit-button" type="submit" class="nhsuk-button">Return to Menu</button>
   
       <!-- <input name="__RequestVerificationToken" type="hidden" value="CfDJ8FTFIt_4U2pNpv3VDtvSAxZpzKN5Q5mcKb0jzaXKDbM-lyrg9BbLo4YJZRq2Zaiebr-tT0bhvby73IhfDVyJ6TSKClfQB5Y1tHmxWGvI20kZlnYxgIxSk_Rcs_DE2nbYN2YMq-nf4iNGy3GvqRKWnf8" /></form> -->
   

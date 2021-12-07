@@ -324,7 +324,7 @@
 <br>
 
         {% if organisation.section1 is not None %}
-        <p class="mb-0">{{ organisation.section1 }}</p>
+        <p class="mb-0">{% autoescape off %}{{ organisation.section1 }}{% endautoescape %}</p>
         <br>
 
         {% else %}
@@ -335,7 +335,7 @@
       <article class="blog-post">
 <br>
         {% if organisation.section2 is not None %}
-        <p class="mb-0">{{ organisation.section2 }}</p>
+        <p class="mb-0">{% autoescape off %}{{ organisation.section2 }}{% endautoescape %}</p>
         <br>
 
         {% else %}
@@ -346,7 +346,7 @@
         <article class="blog-post">
         <br>
         {% if organisation.section3 is not None %}
-        <p class="mb-0">{{ organisation.section3 }}</p>
+        <p class="mb-0">{% autoescape off %}{{ organisation.section3 }}{% endautoescape %}</p>
         <br>
 
         {% else %}

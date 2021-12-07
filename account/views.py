@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.urls.base import reverse_lazy
 from requests.api import head
 from requests.models import HTTPBasicAuth
-from .forms import AgeForm, CustomUserCreationForm, EmployeeForm, EmailForm, ProfilePic
+from .forms import AgeForm, CustomUserCreationForm, EmployeeForm, EmailForm, ProfilePic, FeedbackForm
 from .decorators import  allowed_users, admin_only, unauthenticated_user
 from django.contrib.auth.models import Group, User
 from django.core.mail import EmailMessage
@@ -48,6 +48,8 @@ from datetime import date
 from dateutil.relativedelta import relativedelta
 from django.http.response import HttpResponseRedirect
 import logging
+# BELOW IMPORT IS USED FOR FEEDBACK EMAIL SENDING
+from django.core.mail import send_mail
 
 FORMS = [("contact", account.forms.CustomUserCreationForm),
          ("age", account.forms.AgeForm),
@@ -196,7 +198,8 @@ def profile_main(request, slug):
             ValidationError("Not signed in")
         return render(request, 'profile/profile_main.html', context)
     else:
-        return render(request, 'errors/access_denied.html',)
+        context={'orgslug': slug}
+        return render(request, 'errors/access_denied.html', context)
 
 
 def testing(request):
@@ -618,3 +621,51 @@ class ContactWizard(NamedUrlWizardView):
 #     form_data = [form.cleaned_data for form in form_list]
 
 #     return form_data
+
+
+# FOR THE BETA FEEDBACK FORM
+def feedback(request, slug):
+    # Generates a new form to store the feedback
+    form = FeedbackForm()
+    logging.error(slug)
+    org = slug
+    orgobject = Organisation.objects.get(slug=slug)
+    
+    # If the type of request we're getting is a POST request then we're being given a completed form to send
+    if request.method == "POST":
+        form = FeedbackForm(request.POST)
+
+        if form.is_valid():
+            
+
+            # We need to build the email to give to the feedback email address.
+            feedback_email_content = render_to_string('feedback/feedback_email.html', {
+                'email': form.cleaned_data['email'],
+                'experience_rating': form.cleaned_data['experience_rating'],
+                'use_rating': form.cleaned_data['use_rating'],
+                'improvement_message': form.cleaned_data['improvement_message'],
+                'next_feature_message': form.cleaned_data['next_feature_message'],
+                'other_feedback': form.cleaned_data['feedback_message'],
+            })
+
+            print(feedback_email_content)
+
+            send_mail(
+                'Feedback recieved',
+                feedback_email_content,
+                None,
+                ['jackblanduk@gmail.com'],
+                fail_silently=False,
+            )
+
+            # Redirect the user to the success page
+            return redirect('feedback_successful', slug=slug)
+    
+    # Else if the type of request ISN'T POST, the request it to get the webpage, so we format the context and render the page
+    context = {'feedbackform': form, 'org': org, 'custom_on' : orgobject.custom_form_on, 'orgslug' : slug}
+
+    return render(request,'feedback/feedback_form.html', context)
+
+def feedback_successful(request, slug):
+    context = { 'orgslug': slug}
+    return render(request,'feedback/feedback_success.html', context)

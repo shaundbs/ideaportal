@@ -1,0 +1,84 @@
+Django, when it comes to data models like this project's, can be a bit finicky when creating the data
+models; so we're gonna have to do a bit of manual bit-by-bit work for it.
+
+
+STEP ZERO - PREP:
+In order to get the database to build correctly, we're going to have to build it seperately from the 
+main project. First you need to build an EMPTY database using whatever SQL database system you're using.
+Then, you'll want to start a new Django project seperate from the main project. You can see how to do
+this on the official Django website's tutorial. Once you're finished with that, you'll want to use the
+command
+
+    py manage.py startapp
+
+on the cmd interfact to create the base app folders for account, blog, challenges, orchaapi, and
+organisations.
+
+Now, open up the main ideaplatform project in a seperate window and copy the following:
+- The media, static, and template folders
+- The settings.py file in the main directory (there's only one settings.py file so dw)
+- The models.py file for each app (account, blog, etc)
+
+Remember that you will need to change the ROOT_URLCONF and WSGI_APPLICATION constants in the 
+settings.py file if you named this project something different. ALSO remember to make sure there's only
+one copy of each models.py for each app, and it's the correct one; best way to do this is to not copy
+the whole file but instead the contents of the files.
+
+STEP ONE:
+first make sure you have your empty database set up and have the details you need for it. Then,
+go to the file ideasportal.settings and scroll down to the section containing the DATABASES constant
+and comment out what's currently there, and then copy paste it below.
+Edit the values of the new default database to match the database you're using.
+
+Check your project for any __pycahce__ or migrations folders; you'll need to delete those folders before
+continuing.
+
+
+STEP TWO:
+go to the following files and comment out the following lines.
+    account.models: line 71
+    organizations.models: lines 25, 29, 30, and 31
+    blog.models: lines 29, 31, 37, and 38
+
+then go into the commandline and cd to the root directory of the project (where manage.py is)
+
+type in the following commands:
+    py manage.py makemigrations organisations
+    py manage.py makemigrations blog
+    py manage.py makemigrations account
+    py manage.py makemigrations challenges
+    py manage.py makemigrations orchaapi
+    py manage.py migrate
+
+Check your SQL database to make sure the tables have been created.
+
+STEP THREE:
+go back into the account.models file and uncomment like 71.
+then run the commands:
+    py manage.py makemigrations
+    py manage.py migrate
+
+repeat for blog.models and organizations.models
+
+If something goes wrong, just nuke the __pycache__ folders, the migrations folders, and the database.
+then try again.
+
+
+STEP FOUR:
+now you need to add a few default values to the database.
+In organisations_organisation you need to add the organisations we're using. at a BARE MINIMUM the CNWL
+organisation needs to be in there. Remember to set them as active and give them a slug!
+
+In the auth_group table you need to add "public", "admins", "challenge_managers", and "portal_managers"
+
+In the challenges_departments table you will need to put in all the departments. This includes "health",
+"culture", "Job Satisfaction", "Relationships", "Leadership", and "Data"
+
+You could probably just do this step with a SQL script, let's be real, but this took me 20 hours to
+troubleshoot so I'll come back and write that script later...
+
+
+STEP FIVE:
+now that the database is set up we can return to the original github repo project. Go to the settings.py
+file and set the DATABASES constant to the same thing you set the copy to in step one. The server will
+now work.

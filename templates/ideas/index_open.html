@@ -1,4 +1,4 @@
-{% include 'components/navbar_reg.html' %}
+{% include 'components/navbar_limited.html' %}
 
 <!DOCTYPE html>
 <html>
@@ -59,7 +59,7 @@
 
     <h1>{{ title }}</h1>
     <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
-        <a class="nhsuk-back-link__link" id="back_button_link"href="{% url 'lifecycle' slug pk %}">
+        <a class="nhsuk-back-link__link" id="back_button_link"href="/challenges/{{orgslug}}/challenge-history/lifecycle/{{pk}}">
             <svg class="nhsuk-icon nhsuk-icon__chevron-left"
                  xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 24 24"

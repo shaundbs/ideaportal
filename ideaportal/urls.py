@@ -43,7 +43,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('ideaportal-management/', user_site.urls),
     path('home', views.home, name='home'),
-        path('info/admin-info', views.admin_info, name='admin_info'),
+    path('info/admin-info', views.admin_info, name='admin_info'),
     path('info/portal-manager-info', views.portal_manager_info, name='portal_manager_info'),
     path('info/challenge-manager-info', views.challenge_manager_info, name='challenge_manager_info'),
     path('info/nhs-staff-info', views.nhs_staff_info, name='nhs_staff_info'),
@@ -85,6 +85,12 @@ urlpatterns = [
     path('activate-user/<uidb64>/<token>', views.activate_user, name='activate'),
     path('<slug:slug>/profile/profile-main', views.profile_main, name='profile_main'),
     path('auth/testform/', views.testing, name='testing'),
+
+    path('/blogs/post-feed/', views.index),
+
+    # FOR BETA ONLY
+    path('<slug:slug>/feedback/', views.feedback, name='feedback'),
+    path('<slug:slug>/feedback-successful/', views.feedback_successful, name='feedback_successful'),
 
 ] 
 
