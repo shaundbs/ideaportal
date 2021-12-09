@@ -92,7 +92,7 @@
                     <p class="card-text"> Created on : {{organisation.created_on }} <br> Specialty: {{organisation.specialty  }}</p>
 
 
-                    <a href="{% url 'lifecycle' slug organisation.id %}" class="nhsuk-button nhsuk-button--secondary">View ideas in progress</a>
+                    <a href="{% url 'lifecycle' organisation.id %}" class="nhsuk-button nhsuk-button--secondary">View ideas in progress</a>
                 </div>
             </div>
             {% endfor %}

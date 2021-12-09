@@ -5,7 +5,7 @@ from .forms import IdeaForm, CriteriaForm, ChallengeForm, DepartmentForm, OrgSpe
 from django.shortcuts import redirect
 from operator import pos
 from django.core.checks import messages
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from .models import Challenge, Post, Idea, Department, OrgForm
 from django.shortcuts import render, get_object_or_404
@@ -422,38 +422,48 @@ class IdeaListInDev(generic.ListView):
         
 class History(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    template_name = 'challenges/index_history.html'
+    template_name = 'challenges/lifecycle.html'
     
 
-    model = Organisation
-    queryset = Organisation.objects.all()
+    model = Idea
+    # queryset = Challenge.objects.all()
+    # print('DEBUGGGGGGGGGGGGG ')
+    # print(queryset)
     paginate_by = 4
 
     def get_context_data(self, **kwargs):
-        context = super(History, self).get_context_data(**kwargs) 
-        list_challenges = Organisation.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
-        context['slug'] = self.kwargs['slug']
+        context = super(History, self).get_context_data(**kwargs)
+        #print(context)
+        #print('')
+        #print(self.kwargs)
+        #list_challenges = Challenge.objects.all()
+        #print(list_challenges)
+        #paginator = Paginator(list_challenges, self.paginate_by)
+        #context['slug'] = self.kwargs['slug']
+
+        #page = self.request.GET.get('page')
+        #print(self.request.GET)
+
+        # portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        # portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        # logging.error(portal_choice)
+        # logging.error(portal_slug)
+        # context['org'] = Organisation.objects.get(slug=portal_slug)
+        # context['orgslug'] = portal_slug
+        # context['current_org'] = portal_slug
+        context['org'] = Organisation.objects.get(slug=context['slug'])
+        context['orgslug'] = context['slug']
+        context['current_org'] = context['org']
 
 
-        page = self.request.GET.get('page')
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context['org'] = Organisation.objects.get(slug=portal_slug)
-        context['orgslug'] = portal_slug
-        context['current_org'] = portal_slug
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
+        # try:
+        #     file_exams = paginator.page(page)
+        # except PageNotAnInteger:
+        #     file_exams = paginator.page(1)
+        # except EmptyPage:
+        #     file_exams = paginator.page(paginator.num_pages)
             
-        context['list_challenges'] = file_exams
+        # context['list_challenges'] = file_exams
         return context
 
 class HistoryListCompleted(generic.ListView):
@@ -945,10 +955,11 @@ class CNWLIdeaViewSet(viewsets.ModelViewSet):
 
 
 
-def lifecycle(request, pk, slug):
+def lifecycle(request, pk=None, slug=None):
+    #pk = request.GET.get('pk')
     org = Organisation.objects.get(id=pk)
     org_slug = org.slug
-    context = {'pk':pk, 'orgslug': org_slug, 'slug' : slug}
+    context = {'pk':pk, 'orgslug': org_slug, 'slug': slug}
     return  render(request, 'challenges/lifecycle.html', context)
 
 class CommentList(generic.ListView):
