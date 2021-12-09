@@ -27,6 +27,7 @@ import logging
 # Create your views here.
 
 class PostList(generic.ListView):
+    """The view for managing the challenges"""
     today = make_aware(datetime.datetime.now())
     template_name = 'blogs/manager_index.html'
 
@@ -584,6 +585,7 @@ class ideaform(CreateView):
         return context
         
     def form_valid(self, form):
+        """Set field for form, then redirect to get_success_url"""
         form.instance.post_id = self.kwargs['pk']
         return super().form_valid(form)
 
