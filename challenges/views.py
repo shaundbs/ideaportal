@@ -243,7 +243,8 @@ class IdeaListOpen(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
         portal_id = portal_choice.id
-        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+        result = Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+        return result
     
     def get_context_data(self, **kwargs):
         context = super(IdeaListOpen, self).get_context_data(**kwargs) 
