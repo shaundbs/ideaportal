@@ -1,0 +1,13 @@
+{%extends "ideas/submit_success.html" %}
+
+{%block redirect_page%}
+<form method="get" action="{% url 'blogfeed_main' orgslug %}">
+{%endblock%}
+
+{%block return_message%}
+Click the button to return home page
+{%endblock%}
+
+{%block return_button%}
+<button id="submit-button" type="submit" class="nhsuk-button">Return to home page</button>
+{%endblock%}

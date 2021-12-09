@@ -236,7 +236,7 @@ def idea_criteria_form(request, orgslug):
                 pridar_idea.save()
                 current_idea.save()
 
-                return redirect("submit_success", orgslug=orgslug)
+                return redirect("idea_submit_success", orgslug=orgslug)
 
         try:
             context = {
@@ -441,7 +441,7 @@ def idea_criteria_form(request, orgslug):
 
 def submit_success(request, orgslug):
     context = {"orgslug": orgslug}
-    return render(request, "ideas/submit_success.html", context)
+    return render(request, "ideastore/submit_success.html", context)
 
 
 class IdeaList(generic.ListView):
