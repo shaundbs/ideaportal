@@ -131,13 +131,8 @@ class PostListHealth(PostList):
     template_name = "blogs/index_health.html"
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
         dept_id = Department.objects.get(department="Health").id
-        return (
-            Post.objects.filter(status=1)
-            .filter(org_tag=portal_choice)
-            .filter(department=dept_id)
-        )
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
 
 
 class PostListOrgSpecific(PostList):
@@ -154,15 +149,10 @@ class PostListMonth(PostList):
     template_name = "blogs/index_archives.html"
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
         datetime_object = datetime.datetime.strptime(self.kwargs["month"], "%B")
         logging.error(datetime_object.month)
         logging.error(datetime_object)
-        return (
-            Post.objects.filter(org_tag=portal_choice)
-            .filter(created_on__month=datetime_object.month)
-            .order_by("-created_on")
-        )
+        return super().get_queryset(*args, **kwargs).order_by("-created_on")
 
 
 class PostListCulture(PostList):
@@ -170,13 +160,8 @@ class PostListCulture(PostList):
     template_name = "blogs/index_culture.html"
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
         dept_id = Department.objects.get(department="Culture").id
-        return (
-            Post.objects.filter(status=1)
-            .filter(org_tag=portal_choice)
-            .filter(department=dept_id)
-        )
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
 
 
 class PostListJobSatisfaction(PostList):
@@ -184,13 +169,8 @@ class PostListJobSatisfaction(PostList):
     template_name = "blogs/index_job_sat.html"
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
         dept_id = Department.objects.get(department="Job Satisfaction").id
-        return (
-            Post.objects.filter(status=1)
-            .filter(org_tag=portal_choice)
-            .filter(department=dept_id)
-        )
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
 
 
 class PostListRelationships(PostList):
@@ -198,13 +178,8 @@ class PostListRelationships(PostList):
     template_name = "blogs/index_relationships.html"
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
         dept_id = Department.objects.get(department="Relationships").id
-        return (
-            Post.objects.filter(status=1)
-            .filter(org_tag=portal_choice)
-            .filter(department=dept_id)
-        )
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
 
 
 class PostListLeadership(PostList):
@@ -212,13 +187,8 @@ class PostListLeadership(PostList):
     template_name = "blogs/index_leadership.html"
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
         dept_id = Department.objects.get(department="Leadership").id
-        return (
-            Post.objects.filter(status=1)
-            .filter(org_tag=portal_choice)
-            .filter(department=dept_id)
-        )
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
 
 
 class PostListData(PostList):
@@ -226,13 +196,8 @@ class PostListData(PostList):
     template_name = "blogs/index_data.html"
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
         dept_id = Department.objects.get(department="Data").id
-        return (
-            Post.objects.filter(status=1)
-            .filter(org_tag=portal_choice)
-            .filter(department=dept_id)
-        )
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
 
 
 class PostDetail(generic.DetailView):
@@ -334,9 +299,7 @@ def approve_challenge(request, pk, slug, orgslug):
     logging.error(post.status)
     post.save()
 
-    return HttpResponseRedirect(
-        reverse("post_management_detail", args=[orgslug, str(pk), slug])
-    )
+    return HttpResponseRedirect(reverse("post_management_detail", args=[orgslug, str(pk), slug]))
 
 
 def add_dates(request, pk, slug):
@@ -356,9 +319,7 @@ def reject_challenge(request, pk, slug, orgslug):
     logging.error(post.status)
     post.save()
 
-    return HttpResponseRedirect(
-        reverse("post_management_detail", args=[orgslug, str(pk), slug])
-    )
+    return HttpResponseRedirect(reverse("post_management_detail", args=[orgslug, str(pk), slug]))
 
 
 def like_view(request, pk, slug, orgslug):
@@ -549,27 +510,15 @@ class IdeaDetail(generic.DetailView):
             context["in_sandbox"] = customised.in_sandbox
             context["is_released_and_supported"] = customised.is_released_and_supported
             context["is_open_source_partnership"] = customised.is_open_source_partnership
-            context[
-                "NICE_Tier1_DTAC_evidence_in_place"
-            ] = customised.NICE_Tier1_DTAC_evidence_in_place
-            context[
-                "NICE_Tier2_DTAC_evidence_in_place"
-            ] = customised.NICE_Tier2_DTAC_evidence_in_place
-            context[
-                "risk_and_mitigations_are_public"
-            ] = customised.risk_and_mitigations_are_public
+            context["NICE_Tier1_DTAC_evidence_in_place"] = customised.NICE_Tier1_DTAC_evidence_in_place
+            context["NICE_Tier2_DTAC_evidence_in_place"] = customised.NICE_Tier2_DTAC_evidence_in_place
+            context["risk_and_mitigations_are_public"] = customised.risk_and_mitigations_are_public
             context["ce_mark_dcb_register"] = customised.ce_mark_dcb_register
             context["safety_officer_stated"] = customised.safety_officer_stated
             context["iso_supplier"] = customised.iso_supplier
-            context[
-                "user_kpis_is_an_ai_pathway_are_defined"
-            ] = customised.user_kpis_is_an_ai_pathway_are_defined
-            context[
-                "user_to_board_approval_obtained"
-            ] = customised.user_to_board_approval_obtained
-            context[
-                "cost_of_dev_and_support_agreed"
-            ] = customised.cost_of_dev_and_support_agreed
+            context["user_kpis_is_an_ai_pathway_are_defined"] = customised.user_kpis_is_an_ai_pathway_are_defined
+            context["user_to_board_approval_obtained"] = customised.user_to_board_approval_obtained
+            context["cost_of_dev_and_support_agreed"] = customised.cost_of_dev_and_support_agreed
             context["ip_agreement_in_place"] = customised.ip_agreement_in_place
             context["ig_agreements_in_place"] = customised.ig_agreements_in_place
             context["data_and_model_agreed"] = customised.data_and_model_agreed
