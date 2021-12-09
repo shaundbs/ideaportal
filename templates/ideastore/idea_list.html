@@ -80,6 +80,7 @@
                     <br>
                     <p class="card-text">{{idea.description|slice:":200" }}...</p>
                     <p class="card-text">Cost: {{idea.estimated_cost}}</p>
+                    {% comment %} This button redirect the page to blog/idea_detail.html {% endcomment %}
                     <a href="{% url 'idea_post' org idea.pk idea.slug  %}" class="nhsuk-button">Read More</a>
                 </div>
             </div>

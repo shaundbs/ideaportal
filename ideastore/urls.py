@@ -9,9 +9,11 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path ('<slug:slug>/submit-idea-form/', views.submit_idea, name='submit_idea'),
-    # path ('<slug:slug>/submit-idea-successful/', views.submit_idea, name='submit_idea_successful'),
     path ('<slug:slug>/view-ideas/', views.IdeaList.as_view(), name='view_ideas'),
+    path ('<slug:orgslug>/submit-idea/', views.SubmitIdea.as_view(), name='submit_idea'),
+    path ('<slug:orgslug>/submit-idea-criteria/', views.idea_criteria_form, name='idea_criteria'),
+    path('<slug:orgslug>/submit-idea-success/', views.submit_success, name='idea_submit_success'),
+    # path ('<slug:slug>/submit-idea-successful/', views.submit_idea, name='submit_idea_successful'),
     # path ('<slug:slug>/view-idea/', views.view_idea, name='view_idea'),
 
     # path('<slug:slug>/idea-store/', views.IdeaStore.as_view(), name='bloghub'),
