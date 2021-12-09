@@ -23,6 +23,7 @@ from rest_framework import viewsets
 from .serializers import IdeaSerializer
 import requests, json
 import logging
+from rest_framework.decorators import api_view
 
 # Create your views here.
 
@@ -954,7 +955,18 @@ class CNWLIdeaViewSet(viewsets.ModelViewSet):
     queryset = Idea.objects.filter(org_tag = cnwl_id).filter(stage__isnull=False).order_by('title')
     serializer_class = IdeaSerializer
 
+@api_view(['GET'])
+def intranet_api(request, stage=None):
+    org = Organisation.objects.get(name='Public')
+    org_slug = org.slug
+    pk = org.id
+    context = {'pk':pk, 'orgslug':org_slug,'slug':org_slug}
 
+    query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
+    serializer = IdeaSerializer(query_set, many=True)
+
+    result = HttpResponse(serializer.data)
+    return result
 
 def lifecycle(request, pk=None, slug=None):
     #pk = request.GET.get('pk')
