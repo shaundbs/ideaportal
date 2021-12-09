@@ -9,11 +9,21 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path ('<slug:slug>/view-ideas/', views.IdeaList.as_view(), name='view_ideas'),
+    #url path for submitting idea
     path ('<slug:orgslug>/submit-idea/', views.SubmitIdea.as_view(), name='submit_idea'),
     path ('<slug:orgslug>/submit-idea-criteria/', views.idea_criteria_form, name='idea_criteria'),
     path('<slug:orgslug>/submit-idea-success/', views.submit_success, name='idea_submit_success'),
-    # path ('<slug:slug>/submit-idea-successful/', views.submit_idea, name='submit_idea_successful'),
+
+    #url path for viewing ideas, e.g. latest ideas, ideas within data department and ect.
+    path ('<slug:slug>/view-ideas/', views.IdeaList.as_view(), name='view_ideas_default'),
+    path ('<slug:slug>/view-ideas-health/', views.IdeaListHealth.as_view(), name='view_ideas'),
+    path ('<slug:slug>/view-ideas-culture/', views.IdeaListCulture.as_view(), name='view_ideas'),
+    path ('<slug:slug>/view-ideas-job-satisfaction/', views.IdeaListJobSatifiction.as_view(), name='view_ideas'),
+    path ('<slug:slug>/view-ideas-relationships/', views.IdeaListRelationships.as_view(), name='view_ideas'),
+    path ('<slug:slug>/view-ideas-leadership/', views.IdeaListLeadership.as_view(), name='view_ideas'),
+    path ('<slug:slug>/view-ideas-data/', views.IdeaListData.as_view(), name='view_ideas'),
+    path ('<slug:slug>/view-ideas-pridar/', views.IdeaListPridar.as_view(), name='view_ideas'),
+    path ('<slug:slug>/view-ideas/<slug:month>/<int:int>', views.IdeaListMonth.as_view(), name='view_ideas'),
     # path ('<slug:slug>/view-idea/', views.view_idea, name='view_idea'),
 
     # path('<slug:slug>/idea-store/', views.IdeaStore.as_view(), name='bloghub'),

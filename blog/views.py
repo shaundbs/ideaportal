@@ -89,7 +89,7 @@ class PostList(generic.ListView):
     """The view of the list of challenges"""
 
     paginate_by = 4
-    template_name = "blogs/index.html"
+    template_name = "blogs/index_latestpoll.html"
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
@@ -126,8 +126,8 @@ class PostList(generic.ListView):
         return context
 
 
-class PostListHealth(generic.ListView):
-    paginate_by = 4
+class PostListHealth(PostList):
+
     template_name = "blogs/index_health.html"
 
     def get_queryset(self, *args, **kwargs):
@@ -139,78 +139,18 @@ class PostListHealth(generic.ListView):
             .filter(department=dept_id)
         )
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListHealth, self).get_context_data(**kwargs)
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
 
-        page = self.request.GET.get("page")
+class PostListOrgSpecific(PostList):
 
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
-
-
-class PostListOrgSpecific(generic.ListView):
-    paginate_by = 4
     template_name = "blogs/index_org_specific.html"
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
         return OrgForm.objects.filter(status=1).filter(org_tag=portal_choice)
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListOrgSpecific, self).get_context_data(**kwargs)
-        list_challenges = OrgForm.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
 
-        page = self.request.GET.get("page")
+class PostListMonth(PostList):
 
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
-
-
-class PostListMonth(generic.ListView):
-    paginate_by = 4
     template_name = "blogs/index_archives.html"
 
     def get_queryset(self, *args, **kwargs):
@@ -224,47 +164,9 @@ class PostListMonth(generic.ListView):
             .order_by("-created_on")
         )
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListMonth, self).get_context_data(**kwargs)
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        datetime_object = datetime.datetime.strptime(self.kwargs["month"], "%B")
 
-        logging.error(datetime_object.month)
-        logging.error(datetime_object)
-        context["month"] = self.kwargs["month"]
-        context["year"] = self.kwargs["int"]
+class PostListCulture(PostList):
 
-        page = self.request.GET.get("page")
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        context["orgslug"] = portal_slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
-
-
-class PostListCulture(generic.ListView):
-    paginate_by = 4
     template_name = "blogs/index_culture.html"
 
     def get_queryset(self, *args, **kwargs):
@@ -276,39 +178,9 @@ class PostListCulture(generic.ListView):
             .filter(department=dept_id)
         )
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListCulture, self).get_context_data(**kwargs)
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
 
-        page = self.request.GET.get("page")
+class PostListJobSatisfaction(PostList):
 
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
-
-
-class PostListJobSatisfaction(generic.ListView):
-    paginate_by = 4
     template_name = "blogs/index_job_sat.html"
 
     def get_queryset(self, *args, **kwargs):
@@ -320,39 +192,9 @@ class PostListJobSatisfaction(generic.ListView):
             .filter(department=dept_id)
         )
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListJobSatisfaction, self).get_context_data(**kwargs)
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
 
-        page = self.request.GET.get("page")
+class PostListRelationships(PostList):
 
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
-
-
-class PostListRelationships(generic.ListView):
-    paginate_by = 4
     template_name = "blogs/index_relationships.html"
 
     def get_queryset(self, *args, **kwargs):
@@ -364,39 +206,9 @@ class PostListRelationships(generic.ListView):
             .filter(department=dept_id)
         )
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListRelationships, self).get_context_data(**kwargs)
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
 
-        page = self.request.GET.get("page")
+class PostListLeadership(PostList):
 
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
-
-
-class PostListLeadership(generic.ListView):
-    paginate_by = 4
     template_name = "blogs/index_leadership.html"
 
     def get_queryset(self, *args, **kwargs):
@@ -408,39 +220,9 @@ class PostListLeadership(generic.ListView):
             .filter(department=dept_id)
         )
 
-    def get_context_data(self, **kwargs):
-        context = super(PostListLeadership, self).get_context_data(**kwargs)
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
 
-        page = self.request.GET.get("page")
+class PostListData(PostList):
 
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
-
-
-class PostListData(generic.ListView):
-    paginate_by = 4
     template_name = "blogs/index_data.html"
 
     def get_queryset(self, *args, **kwargs):
@@ -451,36 +233,6 @@ class PostListData(generic.ListView):
             .filter(org_tag=portal_choice)
             .filter(department=dept_id)
         )
-
-    def get_context_data(self, **kwargs):
-        context = super(PostListData, self).get_context_data(**kwargs)
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
-
-        page = self.request.GET.get("page")
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
 
 
 class PostDetail(generic.DetailView):

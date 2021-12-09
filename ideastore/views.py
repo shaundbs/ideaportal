@@ -499,37 +499,33 @@ class IdeaList(generic.ListView):
         return context
 
 
-class IdeaStoreOrgSpecific(generic.ListView):
-    pass
+class IdeaListHealth(IdeaList):
+    template_name = "ideastore/idea_list_health.html"
 
 
-class IdeaStoreHealth(generic.ListView):
-    pass
+class IdeaListCulture(IdeaList):
+    template_name = "ideastore/idea_list_culture.html"
 
 
-class IdeaStoreCulture(generic.ListView):
-    pass
+class IdeaListJobSatifiction(IdeaList):
+    template_name = "ideastore/idea_list_job_sat.html"
 
 
-class IdeaStoreJobSatifiction(generic.ListView):
-    pass
+class IdeaListRelationships(IdeaList):
+    template_name = "ideastore/idea_list_relationships.html"
 
 
-class IdeaStoreRelationship(generic.ListView):
-    pass
+class IdeaListLeadership(IdeaList):
+    template_name = "ideastore/idea_list_leadership.html"
 
 
-class IdeaStoreLeadership(generic.ListView):
-    pass
+class IdeaListData(IdeaList):
+    template_name = "ideastore/idea_list_data.html"
 
 
-class IdeaStoreData(generic.ListView):
-    pass
+class IdeaListPridar(IdeaList):
+    template_name = "ideastore/idea_list_pridar.html"
 
 
-class IdeaStoreSearchBlog(generic.ListView):
-    pass
-
-
-class IdeaStoreMonth(generic.ListView):
-    pass
+class IdeaListMonth(IdeaList):
+    template_name = "ideastore/idea_list_archives.html"

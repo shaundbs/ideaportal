@@ -47,11 +47,7 @@ Issue: add '/' to the end of each pattern
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ideaportal-management/', user_site.urls),
-<<<<<<< HEAD
-    path('home', views.home, name='home'),
-=======
     path('home/', views.home, name='home'),
->>>>>>> idea-solo
     path('info/admin-info', views.admin_info, name='admin_info'),
     path('info/portal-manager-info', views.portal_manager_info, name='portal_manager_info'),
     path('info/challenge-manager-info', views.challenge_manager_info, name='challenge_manager_info'),
