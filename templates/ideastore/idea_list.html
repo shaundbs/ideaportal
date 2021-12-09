@@ -1,4 +1,8 @@
+{% comment %} {% if spec_on %}
+{% include 'components/navbar_custom.html' %}
+{% else %}
 {% include 'components/navbar_blog.html' %}
+{% endif %} {% endcomment %}
 
 <!DOCTYPE html>
 <html>
@@ -63,29 +67,27 @@
   
   </div>
 
-    <h1>Latest Polls</h1>
+    <h1>Latest Ideas</h1>
     <div class="row">
         <!-- Blog Entries Column -->
         <div class="col-md-8 mt-3 left">
-            {% if post_list %}
-            {% for post in post_list %}
+            {% if ideas %}
+            {% for idea in ideas %}
             <div class="card mb-4">
                 <div class="card-body">
-                    <h2 class="card-title">{{ post.title }}</h2>
-                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+                    <h2 class="card-title">{{ idea.title }}</h2>
+                    <p class="card-text text-muted h6">{{ idea.author }} | {{ idea.created_on}} </p>
+                    <p class="card-text text-muted h6">Department: {{ idea.department }} </p>
                     <br>
-                    <p class="card-text">{{post.description|slice:":200" }}...</p>
-                    <p class="card-text"> Start Date: {{post.startDate }} <br> End Date: {{post.endDate  }}</p>
-                    <p class="card-text">                                 Severity: {{post.severity|capfirst}} </p>
-
-
-                    <a href="{% url 'post_detail' org.slug post.pk post.slug %}" class="nhsuk-button">Read More</a>
-                    <a href="{% url 'ideaform' org.slug post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
+                    <p class="card-text">{{idea.description|slice:":200" }}...</p>
+                    <p class="card-text">Cost: {{idea.estimated_cost}}</p>
+                    {% comment %} This button redirect the page to blog/idea_detail.html {% endcomment %}
+                    <a href="{% url 'idea_post' org idea.pk idea.slug  %}" class="nhsuk-button">Read More</a>
                 </div>
             </div>
             {% endfor %}
             {% else %}
-            <h3>There are currently no active polls - check regularly for updates</h3>
+            <h3>There are currently no ideas - check regularly for updates</h3>
             {% endif %}
         </div>
         {% block sidebar %} {% include 'components/sidebar.html' %} {% endblock sidebar %}
@@ -94,10 +96,10 @@
         <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
-                <a href="/blogs/post-feed/challenges/{{ org.slug }}/live-polls/?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
+                <a href="/ideastore/{{ org.slug }}/view-ideas/?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
                 {% endif %}
                 {% if page_obj.has_next %}
-                    <a href="/blogs/post-feed/challenges/{{ org.slug }}/live-polls/?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
+                    <a href="/ideastore/{{ org.slug }}/view-ideas/?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
                 {% endif %}
                 <span class="page-current">
                     <h2 class="card-title">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</h2>                    

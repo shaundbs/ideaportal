@@ -39,10 +39,19 @@ named_contact_forms = (
 contact_wizard = views.ContactWizard.as_view(named_contact_forms,
     url_name='contact_step', done_step_name='finished')
 
+"""
+Issue: add '/' to the end of each pattern
+"""
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ideaportal-management/', user_site.urls),
+<<<<<<< HEAD
     path('home', views.home, name='home'),
+=======
+    path('home/', views.home, name='home'),
+>>>>>>> idea-solo
     path('info/admin-info', views.admin_info, name='admin_info'),
     path('info/portal-manager-info', views.portal_manager_info, name='portal_manager_info'),
     path('info/challenge-manager-info', views.challenge_manager_info, name='challenge_manager_info'),
@@ -80,7 +89,7 @@ urlpatterns = [
     path('challenges/', include('challenges.urls'), name='challengehub'),
     path('organisations/', include('organisations.urls'), name='organisations'),
     path('orchaapi/', include('orchaapi.urls'), name='apihub'),
-
+    path('ideastore/', include('ideastore.urls'), name='ideastore'),
 
     path('activate-user/<uidb64>/<token>', views.activate_user, name='activate'),
     path('<slug:slug>/profile/profile-main', views.profile_main, name='profile_main'),

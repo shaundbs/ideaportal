@@ -2,6 +2,7 @@ from . import views
 from django.urls import path, include
 import challenges.views as cviews
 
+"""blogs/post-feed/challenges/ has been matched"""
 urlpatterns = [
     path('<slug:slug>/live-polls/', views.PostList.as_view(), name='bloghub'),
     path('<slug:slug>/health/', views.PostListHealth.as_view(), name='bloghub_health'),

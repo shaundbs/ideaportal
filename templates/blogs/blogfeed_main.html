@@ -112,6 +112,9 @@
     <link href="{% static 'frontend/css/blog.css' %}" rel="stylesheet">
   </head>
   <body>
+    <! The items of this two nav bar is hard coeded, make sure you change both of them
+       in the case you want to edit the nav bar to add/remove item.
+       Otherwise, refactor this part.>
     {% if request.user|has_group:"admins" %}
     {% include 'components/navbar_portalmanager.html' %}
     {% elif request.user|has_group:"challenge_managers" %}

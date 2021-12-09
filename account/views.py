@@ -449,6 +449,15 @@ def public_landing(request):
 # data = {"name": "Value"}
 
 class blogfeed_main(generic.DetailView):
+    """Landing page view
+    
+    the template 'blogs/blogfeed_main.html' holds reference to some components,
+    including  templates/components/navbar_portalmanager.html and 
+    templates/components/navbar_search.html.
+    Those two components provide different nav. bar for different user group,
+    please be aware if you need to edit the nav. bar, 
+    both of them may need to be changed.
+    """
 
     model = Organisation
     template_name = 'blogs/blogfeed_main.html'
