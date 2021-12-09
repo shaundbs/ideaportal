@@ -77,6 +77,7 @@
                 <div class="card-body">
                     <h2 class="card-title">{{ idea.title }}</h2>
                     <p class="card-text text-muted h6">{{ idea.author }} | {{ idea.created_on}} </p>
+                    <p class="card-text text-muted h6">Department: {{ idea.department }} </p>
                     <br>
                     <p class="card-text">{{idea.description|slice:":200" }}...</p>
                     <p class="card-text">Cost: {{idea.estimated_cost}}</p>

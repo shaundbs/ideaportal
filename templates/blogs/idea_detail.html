@@ -50,6 +50,7 @@
         <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
       </center>
         <p class=" text-muted">{{ object.author }} | {{ object.created_on }}</p>
+        <p class=" text-muted"> Department: {{ object.department }}</p>
         <p class="card-text ">{{ object.description | safe }}</p>
         {% if custom %}
         <p class=" text-muted">PRIDAR Classification:</p>
