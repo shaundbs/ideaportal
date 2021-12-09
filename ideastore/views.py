@@ -1,3 +1,7 @@
+import datetime
+import logging
+import requests, json
+
 from django.shortcuts import render
 from django.views import generic
 from django.views.generic.edit import CreateView
@@ -6,12 +10,9 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect
 
 from organisations.models import Organisation
-from challenges.models import Idea, OrgForm
+from challenges.models import Idea, OrgForm, Department
 from challenges.forms import IdeaForm, PRIDARForm, CriteriaForm
 from .forms import EnhancedIdeaForm
-
-import logging
-import requests, json
 
 # Create your views here.
 
@@ -146,17 +147,11 @@ def idea_criteria_form(request, orgslug):
             # if the keywords from the idea match any sub category areas set state to True and create a list of the similar terms
             existing_ideas = ""
 
-            if (set(category_list_lower) & set(title_list_lower)) & set(
-                description_list_lower
-            ):
+            if (set(category_list_lower) & set(title_list_lower)) & set(description_list_lower):
                 logging.info("This idea could be similar to an exisiting solution")
                 is_similar = True
                 logging.info("MATCH ALERT")
-                category_names = list(
-                    set(category_list_lower)
-                    & set(title_list_lower)
-                    & set(description_list_lower)
-                )
+                category_names = list(set(category_list_lower) & set(title_list_lower) & set(description_list_lower))
                 logging.info(category_names)
             else:
                 logging.info("This idea is not similar to an exisitng solution")
@@ -502,30 +497,67 @@ class IdeaList(generic.ListView):
 class IdeaListHealth(IdeaList):
     template_name = "ideastore/idea_list_health.html"
 
+    def get_queryset(self, *args, **kwargs):
+        dept_id = Department.objects.get(department="Health").id
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
+
 
 class IdeaListCulture(IdeaList):
     template_name = "ideastore/idea_list_culture.html"
+
+    def get_queryset(self, *args, **kwargs):
+        dept_id = Department.objects.get(department="Culture").id
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
 
 
 class IdeaListJobSatifiction(IdeaList):
     template_name = "ideastore/idea_list_job_sat.html"
 
+    def get_queryset(self, *args, **kwargs):
+        dept_id = Department.objects.get(department="Job Satisfaction").id
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
+
 
 class IdeaListRelationships(IdeaList):
     template_name = "ideastore/idea_list_relationships.html"
+
+    def get_queryset(self, *args, **kwargs):
+        dept_id = Department.objects.get(department="Relationships").id
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
 
 
 class IdeaListLeadership(IdeaList):
     template_name = "ideastore/idea_list_leadership.html"
 
+    def get_queryset(self, *args, **kwargs):
+        dept_id = Department.objects.get(department="Leadership").id
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
+
 
 class IdeaListData(IdeaList):
     template_name = "ideastore/idea_list_data.html"
 
+    def get_queryset(self, *args, **kwargs):
+        dept_id = Department.objects.get(department="Data").id
+        return super().get_queryset(*args, **kwargs).filter(department=dept_id)
+
 
 class IdeaListPridar(IdeaList):
+    """I doubt that this class is not necessary"""
+
     template_name = "ideastore/idea_list_pridar.html"
+    pass
 
 
 class IdeaListMonth(IdeaList):
     template_name = "ideastore/idea_list_archives.html"
+
+    def get_queryset(self, *args, **kwargs):
+        datetime_object = datetime.datetime.strptime(self.kwargs["month"], "%B")
+        logging.error(datetime_object.month)
+        logging.error(datetime_object)
+        return (
+            super().get_queryset(*args, **kwargs)
+            .filter(created_on__month=datetime_object.month)
+            .order_by("-created_on")
+        )

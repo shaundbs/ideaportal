@@ -1,31 +1,32 @@
 from . import views
-from django.urls import path, include 
+from django.urls import path, include
 from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
+
 # router = routers.DefaultRouter()
 # router.register(r'all-ideas', views.IdeaViewSet)
 # router.register(r'cnwl', views.CNWLIdeaViewSet)
 
 
 urlpatterns = [
-    #url path for submitting idea
-    path ('<slug:orgslug>/submit-idea/', views.SubmitIdea.as_view(), name='submit_idea'),
-    path ('<slug:orgslug>/submit-idea-criteria/', views.idea_criteria_form, name='idea_criteria'),
-    path('<slug:orgslug>/submit-idea-success/', views.submit_success, name='idea_submit_success'),
-
-    #url path for viewing ideas, e.g. latest ideas, ideas within data department and ect.
-    path ('<slug:slug>/view-ideas/', views.IdeaList.as_view(), name='view_ideas_default'),
-    path ('<slug:slug>/view-ideas-health/', views.IdeaListHealth.as_view(), name='view_ideas'),
-    path ('<slug:slug>/view-ideas-culture/', views.IdeaListCulture.as_view(), name='view_ideas'),
-    path ('<slug:slug>/view-ideas-job-satisfaction/', views.IdeaListJobSatifiction.as_view(), name='view_ideas'),
-    path ('<slug:slug>/view-ideas-relationships/', views.IdeaListRelationships.as_view(), name='view_ideas'),
-    path ('<slug:slug>/view-ideas-leadership/', views.IdeaListLeadership.as_view(), name='view_ideas'),
-    path ('<slug:slug>/view-ideas-data/', views.IdeaListData.as_view(), name='view_ideas'),
-    path ('<slug:slug>/view-ideas-pridar/', views.IdeaListPridar.as_view(), name='view_ideas'),
-    path ('<slug:slug>/view-ideas/<slug:month>/<int:int>', views.IdeaListMonth.as_view(), name='view_ideas'),
+    # url path for submitting idea
+    path("<slug:orgslug>/submit-idea/", views.SubmitIdea.as_view(), name="submit_idea"),
+    path("<slug:orgslug>/submit-idea-criteria/", views.idea_criteria_form, name="idea_criteria"),
+    path("<slug:orgslug>/submit-idea-success/", views.submit_success, name="idea_submit_success"),
+    # url path for viewing ideas, e.g. latest ideas, ideas within data department and ect.
+    path("<slug:slug>/view-ideas/", views.IdeaList.as_view(), name="view_ideas_default"),
+    path("<slug:slug>/view-ideas-health/", views.IdeaListHealth.as_view(), name="view_ideas_health"),
+    path("<slug:slug>/view-ideas-culture/", views.IdeaListCulture.as_view(), name="view_ideas_culture"),
+    path("<slug:slug>/view-ideas-job-satisfaction/", views.IdeaListJobSatifiction.as_view(), name="view_ideas_job_sat"),
+    path(
+        "<slug:slug>/view-ideas-relationships/", views.IdeaListRelationships.as_view(), name="view_ideas_relationships"
+    ),
+    path("<slug:slug>/view-ideas-leadership/", views.IdeaListLeadership.as_view(), name="view_ideas_leadership"),
+    path("<slug:slug>/view-ideas-data/", views.IdeaListData.as_view(), name="view_ideas_data"),
+    path("<slug:slug>/view-ideas-pridar/", views.IdeaListPridar.as_view(), name="view_ideas_pridar"),
+    path("<slug:slug>/view-ideas/<slug:month>/<int:int>", views.IdeaListMonth.as_view(), name="view_ideas_month"),
     # path ('<slug:slug>/view-idea/', views.view_idea, name='view_idea'),
-
     # path('<slug:slug>/idea-store/', views.IdeaStore.as_view(), name='bloghub'),
     # path('<slug:slug>/pridar/', views.IdeaStoreOrgSpecific.as_view(), name='bloghub_org_specific'),
     # path('<slug:slug>/health/', views.IdeaStoreHealth.as_view(), name='bloghub_health'),
@@ -43,7 +44,6 @@ urlpatterns = [
     # path('<slug:slug>/completed-challenges/', views.IdeaStoreCompleted.as_view(), name='completed_challenges'),
     # path('<slug:slug>/pending-ideas/', views.PendingIdeasList.as_view(), name='pending_ideas'),
     # path('<slug:slug>/statistics/', views.Statistics.as_view(), name='stats'),
-
     # path('challenge-history/completed-challenges/', views.HistoryListCompleted.as_view(), name='history_completed'),
     # path('<slug:slug>/challenge-history/ideas/open/<int:pk>', views.IdeaListOpen.as_view(), name='open_ideas'),
     # path('<slug:slug>/challenge-history/ideas/under-review/<int:pk>', views.IdeaListReview.as_view(), name='in_review_ideas'),
@@ -59,9 +59,6 @@ urlpatterns = [
     # path('selected-ideas/', views.IdeaViewSet, name='selected_ideas'),
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # path('search-selected-idea/', views.search_idea, name='search_selected_idea'),
-
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
