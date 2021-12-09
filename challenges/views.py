@@ -955,7 +955,12 @@ class CNWLIdeaViewSet(viewsets.ModelViewSet):
     queryset = Idea.objects.filter(org_tag = cnwl_id).filter(stage__isnull=False).order_by('title')
     serializer_class = IdeaSerializer
 
+from rest_framework.decorators import authentication_classes, permission_classes
+   
+
 @api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
 def intranet_api(request, stage=None):
     org = Organisation.objects.get(name='Public')
     org_slug = org.slug
