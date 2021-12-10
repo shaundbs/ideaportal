@@ -617,10 +617,10 @@ class ideaform(CreateView):
         is_pridar = False
         if custom_on:
             is_pridar = True
-        has_access = False
+        logged_in = False
         if self.request.user.is_authenticated:
-            has_access = True
-        context['has_access'] = has_access
+            logged_in = True
+        context['logged_in'] = logged_in
         context['challenge'] = Post.objects.get(slug=challenge_slug)
         context['custom_on'] = is_pridar
 
@@ -658,8 +658,12 @@ def search_idea(request):
     else:
         return render(request, 'search/selected_idea_search.html', {})
 
-
 def idea_criteria_form(request, orgslug, pk, slug):
+    """This function need to be refactor,
+        1. This function is too long
+        2. there is a almost same function in ideastore, 
+           with only different in the link of successful submission.
+    """
     logging.error(pk)
     post = Post.objects.get(slug=slug)
     org = Organisation.objects.get(slug=orgslug)
@@ -802,8 +806,9 @@ def idea_criteria_form(request, orgslug, pk, slug):
                 pridar_idea.title = current_idea.title
                 pridar_idea.description = current_idea.description
                 pridar_idea.image = current_idea.image
-                pridar_idea.author = request.user
-                current_idea.author = request.user
+                if not current_idea.anonymous and current_idea.anonymous != None:
+                    pridar_idea.author = request.user
+                    current_idea.author = request.user
                 pridar_idea.post = current_idea.post
                 current_idea.org_tag.add(org) 
                 current_idea.department = post.department
@@ -959,7 +964,8 @@ def idea_criteria_form(request, orgslug, pk, slug):
                 if is_public:
                     current_idea.org_tag.add(public)
                 current_idea.is_user_led = is_user_led
-                current_idea.author = request.user
+                if not current_idea.anonymous and current_idea.anonymous != None:
+                    current_idea.author = request.user
                 current_idea.org_tag.add(org) 
                 current_idea.department = post.department
                 current_idea.save()

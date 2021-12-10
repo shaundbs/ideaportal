@@ -102,6 +102,7 @@ class Idea(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to="images/idea_images")
     department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='idea_department', null=True, blank=True)
     sub_department = models.ForeignKey(Department, on_delete=models.SET_NULL, related_name='idea_sub_department', null=True, blank=True)
+    anonymous = models.BooleanField(null=True)
     likes = models.ManyToManyField(Account, related_name='idea_likes', null=True, blank=True)
     is_pridar = models.BooleanField(default=False)
     STAGES = [
