@@ -1,7 +1,6 @@
-{% include 'components/navbar_limited.html' %}
-
 {% load static %}
 
+{% include 'components/navbar_limited.html' %}
   
   <div class="nhsuk-width-container">
           
@@ -15,8 +14,9 @@
   <div class="nhsuk-grid-row">
     <div class="nhsuk-grid-column-two-thirds">
   
-    
+      {%block redirect_page%}
       <form method="get" action="{% url 'bloghub' orgslug %}">
+      {%endblock%}
         {% csrf_token %}
   
         <div class="nhsuk-form-group">
@@ -30,7 +30,9 @@
                 <div id="nhs-number-hint">
                     <p>You will receive a notification from a challenge manager on the status of your idea in due course</p>
                     <div class="nhsuk-hint" id="example-hint">
+                        {%block return_message%}
                         Click the button to return to the challenge feed
+                        {%endblock%}
                       </div>
                     
                 </div>
@@ -39,7 +41,9 @@
 
         
         </div>
+        {%block return_button%}
         <button id="submit-button" type="submit" class="nhsuk-button">Return to challenge Feed</button>
+        {%endblock%}
   
       <!-- <input name="__RequestVerificationToken" type="hidden" value="CfDJ8FTFIt_4U2pNpv3VDtvSAxZpzKN5Q5mcKb0jzaXKDbM-lyrg9BbLo4YJZRq2Zaiebr-tT0bhvby73IhfDVyJ6TSKClfQB5Y1tHmxWGvI20kZlnYxgIxSk_Rcs_DE2nbYN2YMq-nf4iNGy3GvqRKWnf8" /></form> -->
   

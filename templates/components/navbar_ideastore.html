@@ -1,0 +1,77 @@
+{%extends "bases/basePollNavbar.html" %}
+
+{%block navbar_items%} 
+
+  <li class="nhsuk-header__navigation-item">
+    <a class="nhsuk-header__navigation-link" href="{% url 'blogfeed_main' org.slug%}" >
+      Home
+      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+      </svg>
+    </a>
+  </li>
+
+  <li class="nhsuk-header__navigation-item">
+    <a class="nhsuk-header__navigation-link" href="{% url 'view_ideas_default' org.slug %}" >
+      Latest Polls
+      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+      </svg>
+    </a>
+  </li>
+    
+  <li class="nhsuk-header__navigation-item">
+    <a class="nhsuk-header__navigation-link" href="{% url 'view_ideas_health' org.slug %}" >
+      Health 
+      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+      </svg>
+    </a>
+  </li>
+
+  <li class="nhsuk-header__navigation-item">
+    <a class="nhsuk-header__navigation-link" href="{% url 'view_ideas_culture' org.slug %}" >
+      Culture
+      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+      </svg>
+    </a>
+  </li>
+    
+  <li class="nhsuk-header__navigation-item">
+    <a class="nhsuk-header__navigation-link" href="{% url 'view_ideas_job_sat' org.slug %}" >
+      Job Satisfaction
+      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+      </svg>
+    </a>
+  </li>
+
+  <li class="nhsuk-header__navigation-item">
+    <a class="nhsuk-header__navigation-link" href="{% url 'view_ideas_relationships' org.slug %}" >
+      Relationships
+      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+      </svg>
+    </a>
+  </li>
+ 
+  <li class="nhsuk-header__navigation-item">
+    <a class="nhsuk-header__navigation-link" href="{% url 'view_ideas_leadership' org.slug %}" >
+      Leadership
+      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+      </svg>
+    </a>
+  </li>
+
+  <li class="nhsuk-header__navigation-item">
+    <a class="nhsuk-header__navigation-link" href="{% url 'view_ideas_data' org.slug %}" >
+      Data
+      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+      </svg>
+    </a>
+  </li>
+
+{% endblock %}  

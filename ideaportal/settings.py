@@ -50,6 +50,11 @@ INSTALLED_APPS = [
     'orchaapi',
     'rest_framework.authtoken',
     'dotenv',
+<<<<<<< HEAD
+=======
+    'organisations',
+    'ideastore',
+>>>>>>> idea-solo
 ]
 
 

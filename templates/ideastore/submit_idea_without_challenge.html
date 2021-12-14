@@ -1,3 +1,9 @@
+<!-- I was attempt to use template inheritance to inherit this template,
+     from ideas/submit_ideas_form.html
+     But when I replace the set_department block with the code in this template,
+     it keep pops "expect endblock error"
+-->
+
 {% load static %}
 
 {% include 'components/navbar_limited.html' %}
@@ -45,8 +51,7 @@
     </legend>
     <br>
     {%block more_information%}
-    <h4>Challenge:</h4>
-    <h5 id="name-hint" >"{{ challenge }}"</h5>
+    <!-- No information becasue this is challenge less -->
     {%endblock more_information%}
 
     <p id="name-hint">Please fill out all required fields</p>
@@ -99,8 +104,11 @@
     {% else %}
     {% endif %}
     {%block set_department%}
-    <div class="nhsuk-form-group">  
-      {% render_field form.department class="nhsuk-select" id="select-1" name="select-1" %} 
+    <div class="nhsuk-form-group " id="question_nhsnumber">
+      {{ form.department.label }} 
+      <div class="nhsuk-form-group">
+      </div>
+      {% render_field form.department class="nhsuk-select" id="select-1" name="department" onchange='checkvalue(this.value)' %} 
     </div>
     {%endblock set_department%}
     
