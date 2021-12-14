@@ -5,7 +5,7 @@ from .forms import IdeaForm, CriteriaForm, ChallengeForm, DepartmentForm, OrgSpe
 from django.shortcuts import redirect
 from operator import pos
 from django.core.checks import messages
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from .models import Challenge, Post, Idea, Department, OrgForm
 from django.shortcuts import render, get_object_or_404
@@ -23,11 +23,11 @@ from rest_framework import viewsets
 from .serializers import IdeaSerializer
 import requests, json
 import logging
+from rest_framework.decorators import api_view
 
 # Create your views here.
 
 class PostList(generic.ListView):
-    """The view for managing the challenges"""
     today = make_aware(datetime.datetime.now())
     template_name = 'blogs/manager_index.html'
 
@@ -244,14 +244,15 @@ class IdeaListOpen(generic.ListView):
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(id=self.kwargs['pk'])
         portal_id = portal_choice.id
-        return Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+        result = Idea.objects.filter(stage='open').filter(org_tag=portal_id).order_by('-created_on')
+        return result
     
     def get_context_data(self, **kwargs):
         context = super(IdeaListOpen, self).get_context_data(**kwargs) 
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
         logging.error(self.kwargs['pk'])
-        context['orgslug'] = self.kwargs['slug']
+        context['slug'] = self.kwargs['slug']
         context['title'] = 'Open Ideas'
         context['pk'] = self.kwargs['pk']
         page = self.request.GET.get('page')
@@ -423,38 +424,48 @@ class IdeaListInDev(generic.ListView):
         
 class History(generic.ListView):
     today = make_aware(datetime.datetime.now())
-    template_name = 'challenges/index_history.html'
+    template_name = 'challenges/lifecycle.html'
     
 
-    model = Organisation
-    queryset = Organisation.objects.all()
+    model = Idea
+    # queryset = Challenge.objects.all()
+    # print('DEBUGGGGGGGGGGGGG ')
+    # print(queryset)
     paginate_by = 4
 
     def get_context_data(self, **kwargs):
-        context = super(History, self).get_context_data(**kwargs) 
-        list_challenges = Organisation.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
-        context['slug'] = self.kwargs['slug']
+        context = super(History, self).get_context_data(**kwargs)
+        #print(context)
+        #print('')
+        #print(self.kwargs)
+        #list_challenges = Challenge.objects.all()
+        #print(list_challenges)
+        #paginator = Paginator(list_challenges, self.paginate_by)
+        #context['slug'] = self.kwargs['slug']
+
+        #page = self.request.GET.get('page')
+        #print(self.request.GET)
+
+        # portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        # portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        # logging.error(portal_choice)
+        # logging.error(portal_slug)
+        # context['org'] = Organisation.objects.get(slug=portal_slug)
+        # context['orgslug'] = portal_slug
+        # context['current_org'] = portal_slug
+        context['org'] = Organisation.objects.get(slug=context['slug'])
+        context['orgslug'] = context['slug']
+        context['current_org'] = context['org']
 
 
-        page = self.request.GET.get('page')
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context['org'] = Organisation.objects.get(slug=portal_slug)
-        context['orgslug'] = portal_slug
-        context['current_org'] = portal_slug
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
+        # try:
+        #     file_exams = paginator.page(page)
+        # except PageNotAnInteger:
+        #     file_exams = paginator.page(1)
+        # except EmptyPage:
+        #     file_exams = paginator.page(paginator.num_pages)
             
-        context['list_challenges'] = file_exams
+        # context['list_challenges'] = file_exams
         return context
 
 class HistoryListCompleted(generic.ListView):
@@ -492,76 +503,33 @@ def submit_challenge_successful(request, slug):
 
 
 def submit_challenge(request, slug):
-    """
-    Called for both getting the challenge submission page and submitting a challenge
-    
-    Keyword Arguments:
-    request -- the HTTP request that calls this.
-    slug -- the url slug; identifies the organization that this challenge is being submitted in.
-    
-    Returns either the submit challenge page, or a redirect to the success page
-    """
-    # if the user is logged in, we can tag the request to the user (and should give an option to post anonymously anyway)
     if request.user.is_authenticated:
-        # Generates a new form to store the challenge data
         form = ChallengeForm()
         logging.error(slug)
         org = slug
         orgobject = Organisation.objects.get(slug=slug)
         
-        # If the type of request we're getting is a POST request then we're being given a completed form to send
         if request.method == "POST":
             form = ChallengeForm(request.POST, request.FILES)
 
             if form.is_valid():
                 form.author = request.user
                 challenge = form.save()
+                challenge.author = request.user
                 challenge.org_tag = orgobject
-                # If the challenge is NOT flagged to be anonymous, we need to get the user from the request
-                if challenge.anonymous != True:
-                    challenge.author = request.user
                 cnwl = False
-                # Save the challenge form again, because we've made changes
                 challenge = form.save()
                 Post.objects.create(author=challenge.author, title=challenge.title, severity=challenge.severity, department=challenge.department, 
                 challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
 
-                # Redirect the user to the success page
                 return redirect('submit_challenge_successful', slug=slug)
         
-        # Else if the type of request ISN'T POST, the request it to get the webpage, so we format the context and render the page
-        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on, 'orgslug' : slug, 'logged_in' : True}
+
+        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on, 'orgslug' : slug}
 
         return render(request,'challenges/submit_challenge.html', context)
-    # Else the user isn't logged in, so the challenge is anonymous by default
     else:
-        # Generates a new form to store the challenge data
-        form = ChallengeForm()
-        logging.error(slug)
-        org = slug
-        orgobject = Organisation.objects.get(slug=slug)
-        
-        # If the type of request we're getting is a POST request then we're being given a completed form to send
-        if request.method == "POST":
-            form = ChallengeForm(request.POST, request.FILES)
-
-            if form.is_valid():
-                challenge = form.save()
-                challenge.org_tag = orgobject
-                cnwl = False
-                # Save the challenge form again, because we've made changes
-                challenge = form.save()
-                Post.objects.create(title=challenge.title, severity=challenge.severity, department=challenge.department, 
-                challenge=challenge, description=challenge.description, org_tag = challenge.org_tag, image = challenge.image)
-
-                # Redirect the user to the success page
-                return redirect('submit_challenge_successful', slug=slug)
-        
-        # Else if the type of request ISN'T POST, the request it to get the webpage, so we format the context and render the page
-        context = {'challengeform': form, 'org': org, 'custom_on' : orgobject.custom_form_on, 'orgslug' : slug, 'logged_in' : False}
-
-        return render(request,'challenges/submit_challenge.html', context)
-
+        return redirect('access_denied')
 
 def orcha_api(request):
     
@@ -617,10 +585,10 @@ class ideaform(CreateView):
         is_pridar = False
         if custom_on:
             is_pridar = True
-        logged_in = False
+        has_access = False
         if self.request.user.is_authenticated:
-            logged_in = True
-        context['logged_in'] = logged_in
+            has_access = True
+        context['has_access'] = has_access
         context['challenge'] = Post.objects.get(slug=challenge_slug)
         context['custom_on'] = is_pridar
 
@@ -628,7 +596,6 @@ class ideaform(CreateView):
         return context
         
     def form_valid(self, form):
-        """Set field for form, then redirect to get_success_url"""
         form.instance.post_id = self.kwargs['pk']
         return super().form_valid(form)
 
@@ -658,12 +625,8 @@ def search_idea(request):
     else:
         return render(request, 'search/selected_idea_search.html', {})
 
+
 def idea_criteria_form(request, orgslug, pk, slug):
-    """This function need to be refactor,
-        1. This function is too long
-        2. there is a almost same function in ideastore, 
-           with only different in the link of successful submission.
-    """
     logging.error(pk)
     post = Post.objects.get(slug=slug)
     org = Organisation.objects.get(slug=orgslug)
@@ -806,9 +769,8 @@ def idea_criteria_form(request, orgslug, pk, slug):
                 pridar_idea.title = current_idea.title
                 pridar_idea.description = current_idea.description
                 pridar_idea.image = current_idea.image
-                if not current_idea.anonymous and current_idea.anonymous != None:
-                    pridar_idea.author = request.user
-                    current_idea.author = request.user
+                pridar_idea.author = request.user
+                current_idea.author = request.user
                 pridar_idea.post = current_idea.post
                 current_idea.org_tag.add(org) 
                 current_idea.department = post.department
@@ -964,8 +926,7 @@ def idea_criteria_form(request, orgslug, pk, slug):
                 if is_public:
                     current_idea.org_tag.add(public)
                 current_idea.is_user_led = is_user_led
-                if not current_idea.anonymous and current_idea.anonymous != None:
-                    current_idea.author = request.user
+                current_idea.author = request.user
                 current_idea.org_tag.add(org) 
                 current_idea.department = post.department
                 current_idea.save()
@@ -994,12 +955,29 @@ class CNWLIdeaViewSet(viewsets.ModelViewSet):
     queryset = Idea.objects.filter(org_tag = cnwl_id).filter(stage__isnull=False).order_by('title')
     serializer_class = IdeaSerializer
 
+from rest_framework.decorators import authentication_classes, permission_classes
+   
 
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def intranet_api(request, stage=None):
+    org = Organisation.objects.get(name='Public')
+    org_slug = org.slug
+    pk = org.id
+    context = {'pk':pk, 'orgslug':org_slug,'slug':org_slug}
 
-def lifecycle(request, pk, slug):
+    query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
+    serializer = IdeaSerializer(query_set, many=True)
+
+    result = HttpResponse(serializer.data)
+    return result
+
+def lifecycle(request, pk=None, slug=None):
+    #pk = request.GET.get('pk')
     org = Organisation.objects.get(id=pk)
     org_slug = org.slug
-    context = {'pk':pk, 'orgslug': org_slug, 'slug' : slug}
+    context = {'pk':pk, 'orgslug': org_slug, 'slug': slug}
     return  render(request, 'challenges/lifecycle.html', context)
 
 class CommentList(generic.ListView):
