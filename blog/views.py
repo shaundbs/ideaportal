@@ -93,7 +93,7 @@ class PostList(generic.ListView):
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        return Post.objects.filter(status=1).filter(org_tag=portal_choice)
+        return Post.objects.filter(status=1).filter(org_tag=portal_choice).order_by("-created_on" ,"-updated_on")
 
     def get_context_data(self, **kwargs):
         context = super(PostList, self).get_context_data(**kwargs)
