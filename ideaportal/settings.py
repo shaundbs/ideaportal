@@ -32,7 +32,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'organisations',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,11 +49,8 @@ INSTALLED_APPS = [
     'orchaapi',
     'rest_framework.authtoken',
     'dotenv',
-<<<<<<< HEAD
-=======
     'organisations',
     'ideastore',
->>>>>>> idea-solo
 ]
 
 
