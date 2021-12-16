@@ -13,10 +13,6 @@ STATUS = (
 )
 
 class Post(models.Model):
-    """The model of the list of the challenges
-    
-    A Post contains the collections of challenges and its associated ideas
-    """
     title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, null=True, default='none')
     SEVERITY_CHOICES = [
@@ -24,21 +20,19 @@ class Post(models.Model):
     ('medium', 'Medium'),
     ('high', 'High'),
     ('urgent', 'Urgent'),
-]   
-    # To maintain the code consistency, all the "to" filed in ForeignKey is using 
-    # the [name] of the other model
+]
     severity = models.CharField(max_length=32, choices=SEVERITY_CHOICES, default='low')
-    author = models.ForeignKey("account.Account", on_delete=models.SET_NULL, related_name='blog_posts', null=True)
+    author = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='blog_posts', null=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.BooleanField(default=False)
     department = models.ForeignKey('challenges.Department', on_delete=CASCADE, related_name='dept', null=True)
-    likes = models.ManyToManyField("account.Account", related_name='post_likes', null=True, blank=True)
+    likes = models.ManyToManyField(Account, related_name='post_likes', null=True, blank=True)
     challenge = models.ForeignKey('challenges.Challenge', related_name='post_to_challenge', on_delete=CASCADE, null=True)
     startDate = models.DateField(null=True, blank=True)
     endDate =  models.DateField(null=True, blank=True)
     description = models.TextField(max_length=500,default='Type content here...')
-    manager = models.ForeignKey("account.Account", on_delete=models.SET_NULL, related_name='challenge_manager', null=True, blank=True)
+    manager = models.ForeignKey(Account, on_delete=models.SET_NULL, related_name='challenge_manager', null=True, blank=True)
     image = models.ImageField(null=True, blank=True)
     winner = models.ForeignKey('challenges.Idea', on_delete=models.SET_NULL, related_name='winner', null=True, blank=True)
     org_tag = models.ForeignKey('organisations.Organisation', on_delete=models.SET_NULL, related_name='postorgtag', null=True)
@@ -46,7 +40,6 @@ class Post(models.Model):
     def total_likes(self):
         return self.likes.count()
 
-    # Two method with same name and same args, with no self pass into it.
     def total_likes_received(user):
         return user.posts.aggregate(total_likes=Count('likes'))['total_likes'] or 0
 
@@ -62,7 +55,6 @@ class Post(models.Model):
         self.slug = slugify(self.title)
         super(Post, self).save(*args, **kwargs)
 
-    # Cannot find the useage of this method
     def create_post(self, author, title, severity, department, challenge, description):
         if not title:
             raise ValueError("Title is a required field")

@@ -40,7 +40,7 @@
       
       <div class="card-body">
         <div class="nhsuk-back-link">
-  <a class="nhsuk-back-link__link" href="{{ request.META.HTTP_REFERER }}">
+  <a class="nhsuk-back-link__link" href="{% url 'post_detail' orgslug pk slug %}">
     <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
     </svg>
@@ -50,7 +50,6 @@
         <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
       </center>
         <p class=" text-muted">{{ object.author }} | {{ object.created_on }}</p>
-        <p class=" text-muted"> Department: {{ object.department }}</p>
         <p class="card-text ">{{ object.description | safe }}</p>
         {% if custom %}
         <p class=" text-muted">PRIDAR Classification:</p>

@@ -1,6 +1,5 @@
-{%extends "bases/basePollNavbar.html" %}
+{% load static %}
 
-{%block navbar_items%} 
 
 <!DOCTYPE html>
   <html lang="en">
@@ -114,77 +113,97 @@
     <button class="nhsuk-header__navigation-close" id="close-menu">
       <svg class="nhsuk-icon nhsuk-icon__close" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path d="M13.41 12l5.3-5.29a1 1 0 1 0-1.42-1.42L12 10.59l-5.29-5.3a1 1 0 0 0-1.42 1.42l5.3 5.29-5.3 5.29a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l5.29-5.3 5.29 5.3a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"></path>
-        
-  <li class="nhsuk-header__navigation-item">
-    <a class="nhsuk-header__navigation-link" href="{% url 'blogfeed_main' org.slug%}" >
-      Home
-      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
       </svg>
-    </a>
-  </li>
+      <span class="nhsuk-u-visually-hidden">Close menu</span>
+    </button>
+  </p>
+  <ul class="nhsuk-header__navigation-list">
+    <li class="nhsuk-header__navigation-item">
+      <a class="nhsuk-header__navigation-link" href="/blogs/post-feed/{{org.slug}}" >
+        Home
+        <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+        </svg>
+      </a>
+    </li>
 
-  <li class="nhsuk-header__navigation-item">
-    <a class="nhsuk-header__navigation-link" href="{% url 'bloghub' org.slug %}" >
-      Latest Polls
-      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-      </svg>
-    </a>
-  </li>
+
     
-  <li class="nhsuk-header__navigation-item">
-    <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_health' org.slug %}" >
-      Health 
-      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-      </svg>
-    </a>
-  </li>
-
-  <li class="nhsuk-header__navigation-item">
-    <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_culture' org.slug %}" >
-      Culture
-      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-      </svg>
-    </a>
-  </li>
+    <li class="nhsuk-header__navigation-item">
+      <a class="nhsuk-header__navigation-link" href="{% url 'bloghub' org.slug %}" >
+        Latest Polls
+        <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+        </svg>
+      </a>
+    </li>
     
-  <li class="nhsuk-header__navigation-item">
-    <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_job_satisfaction' org.slug %}" >
-      Job Satisfaction
-      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-      </svg>
-    </a>
-  </li>
+      <li class="nhsuk-header__navigation-item">
+  <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_health' org.slug %}" >
+    Health 
+    <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+    </svg>
+  </a>
+</li>
 
-  <li class="nhsuk-header__navigation-item">
-    <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_relationships' org.slug %}" >
-      Relationships
-      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-      </svg>
-    </a>
-  </li>
- 
-  <li class="nhsuk-header__navigation-item">
-    <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_leadership' org.slug %}" >
-      Leadership
-      <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
-      </svg>
-    </a>
-  </li>
+    
 
-  <li class="nhsuk-header__navigation-item">
+    
+      <li class="nhsuk-header__navigation-item">
+  <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_culture' org.slug %}" >
+    Culture
+    <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+    </svg>
+  </a>
+</li>
+
+    
+      <li class="nhsuk-header__navigation-item">
+  <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_job_satisfaction' org.slug %}" >
+    Job Satisfaction
+    <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+    </svg>
+  </a>
+</li>
+
+    
+      <li class="nhsuk-header__navigation-item">
+  <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_relationships' org.slug %}" >
+    Relationships
+    <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+    </svg>
+  </a>
+</li>
+
+    
+      <li class="nhsuk-header__navigation-item">
+  <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_leadership' org.slug %}" >
+    Leadership
+    <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
+    </svg>
+  </a>
+  
+</li>
+
+    
+<li class="nhsuk-header__navigation-item">
     <a class="nhsuk-header__navigation-link" href="{% url 'bloghub_data' org.slug %}" >
       Data
       <svg class="nhsuk-icon nhsuk-icon__chevron-right" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
         <path d="M15.5 12a1 1 0 0 1-.29.71l-5 5a1 1 0 0 1-1.42-1.42l4.3-4.29-4.3-4.29a1 1 0 0 1 1.42-1.42l5 5a1 1 0 0 1 .29.71z"></path>
       </svg>
     </a>
+    
   </li>
 
-{% endblock %}  
+    
+  </ul>
+</nav>
+
+  
+</header>

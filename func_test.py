@@ -1,5 +1,4 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 
 browser = webdriver.Firefox()
 browser.get('http://localhost:8000')
