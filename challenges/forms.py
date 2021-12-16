@@ -12,10 +12,14 @@ import logging
 class IdeaForm(forms.ModelForm):
 
     class Meta:
+        """In ideastore, though class EnhancedIdeaForm is inherit from this class,
+           because fields in not emmutable, so once you change the Meta here,
+           you need to also change the Meta of class EnhancedIdeaForm in ideastore/forms
+        """
         model = Idea
-        fields = ('title', 'description', 'image', 'is_pridar')
-        labels = {'is_pridar': 'Technology-related?'}
-
+        fields = ('title', 'description', 'anonymous', 'image', 'is_pridar')
+        labels = {'is_pridar': 'Technology-related?', 'anonymous': 'Post anonymously?'}
+        
 class OrgSpecificForm(forms.Form):
 
     def __init__(self, *args, **kwargs):

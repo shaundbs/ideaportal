@@ -40,10 +40,10 @@ class SubmitIdea(CreateView):
         is_pridar = False
         if custom_on:
             is_pridar = True
-        has_access = False
+        logged_in = False
         if self.request.user.is_authenticated:
-            has_access = True
-        context["has_access"] = has_access
+            logged_in = True
+        context['logged_in'] = logged_in
         context["custom_on"] = is_pridar
 
         context
@@ -218,8 +218,9 @@ def idea_criteria_form(request, orgslug):
                 pridar_idea.title = current_idea.title
                 pridar_idea.description = current_idea.description
                 pridar_idea.image = current_idea.image
-                pridar_idea.author = request.user
-                current_idea.author = request.user
+                if not current_idea.anonymous and current_idea.anonymous != None:
+                    pridar_idea.author = request.user
+                    current_idea.author = request.user
                 pridar_idea.post = current_idea.post
                 current_idea.org_tag.add(org)
                 """Issue, add department selection to idea submit form 01"""
@@ -408,7 +409,8 @@ def idea_criteria_form(request, orgslug):
                 if is_public:
                     current_idea.org_tag.add(public)
                 current_idea.is_user_led = is_user_led
-                current_idea.author = request.user
+                if not current_idea.anonymous and current_idea.anonymous != None:
+                    current_idea.author = request.user
                 current_idea.org_tag.add(org)
                 """Issue, add department selection to idea submit form 01"""
                 # current_idea.department = post.department
