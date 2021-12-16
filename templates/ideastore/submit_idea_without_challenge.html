@@ -1,18 +1,13 @@
-<!-- I was attempt to use template inheritance to inherit this template,
-     from ideas/submit_ideas_form.html
-     But when I replace the set_department block with the code in this template,
-     it keep pops "expect endblock error"
--->
-
 {% load static %}
 
-{% include 'components/navbar_limited.html' %}
+{% if has_access %}
+  {% include 'components/navbar_reg.html' %}
 
 
 <div class="nhsuk-width-container">
         
     <div class="nhsuk-back-link nhsuk-u-margin-top-4 nhsuk-u-margin-bottom-0">
-        <a class="nhsuk-back-link__link" id="back_button_link" href="{{ request.META.HTTP_REFERER }}">
+        <a class="nhsuk-back-link__link" id="back_button_link" href="{% url 'blogfeed_main' orgslug%}">
             <svg class="nhsuk-icon nhsuk-icon__chevron-left"
                  xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 24 24"
@@ -36,12 +31,6 @@
 
 </class> 
 
-<!-- <form method="POST" action="">
-  {% csrf_token %}
-{{ createuserform.as_p }}
-<input type="submit" name="Create user">
-</form> -->
-
 
 <form method="post" action="" enctype="multipart/form-data">
   {% csrf_token %}
@@ -49,11 +38,6 @@
     <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--xl">
       <h1 class="nhsuk-fieldset__heading" id="page_h1_title">Suggest an idea</h1>
     </legend>
-    <br>
-    {%block more_information%}
-    <!-- No information becasue this is challenge less -->
-    {%endblock more_information%}
-
     <p id="name-hint">Please fill out all required fields</p>
     <br>
     <div class="nhsuk-form-group " id="question_nhsnumber">
@@ -93,32 +77,24 @@
       </div>
     </details>
 
-    {% if logged_in %}
-    <br>
-      <div class="nhsuk-form-group " id="question_nhsnumber">
-        {{ form.anonymous.label }} 
-        <div class="nhsuk-form-group " >
-        </div>
-        {% render_field form.anonymous class="nhsuk-checkboxes" id="anon_check" name="anon_check" %} 
-      </div>
-    {% else %}
-    {% endif %}
-    {%block set_department%}
     <div class="nhsuk-form-group " id="question_nhsnumber">
       {{ form.department.label }} 
-      <div class="nhsuk-form-group">
+      <div class="nhsuk-form-group " >
       </div>
       {% render_field form.department class="nhsuk-select" id="select-1" name="department" onchange='checkvalue(this.value)' %} 
     </div>
-    {%endblock set_department%}
-    
-      {% if custom_on %}   
+
+    <div class="nhsuk-checkboxes">
+
+      {% if custom_on %}
+      
       <div class="nhsuk-checkboxes__item">
         {% render_field form.is_pridar class="nhsuk-checkboxes__input"  id="example-3" name="example" type="checkbox" value="text message" %} 
         <label class="nhsuk-label nhsuk-checkboxes__label" for="example-3">
           {{ form.is_pridar.label }} 
         </label>
-      </div>      
+      </div>
+        
  <br>
 {% else %}
 {% endif %}
@@ -180,3 +156,65 @@
        document.getElementById('department').style.display='none'; 
 }
 </script>
+{% else %}
+{% include 'components/navbar_reg.html' %}
+
+
+<div class="nhsuk-width-container app-width-container--full">
+
+  
+  <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        
+        <div class="card-body">
+          <div class="nhsuk-back-link">
+      <a class="nhsuk-back-link__link" href="{{request.META.HTTP_REFERER}}">
+      <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+      </svg>
+      Go back</a>
+      </div>
+
+        <h1 class="govuk-heading-l">Access denied</h1>
+        <p class="govuk-body">
+          You do not have permission to access this page.
+        </p>
+        <p class="govuk-body">
+          This could be because you do not have the correct permissions to access this organisation's page.<br>
+          Please contact an administrator or portal manager to request access if this is the case. 
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+<br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+
+
+{% include 'components/footer.html' %}
+
+          <!-- Data Layer -->
+          <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
+  </body>
+
+</html>
+
+{% endif %}

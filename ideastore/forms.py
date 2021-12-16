@@ -15,9 +15,8 @@ class EnhancedIdeaForm(IdeaForm):
 
     class Meta:
         model = Idea
-        fields = ("title", "description", 'anonymous', "department", 'image', 'is_pridar')
+        fields = ("title", "description", "department", "image", "is_pridar")
         labels = {
             "is_pridar": "Technology-related?",
-            'anonymous': 'Post anonymously?',
             "department": "Department",
         }
