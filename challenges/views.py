@@ -1029,19 +1029,19 @@ class PostDetail(generic.DetailView):
 
         return context
 
-    @api_view(['GET'])
-    @authentication_classes([])
-    @permission_classes([])
-    def intranet_api(request, stage=None):
-        org = Organisation.objects.get(name='Public')
-        org_slug = org.slug
-        pk = org.id
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def intranet_api(request, stage=None):
+    org = Organisation.objects.get(name='Public')
+    org_slug = org.slug
+    pk = org.id
 
-        query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
-        serializer = IdeaSerializer(query_set, many=True)
+    query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
+    serializer = IdeaSerializer(query_set, many=True)
 
-        result = HttpResponse(serializer.data)
-        return result
+    result = HttpResponse(serializer.data)
+    return result
 
     
 # class add_category_view(CreateView):
