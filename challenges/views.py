@@ -5,7 +5,7 @@ from .forms import IdeaForm, CriteriaForm, ChallengeForm, DepartmentForm, OrgSpe
 from django.shortcuts import redirect
 from operator import pos
 from django.core.checks import messages
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.views import generic
 from .models import Challenge, Post, Idea, Department, OrgForm
 from django.shortcuts import render, get_object_or_404
@@ -23,6 +23,9 @@ from rest_framework import viewsets
 from .serializers import IdeaSerializer
 import requests, json
 import logging
+from rest_framework.decorators import api_view
+from rest_framework.decorators import authentication_classes, permission_classes
+
 
 # Create your views here.
 
@@ -1025,6 +1028,20 @@ class PostDetail(generic.DetailView):
         context["liked"] = liked
 
         return context
+
+    @api_view(['GET'])
+    @authentication_classes([])
+    @permission_classes([])
+    def intranet_api(request, stage=None):
+        org = Organisation.objects.get(name='Public')
+        org_slug = org.slug
+        pk = org.id
+
+        query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
+        serializer = IdeaSerializer(query_set, many=True)
+
+        result = HttpResponse(serializer.data)
+        return result
 
     
 # class add_category_view(CreateView):
