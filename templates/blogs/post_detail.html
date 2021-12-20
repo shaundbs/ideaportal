@@ -54,11 +54,7 @@
 <center>
         <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
       </center>
-      {% if post.author %}
-        <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
-      {% else %}
-        <p class=" text-muted">anonymous user | {{ post.created_on }}</p>
-      {% endif %}
+        <p class=" text-muted">Author: {{ post.author|default_if_none:"Anonymous" }} | Date: {{ post.created_on }}</p>
         <p class=" text-muted"> Severity: {{ object.severity| capfirst }}</p>
         <p class="card-text ">{{ object.description | safe }}</p>
         
