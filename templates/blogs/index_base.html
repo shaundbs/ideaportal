@@ -10,7 +10,7 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h2 class="card-title">{{ post.title }}</h2>
-                    <p class="card-text text-muted h6">{{ post.author }} | {{ post.created_on}} </p>
+                    <p class="card-text text-muted h6">Author: {{ post.author|default_if_none:"Anonymous" }} | Date: {{ post.created_on}} </p>
                     <p class="card-text text-muted h6">Department: {{ post.department }} </p>
                     <br>
                     <p class="card-text">{{post.description|slice:":200" }}...</p>
