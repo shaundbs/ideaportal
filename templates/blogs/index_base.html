@@ -16,8 +16,10 @@
                     <p class="card-text">{{post.description|slice:":200" }}...</p>
                     <p class="card-text"> Start Date: {{post.startDate }} <br> End Date: {{post.endDate  }}</p>
                     <p class="card-text">                                 Severity: {{post.severity|capfirst}} </p>
+                    {%block button%}
                     <a href="{% url 'post_detail' org.slug post.pk post.slug %}" class="nhsuk-button">Read More</a>
                     <a href="{% url 'ideaform' org.slug post.pk post.slug %}" class="nhsuk-button nhsuk-button--secondary">Suggest Idea</a>
+                    {%endblock button%}
                 </div>
             </div>
         {% endfor %}
