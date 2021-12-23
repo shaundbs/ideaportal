@@ -1,4 +1,13 @@
-{% extends "blogs/base.html" %} 
+{% extends 'blogs/index_base.html' %}
+
+{%block nav_bar%} {% include 'components/navbar_management.html' %} {%endblock%}
+
+{%block section_title%}Pending Challenges{%endblock%}
+
+{%block button%}
+<a href="{% url 'post_management_detail' orgslug post.pk post.slug %}" class="nhsuk-button">Manage</a>
+{%endblock button%}
+{% comment %} {% extends "blogs/base.html" %} 
 {% block content %}
 
 <style>
@@ -54,4 +63,4 @@
     </div>
 </div>
 {% include 'components/footer.html' %}
-{%endblock%}
+{%endblock%} {% endcomment %}

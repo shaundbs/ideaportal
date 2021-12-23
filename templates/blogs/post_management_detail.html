@@ -53,7 +53,7 @@
 <center>
 <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
 </center>
-<p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
+<p class=" text-muted">Author: {{ object.author|default_if_none:"Anonymous" }} | Date: {{ object.created_on }}</p>
 <p class=" text-muted"> Severity: {{ object.severity| capfirst }}</p>
 {% if object.status %}
 <p class=" text-muted">Status: Approved</p>
