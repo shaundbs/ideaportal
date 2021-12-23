@@ -49,7 +49,7 @@
 <center>
         <h1>{% block title %} {{ object.title }} {% endblock title %}</h1>
       </center>
-        <p class=" text-muted">{{ object.author }} | {{ object.created_on }}</p>
+        <p class=" text-muted">Author: {{ object.author|default_if_none:"Anonymous" }} | Date: {{ object.created_on }}</p>
         <p class=" text-muted"> Department: {{ object.department }}</p>
         <p class="card-text ">{{ object.description | safe }}</p>
         {% if custom %}
