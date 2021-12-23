@@ -90,6 +90,7 @@ def reject_idea(request, pk, slug, orgslug):
 class PendingIdeasList(generic.ListView):
     today = make_aware(datetime.datetime.now())
     template_name = 'ideas/pending_ideas.html'
+    context_object_name = 'ideas'
     # queryset = Idea.objects.all()
 
     model = Idea
