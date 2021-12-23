@@ -1034,10 +1034,12 @@ class PostDetail(generic.DetailView):
 @permission_classes([])
 def intranet_api(request, stage=None):
     org = Organisation.objects.get(name='Public')
-    org_slug = org.slug
     pk = org.id
 
-    query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
+    if stage=='all':
+        query_set = Idea.objects.filter(org_tag = pk).order_by('-created_on')
+    else:
+        query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
     serializer = IdeaSerializer(query_set, many=True)
 
     result = HttpResponse(serializer.data)
