@@ -17,7 +17,7 @@
                     <p class="card-text">Cost: {{idea.estimated_cost}}</p>
                     {% comment %} This button redirect the page to blog/idea_detail.html {% endcomment %}
                     {%block button%}
-                    <a href="{% url 'idea_post' org idea.pk idea.slug  %}" class="nhsuk-button">Read More</a>
+                    <a href="{% url 'idea_post' org.slug idea.pk idea.slug  %}" class="nhsuk-button">Read More</a>
                     {%endblock button%}
                 </div>
             </div>
