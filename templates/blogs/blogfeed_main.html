@@ -364,11 +364,11 @@
           <thead>
             <tr>
               <th>Username</th>
-              <th>Ideas selected</th>
+              <th>Contribution</th>
             </tr>
           </thead>
           <tbody>
-            {% for item1, item2 in leaderboard_data %}
+            {% for item1, item2 in leaderboard_data_contribution %}
             <tr>
               <td>{{ forloop.counter }}. {{ item1 }}</td>
               <td>{{ item2 }}</td>

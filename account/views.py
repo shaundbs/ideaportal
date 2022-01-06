@@ -35,7 +35,7 @@ from formtools.wizard.views import SessionWizardView, NamedUrlWizardView
 import account.forms
 import requests, json
 import http.client
-from challenges.models import Idea, Department
+from challenges.models import Challenge, Idea, Department
 from django.db.models import Count
 from email.mime.multipart import MIMEMultipart
 from rest_framework import viewsets
@@ -478,21 +478,37 @@ class blogfeed_main(generic.DetailView):
         users = Account.objects.filter(affiliated_with=portal_choice)
         # wins = Idea.total_ideas_selected(self.request.user)
         logging.error(users)
-        ranks = []
+        ranks_idea_selected = []
+        ranks_contribution = []
         names = []
         score = 0
 
+        
         for i in users:
+            # leaderboard based on ideas selected
             score = Idea.total_ideas_selected(i)
-            ranks.append(score)
+            ranks_idea_selected.append(score)
+
+            # leaderboard based on contribution --> ideas and challenges submitted
+            score = Idea.total_ideas_submitted(i) + Challenge.total_challenges_submitted(i)
+            ranks_contribution.append(score)
+
             names.append(i.username)
 
-        logging.error(ranks)
+        logging.error(ranks_idea_selected)
+        logging.error(ranks_contribution)
         logging.error(names)
-        user_data = zip(names, ranks)
-        leaderboard_data = sorted(user_data, key=lambda x: x[1], reverse=True)[:5]
-        logging.error(leaderboard_data)
-        context['leaderboard_data'] = leaderboard_data
+
+        user_data_idea_submitted = zip(names, ranks_idea_selected)
+        leaderboard_data_idea_submitted = sorted(user_data_idea_submitted, key=lambda x: x[1], reverse=True)[:5]
+        logging.error(leaderboard_data_idea_submitted)
+        context['leaderboard_data_idea_submitted'] = leaderboard_data_idea_submitted
+
+        user_data_contribution = zip(names, ranks_contribution)
+        leaderboard_data_contribution = sorted(user_data_contribution, key=lambda x: x[1], reverse=True)[:5]
+        logging.error(leaderboard_data_contribution)
+        context['leaderboard_data_contribution'] = leaderboard_data_contribution
+
         total_challenges = Post.objects.filter(org_tag = portal_choice).count()
         total_ideas = Idea.objects.filter(org_tag = portal_choice).count()
         context['total_challenges'] = total_challenges
