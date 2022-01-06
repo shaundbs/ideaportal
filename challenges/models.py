@@ -75,6 +75,9 @@ class Challenge(models.Model):
             return self.default_pic_mapping[self.department.department]
         return self.image
 
+    def total_challenges_submitted(user):
+        return user.challenge_author.count()
+
     def save(self, *args, **kwargs):
         self.image = self.get_profile_pic_url()
         super(Challenge, self).save(*args, **kwargs)
@@ -118,6 +121,9 @@ class Idea(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+    def total_ideas_submitted(user):
+        return user.idea_author.count()
 
     def total_likes(self):
         return self.likes.count()
