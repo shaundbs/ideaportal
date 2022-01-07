@@ -28,6 +28,8 @@ from account.decorators import has_org_access
 from challenges.models import OrgForm
 import logging
 
+from ideaportal.templates import ListViewTemplate
+
 
 def search_blog(request, slug):
     # org = Organisation.objects.get(id=slug)
@@ -85,45 +87,15 @@ class MyDetailView(generic.DetailView):
         return context
 
 
-class PostList(generic.ListView):
+class PostList(ListViewTemplate):
     """The view of the list of challenges"""
 
-    paginate_by = 4
     template_name = "blogs/index_latestpoll.html"
+    model = Post
+    paginate_by = 4
 
-    def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        return Post.objects.filter(status=1).filter(org_tag=portal_choice).order_by("-created_on" ,"-updated_on")
-
-    def get_context_data(self, **kwargs):
-        context = super(PostList, self).get_context_data(**kwargs)
-        list_challenges = Post.objects.all()
-        # class Paginator(object_list, per_page, orphans=0, allow_empty_first_page=True)
-        paginator = Paginator(list_challenges, self.paginate_by)
-
-        page = self.request.GET.get("page")
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["slug"]).slug
-        context["org"] = Organisation.objects.get(slug=portal_slug)
-
-        spec_on = False
-        custom_form_on = portal_choice.custom_form_on
-        if custom_form_on:
-            spec_on = True
-
-        context["spec_on"] = spec_on
-
-        # To catch the exception raised by Class Paginator
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-
-        context["list_challenges"] = file_exams
-        return context
+    def _filter_queryset(self, queryset):
+        return queryset.filter(status=1).order_by("-created_on" ,"-updated_on")
 
 
 class PostListHealth(PostList):
@@ -139,10 +111,6 @@ class PostListOrgSpecific(PostList):
 
     template_name = "blogs/index_org_specific.html"
 
-    def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        return OrgForm.objects.filter(status=1).filter(org_tag=portal_choice)
-
 
 class PostListMonth(PostList):
 
@@ -150,9 +118,12 @@ class PostListMonth(PostList):
 
     def get_queryset(self, *args, **kwargs):
         datetime_object = datetime.datetime.strptime(self.kwargs["month"], "%B")
-        logging.error(datetime_object.month)
-        logging.error(datetime_object)
-        return super().get_queryset(*args, **kwargs).order_by("-created_on")
+        return super().get_queryset(*args, **kwargs).filter(created_on__month = datetime_object.month)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['month'] = self.kwargs["month"]
+        return context
 
 
 class PostListCulture(PostList):

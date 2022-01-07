@@ -27,43 +27,64 @@ from rest_framework.decorators import api_view
 from rest_framework.decorators import authentication_classes, permission_classes
 
 
-# Create your views here.
+
+"""Below are the calsses for pages in [Management] tab in [Home] page.
+
+Classes:
+    PostList: [Pending Challenges]
+    PostListCompleted: [Completed Challenges]
+    PendingIdeasList: [Pending Ideas]
+"""
 
 class PostList(generic.ListView):
-    """The view for managing the challenges"""
+    """View for Pending Challenges under Management tab"""
     today = make_aware(datetime.datetime.now())
     template_name = 'blogs/manager_index.html'
-
     model = Post
-
     paginate_by = 4
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return Post.objects.filter(status=0).filter(org_tag=portal_choice).filter(endDate=None).order_by('-created_on')
+        return self.model.objects.filter(status=0).filter(org_tag=portal_choice).filter(endDate=None).order_by('-created_on')
 
     def get_context_data(self, **kwargs):
-        context = super(PostList, self).get_context_data(**kwargs) 
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
-
-        page = self.request.GET.get('page')
-
+        context = super().get_context_data(**kwargs) 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
         logging.error(portal_choice)
         logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
-        context['orgslug'] = portal_slug
+        context['orgslug'] = portal_slug            
+        return context
 
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-            
-        context['list_challenges'] = file_exams
+class PostListCompleted(PostList):
+    """View for Completed Challenges under Management tab"""
+    template_name = 'blogs/completed_challenges.html'
+
+    def get_queryset(self, *args, **kwargs):
+        today = make_aware(datetime.datetime.now())
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        return self.model.objects.filter(status=1).filter(org_tag=portal_choice).filter(endDate__lte=today).order_by('-created_on')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs) 
+        return context
+
+# IdeaApprovalForm
+
+class PendingIdeasList(PostList):
+    template_name = 'ideas/pending_ideas.html'
+    context_object_name = 'ideas'
+    model = Idea
+
+    def get_queryset(self, *args, **kwargs):
+        portal_choice = self.kwargs['slug']
+        logging.error(portal_choice)
+        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        return self.model.objects.filter(status=0).filter(org_tag=portal_choice)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs) 
         return context
 
 def approve_idea(request, pk, slug, orgslug):
@@ -84,50 +105,6 @@ def reject_idea(request, pk, slug, orgslug):
     idea.save()
 
     return HttpResponseRedirect(reverse('idea_management_detail', args=[orgslug, str(pk), slug]))
-
-# IdeaApprovalForm
-
-class PendingIdeasList(generic.ListView):
-    today = make_aware(datetime.datetime.now())
-    template_name = 'ideas/pending_ideas.html'
-    context_object_name = 'ideas'
-    # queryset = Idea.objects.all()
-
-    model = Idea
-
-    paginate_by = 4
-
-    def get_queryset(self, *args, **kwargs):
-        portal_choice = self.kwargs['slug']
-        logging.error(portal_choice)
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return Idea.objects.filter(status=0).filter(org_tag=portal_choice)
-
-    def get_context_data(self, **kwargs):
-        context = super(PendingIdeasList, self).get_context_data(**kwargs) 
-        list_challenges = Idea.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
-
-        page = self.request.GET.get('page')
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context['org'] = Organisation.objects.get(slug=portal_slug)
-        context['orgslug'] = portal_slug
-        
-
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-            
-        context['list_challenges'] = file_exams
-        return context
 
 class Statistics(generic.ListView):
     today = make_aware(datetime.datetime.now())
@@ -201,41 +178,6 @@ class IdeaManagementDetail(generic.DetailView):
         context['custom'] = custom
         
 
-        return context
-
-class PostListCompleted(generic.ListView):
-    today = make_aware(datetime.datetime.now())
-    logging.error(today)
-    queryset = Post.objects.filter(status=1).filter(endDate__lte=today)
-    template_name = 'blogs/completed_challenges.html'
-
-    model = Post
-
-    paginate_by = 4
-
-
-    def get_context_data(self, **kwargs):
-        context = super(PostListCompleted, self).get_context_data(**kwargs) 
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
-
-        page = self.request.GET.get('page')
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context['org'] = Organisation.objects.get(slug=portal_slug)
-        context['orgslug'] = portal_slug
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-            
-        context['list_challenges'] = file_exams
         return context
 
 class IdeaListOpen(generic.ListView):
