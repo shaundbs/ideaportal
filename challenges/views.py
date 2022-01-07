@@ -48,27 +48,13 @@ class PostList(generic.ListView):
         return self.model.objects.filter(status=0).filter(org_tag=portal_choice).filter(endDate=None).order_by('-created_on')
 
     def get_context_data(self, **kwargs):
-        context = super(PostList, self).get_context_data(**kwargs) 
-        list_challenges = Post.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
-
-        page = self.request.GET.get('page')
-
+        context = super().get_context_data(**kwargs) 
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
         logging.error(portal_choice)
         logging.error(portal_slug)
         context['org'] = Organisation.objects.get(slug=portal_slug)
-        context['orgslug'] = portal_slug
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-            
-        context['list_challenges'] = file_exams
+        context['orgslug'] = portal_slug            
         return context
 
 class PostListCompleted(PostList):
