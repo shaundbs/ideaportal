@@ -1,6 +1,6 @@
 from organisations.models import Organisation
 from django.views.generic import ListView
-from django.db.models import Model, QuerySet
+from django.db.models import Model
 import logging
 
 class ListViewTemplate(ListView):
@@ -13,15 +13,14 @@ class ListViewTemplate(ListView):
     def _filter_queryset(self, queryset):
         """Override this method to filter the Model
 
-        e.g. self.model.objects.filter(xxx=x).order_by('xxx')
+        Note: The queryset is already filtered by Organisation. 
+        Example of use: queryset.filter(xxx=x).order_by('xxx')
         """
         return queryset
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        logging.error(portal_choice)
-        self.portal_choice = portal_choice
-        queryset = self.model.objects.filter(Organisation=self.portal_choice)
+        self.portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
+        queryset = self.model.objects.filter(org_tag=self.portal_choice)
         return self._filter_queryset(queryset)
 
     def get_context_data(self, **kwargs):
