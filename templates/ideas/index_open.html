@@ -97,10 +97,10 @@
         <div class="pagination">
             <span class="page-links">
                 {% if page_obj.has_previous %}
-                <a href="/blogs/post-feed/challenges/{{ org.slug }}/live-polls/?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
+                <a href="{{request.path}}?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
                 {% endif %}
                 {% if page_obj.has_next %}
-                    <a href="/blogs/post-feed/challenges/{{ org.slug }}/live-polls/?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
+                    <a href="{{request.path}}?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
                 {% endif %}
                 <span class="page-current">
                     <h2 class="card-title">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</h2>                    

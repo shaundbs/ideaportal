@@ -351,8 +351,8 @@ def like_view_idea(request, pk, slug, orgslug):
 def approval_view(request, pk, slug, orgslug):
     logging.error(pk)
     form = ApprovalForm()
-    idea = Post.objects.get(id=pk)
-    logging.error(idea.title)
+    post = Post.objects.get(id=pk)
+    logging.error(post.title)
     if request.method == "POST":
         form = ApprovalForm(request.POST)
         if form.is_valid():
@@ -362,11 +362,11 @@ def approval_view(request, pk, slug, orgslug):
             logging.error(endDate)
             status = form.cleaned_data.get("status")
             logging.error(status)
-            idea.startDate = startDate
-            idea.endDate = endDate
-            idea.status = status
-            idea.stage = "open"
-            idea.save()
+            post.startDate = startDate
+            post.endDate = endDate
+            post.status = status
+            post.stage = "open"
+            post.save()
 
             return redirect("post_management_detail", orgslug=orgslug, pk=pk, slug=slug)
 

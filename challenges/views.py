@@ -167,10 +167,12 @@ class IdeaManagementDetail(generic.DetailView):
     
     model = Idea
     template_name = 'ideas/idea_management_detail.html'
+    def get(self, request, *args, **kwargs):
+        super().get(request, *args, **kwargs)
+        return HttpResponseRedirect(reverse("idea_management_detail", args=[self.kwargs['orgslug'], self.kwargs['pk'], self.kwargs['slug']]))
 
     def get_context_data(self, *args, **kwargs):
         context = super(IdeaManagementDetail, self).get_context_data()
-        portal_choice = Organisation.objects.get(slug=self.kwargs['orgslug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
         context['orgslug'] = portal_slug
         stuff = get_object_or_404(Idea, id=self.kwargs['pk'])
@@ -252,23 +254,10 @@ class IdeaListOpen(generic.ListView):
     
     def get_context_data(self, **kwargs):
         context = super(IdeaListOpen, self).get_context_data(**kwargs) 
-        list_challenges = Idea.objects.all()
-        paginator = Paginator(list_challenges, self.paginate_by)
         logging.error(self.kwargs['pk'])
         context['orgslug'] = self.kwargs['slug']
         context['title'] = 'Open Ideas'
         context['pk'] = self.kwargs['pk']
-        page = self.request.GET.get('page')
-
-
-        try:
-            file_exams = paginator.page(page)
-        except PageNotAnInteger:
-            file_exams = paginator.page(1)
-        except EmptyPage:
-            file_exams = paginator.page(paginator.num_pages)
-            
-        context['list_challenges'] = file_exams
         return context
 
 class IdeaListDelivered(generic.ListView):
@@ -293,7 +282,7 @@ class IdeaListDelivered(generic.ListView):
         paginator = Paginator(list_challenges, self.paginate_by)
         logging.error(self.kwargs['pk'])
         context['title'] = 'Delivered Ideas'
-        context['slug'] = self.kwargs['slug']
+        context['orgslug'] = self.kwargs['slug']
         context['pk'] = self.kwargs['pk']
 
         page = self.request.GET.get('page')
@@ -330,10 +319,9 @@ class IdeaListReview(generic.ListView):
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
         logging.error(self.kwargs['pk'])
-        context['slug'] = self.kwargs['slug']
+        context['orgslug'] = self.kwargs['slug']
         context['title'] = 'Under-review Ideas'
         context['pk'] = self.kwargs['pk']
-
 
         page = self.request.GET.get('page')
 
@@ -369,10 +357,9 @@ class IdeaListAccepted(generic.ListView):
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
         logging.error(self.kwargs['pk'])
-        context['slug'] = self.kwargs['slug']
+        context['orgslug'] = self.kwargs['slug']
         context['title'] = 'Accepted Ideas'
         context['pk'] = self.kwargs['pk']
-
 
         page = self.request.GET.get('page')
 
@@ -407,7 +394,7 @@ class IdeaListInDev(generic.ListView):
         context = super(IdeaListInDev, self).get_context_data(**kwargs) 
         list_challenges = Idea.objects.all()
         paginator = Paginator(list_challenges, self.paginate_by)
-        context['slug'] = self.kwargs['slug']
+        context['orgslug'] = self.kwargs['slug']
         logging.error(self.kwargs['pk'])
         context['title'] = 'In-development Ideas'
         context['pk'] = self.kwargs['pk']
@@ -1002,8 +989,7 @@ class CNWLIdeaViewSet(viewsets.ModelViewSet):
 
 def lifecycle(request, pk, slug):
     org = Organisation.objects.get(id=pk)
-    org_slug = org.slug
-    context = {'pk':pk, 'orgslug': org_slug, 'slug' : slug}
+    context = {'pk':pk, 'orgslug': slug}
     return  render(request, 'challenges/lifecycle.html', context)
 
 class CommentList(generic.ListView):
