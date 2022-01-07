@@ -270,7 +270,7 @@ def approve_challenge(request, pk, slug, orgslug):
     logging.error(post.status)
     post.save()
 
-    return HttpResponseRedirect(reverse("post_management_detail", args=[orgslug, str(pk), slug]))
+    return HttpResponseRedirect(reverse("pending_idea", args=[orgslug, str(pk), slug]))
 
 
 def add_dates(request, pk, slug):

@@ -95,7 +95,7 @@ def approve_idea(request, pk, slug, orgslug):
     logging.error(idea.status)
     idea.save()
 
-    return HttpResponseRedirect(reverse('idea_management_detail', args=[orgslug, str(pk), slug]))
+    return HttpResponseRedirect(reverse('pending_ideas', args=[orgslug]))
 
 def reject_idea(request, pk, slug, orgslug):
     idea = get_object_or_404(Idea, id=request.POST.get('idea_id'))
@@ -144,10 +144,7 @@ class IdeaManagementDetail(generic.DetailView):
     
     model = Idea
     template_name = 'ideas/idea_management_detail.html'
-    def get(self, request, *args, **kwargs):
-        super().get(request, *args, **kwargs)
-        return HttpResponseRedirect(reverse("idea_management_detail", args=[self.kwargs['orgslug'], self.kwargs['pk'], self.kwargs['slug']]))
-
+    
     def get_context_data(self, *args, **kwargs):
         context = super(IdeaManagementDetail, self).get_context_data()
         portal_slug = Organisation.objects.get(slug=self.kwargs['orgslug']).slug
