@@ -119,6 +119,11 @@ class PostListMonth(PostList):
     def get_queryset(self, *args, **kwargs):
         datetime_object = datetime.datetime.strptime(self.kwargs["month"], "%B")
         return super().get_queryset(*args, **kwargs).filter(created_on__month = datetime_object.month)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['month'] = self.kwargs["month"]
+        return context
 
 
 class PostListCulture(PostList):
