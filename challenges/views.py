@@ -39,9 +39,15 @@ Classes:
 class PostList(generic.ListView):
     """View for Pending Challenges under Management tab"""
     today = make_aware(datetime.datetime.now())
-    template_name = 'blogs/manager_index.html'
+    template_name = 'errors/access_denied.html'
     model = Post
     paginate_by = 4
+
+
+    def setup(self, request, *args, **kwargs):
+        if request.user.is_admin:
+            self.template_name = 'blogs/manager_index.html'
+        return super().setup(request, *args, **kwargs)
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
