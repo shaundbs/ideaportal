@@ -9,6 +9,7 @@
       <div class="govuk-grid-column-two-thirds">
         
         <div class="card-body">
+
           <div class="nhsuk-back-link">
       <a class="nhsuk-back-link__link" href="{{request.META.HTTP_REFERER}}">
       <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
@@ -21,10 +22,15 @@
         <p class="govuk-body">
           You do not have permission to access this page.
         </p>
-        <p class="govuk-body">
-          This could be because you do not have the correct permissions to access this organisation's page.<br>
+          {% if prompt %}
+          {% else %}
+          <p class="govuk-body">
+          This could be because you do not have the correct permissions to access this page.<br>
           Please contact an administrator or portal manager to request access if this is the case. 
-        </p>
+          </p>
+          {% endif %}
+
+        <a href="{% url 'blogfeed_main' orgslug %}" class="nhsuk-button">Back to Landding Page</a>
       </div>
     </div>
   </main>
