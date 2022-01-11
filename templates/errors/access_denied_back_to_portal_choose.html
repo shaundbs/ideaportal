@@ -1,11 +1,10 @@
 {% extends "errors/access_denied_base.html" %}
 {%block prompt%}
   <p class="govuk-body">
-  This could be because you do not have the correct permissions to access this page.<br>
+  This could be because you do not have the access to this portal.<br>
   Please contact an administrator or portal manager to request access if this is the case. 
   </p>
 {%endblock prompt%}
 {%block return_button%}
-  <a href="{% url 'blogfeed_main' orgslug %}" class="nhsuk-button">Back to Landding Page</a>
+  <a href="{% url 'select_org' %}" class="nhsuk-button">Back to Portal Choose Page</a>
 {%endblock return_button%}
-
