@@ -40,13 +40,13 @@ class PostList(generic.ListView):
     """View for Pending Challenges under Management tab"""
     today = make_aware(datetime.datetime.now())
     template_name = 'errors/access_denied.html'
+    manage_template_name = 'blogs/manager_index.html'
     model = Post
     paginate_by = 4
 
-
     def setup(self, request, *args, **kwargs):
         if request.user.is_admin:
-            self.template_name = 'blogs/manager_index.html'
+            self.template_name = self.manage_template_name
         return super().setup(request, *args, **kwargs)
 
     def get_queryset(self, *args, **kwargs):
@@ -65,7 +65,7 @@ class PostList(generic.ListView):
 
 class PostListCompleted(PostList):
     """View for Completed Challenges under Management tab"""
-    template_name = 'blogs/completed_challenges.html'
+    manage_template_name = 'blogs/completed_challenges.html'
 
     def get_queryset(self, *args, **kwargs):
         today = make_aware(datetime.datetime.now())
@@ -79,7 +79,7 @@ class PostListCompleted(PostList):
 # IdeaApprovalForm
 
 class PendingIdeasList(PostList):
-    template_name = 'ideas/pending_ideas.html'
+    manage_template_name = 'ideas/pending_ideas.html'
     context_object_name = 'ideas'
     model = Idea
 
