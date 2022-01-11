@@ -488,7 +488,7 @@ class blogfeed_main(generic.DetailView):
             has_access = True
         
         if not has_access:
-            self.template_name = 'errors/access_denied.html'
+            self.template_name = 'errors/access_denied_back_to_portal_choose.html'
         kwargs.update(has_access = has_access)
         return super().setup(request, *args, **kwargs)
 
