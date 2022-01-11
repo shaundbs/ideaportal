@@ -461,16 +461,48 @@ class blogfeed_main(generic.DetailView):
 
     model = Organisation
     template_name = 'blogs/blogfeed_main.html'
+    
+    def setup(self, request, *args, **kwargs):
+        """Override this method from super class.
+
+        Adding the functionality to check if a user has access 
+        to the [Landing Page] for such portal (e.g. public).
+        If one has, keep going; otherwise, change to template to [Access Denied] page.
+
+        Parameters is same as the method in super class.
+        {'has_access': bool} is appended to the [**kwargs] in returns.
+        """
+        has_access = False
+        portal_choice = Organisation.objects.get(slug=kwargs['slug'])
+        if request.user.is_authenticated:
+            affiliate = request.user.affiliated_with.all()
+            try: 
+                if portal_choice in affiliate:
+                    has_access = True
+                # Should admin from one protal has access to another portal?    
+                if request.user.groups.filter(name = 'admins').exists():
+                    has_access = True
+            except:
+                ValidationError("Auth issue")
+        else: # As an anonymous users, trivially true
+            has_access = True
+        
+        if not has_access:
+            self.template_name = 'errors/access_denied.html'
+        kwargs.update(has_access = has_access)
+        return super().setup(request, *args, **kwargs)
 
     def get_context_data(self, *args, **kwargs):
         context = super(blogfeed_main, self).get_context_data(*args, **kwargs)
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
         portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+        context['orgslug'] = portal_slug
+        if not self.kwargs['has_access']:
+            return context
+        context['org'] = Organisation.objects.get(slug=portal_slug)
         context['slug'] = portal_slug
         logging.error(portal_choice)
         logging.error(portal_slug)
-        context['org'] = Organisation.objects.get(slug=portal_slug)
-        context['orgslug'] = portal_slug
         today = date.today()
         six_months = today + relativedelta(months=-10)
         logging.error(six_months)
@@ -520,28 +552,6 @@ class blogfeed_main(generic.DetailView):
         # notifications = zip(post_notifs, idea_notifs)
         context['notifications'] = post_notifs
         context['idea_notifications'] = idea_notifs
-
-        has_access = False
-        is_auth = False
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        logging.error(portal_choice)
-
-        if self.request.user.is_authenticated:
-            affiliate = self.request.user.affiliated_with.all()
-            logging.error(affiliate)
-            try: 
-                if portal_choice in affiliate:
-                    has_access = True       
-                if self.request.user.groups.filter(name = 'admins').exists():
-                    has_access = True
-            except:
-                ValidationError("Auth issue")
-        else:
-            has_access = True
-        
-        logging.error(has_access)
-        context['has_access'] = has_access
 
         result = []
         year_list = []
