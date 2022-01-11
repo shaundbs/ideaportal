@@ -1,59 +1,11 @@
-{% include 'components/navbar_limited.html' %}
+{% extends "errors/access_denied_base.html" %}
+{%block prompt%}
+  <p class="govuk-body">
+  This could be because you do not have the correct permissions to access this page.<br>
+  Please contact an administrator or portal manager to request access if this is the case. 
+  </p>
+{%endblock prompt%}
+{%block return_button%}
+  <a href="{% url 'blogfeed_main' orgslug %}" class="nhsuk-button">Back to Landding Page</a>
+{%endblock return_button%}
 
-
-<div class="nhsuk-width-container app-width-container--full">
-
-  
-  <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        
-        <div class="card-body">
-
-          <div class="nhsuk-back-link">
-
-        <h1 class="govuk-heading-l">Access denied</h1>
-        <p class="govuk-body">
-          You do not have permission to access this page.
-        </p>
-          {% if prompt %}
-          {% else %}
-          <p class="govuk-body">
-          This could be because you do not have the correct permissions to access this page.<br>
-          Please contact an administrator or portal manager to request access if this is the case. 
-          </p>
-          {% endif %}
-
-        <a href="{% url 'blogfeed_main' orgslug %}" class="nhsuk-button">Back to Landding Page</a>
-      </div>
-    </div>
-  </main>
-</div>
-<br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-
-
-
-{% include 'components/footer.html' %}
-
-          <!-- Data Layer -->
-          <script>document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');</script>
-  </body>
-
-</html>
