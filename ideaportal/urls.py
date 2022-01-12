@@ -86,6 +86,7 @@ urlpatterns = [
     path('organisations/', include('organisations.urls'), name='organisations'),
     path('orchaapi/', include('orchaapi.urls'), name='apihub'),
     path('ideastore/', include('ideastore.urls'), name='ideastore'),
+    path('management/', include('management.urls'), name='management'),
 
     path('activate-user/<uidb64>/<token>', views.activate_user, name='activate'),
     path('<slug:slug>/profile/profile-main', views.profile_main, name='profile_main'),
