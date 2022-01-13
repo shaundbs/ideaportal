@@ -3,17 +3,15 @@ from .models import Organisation
 
 # Register your models here.
 class OrgAdmin(admin.ModelAdmin):
-    list_display = ('name','is_active','specialty', 'description', 'created_on')
-    list_filter = ("specialty",)
-    search_fields = ['name', 'specialty']
+    list_display = ('name','is_active', 'description', 'created_on')
+    search_fields = ['name']
 
     filter_horizontal = ()
     fieldsets = ()
 
 class OrgAdmin(admin.ModelAdmin):
-    list_display = ('name','is_active','specialty', 'description', 'created_on')
-    list_filter = ("specialty",)
-    search_fields = ['name', 'specialty']
+    list_display = ('name','is_active', 'description', 'created_on')
+    search_fields = ['name']
 
     filter_horizontal = ()
     fieldsets = ()
