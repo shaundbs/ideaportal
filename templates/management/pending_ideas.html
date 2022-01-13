@@ -5,7 +5,7 @@
 {%block section_title%} Pending Ideas {%endblock%}
 
 {%block button%}
-<a href="{% url 'idea_management_detail' orgslug idea.pk idea.slug %}" class="nhsuk-button">Manage</a>
+<a href="{% url 'idea_management_detail' org.slug idea.pk idea.slug %}" class="nhsuk-button">Manage</a>
 {%endblock button%}
 {% comment %} {% extends "blogs/base.html" %} 
 {% block content %}

@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.views.generic import DetailView, ListView
 from django.utils.timezone import make_aware
 from django.urls import reverse
+from account.views import access_denied
 
 from challenges.models import Post, Idea, OrgForm
 from organisations.models import Organisation
@@ -26,75 +27,66 @@ Function:
 - reject_idea
 """
 
-class PostList(ListView):
-    """View for Pending Challenges under Management tab"""
+class ManagementListView(ListView):
+    """Abstract class for the ListView classes in [Management]"""
     today = make_aware(datetime.datetime.now())
-    template_name = 'error/access_denied.html'
-    manage_template_name = 'management/manager_index.html'
-    model = Post
+    template_name = None
+    model = None
     paginate_by = 4
 
     def setup(self, request, *args, **kwargs):
-        if request.user.is_admin:
-            self.template_name = self.manage_template_name
+        """Override the setup method, redirect to [Access Denied] if user is not admin"""
+        if not request.user.is_admin:
+            orgslug = Organisation.objects.get(slug=self.kwargs['slug']).slug
+            return HttpResponseRedirect(reverse('ideaportal:access_denied'), args=[orgslug])
         return super().setup(request, *args, **kwargs)
 
     def get_queryset(self, *args, **kwargs):
         portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return self.model.objects.filter(status=0).filter(org_tag=portal_choice).filter(endDate=None).order_by('-created_on')
+        return self.model.objects.filter(org_tag=portal_choice)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) 
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        portal_slug = Organisation.objects.get(slug=self.kwargs['slug']).slug
-        logging.error(portal_choice)
-        logging.error(portal_slug)
-        context['org'] = Organisation.objects.get(slug=portal_slug)
-        context['orgslug'] = portal_slug            
+        context = super().get_context_data(**kwargs)
+        context['org'] = Organisation.objects.get(slug=self.kwargs['slug'])         
         return context
 
-class PostListCompleted(PostList):
+class PostList(ManagementListView):
+    """View for Pending Challenges under Management tab"""
+    template_name = 'management/manager_index.html'
+    model = Post
+
+    def get_queryset(self, *args, **kwargs):
+        query_set = super().get_queryset(*args, **kwargs)
+        return query_set.filter(status=0).filter(endDate=None).order_by('-created_on')
+
+class PostListCompleted(ManagementListView):
     """View for Completed Challenges under Management tab"""
-    manage_template_name = 'management/completed_challenges.html'
+    template_name = 'management/completed_challenges.html'
+    model = Post
 
     def get_queryset(self, *args, **kwargs):
-        today = make_aware(datetime.datetime.now())
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return self.model.objects.filter(status=1).filter(org_tag=portal_choice).filter(endDate__lte=today).order_by('-created_on')
+        query_set = super().get_queryset(*args, **kwargs)
+        return query_set.filter(status=1).filter(endDate__lte=self.today).order_by('-created_on')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) 
-        return context
 
-class PendingIdeasList(PostList):
-    manage_template_name = 'management/pending_ideas.html'
-    context_object_name = 'ideas'
+class PendingIdeasList(ManagementListView):
+    template_name = 'management/pending_ideas.html'
     model = Idea
-
-    def get_queryset(self, *args, **kwargs):
-        portal_choice = self.kwargs['slug']
-        logging.error(portal_choice)
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return self.model.objects.filter(status=0).filter(org_tag=portal_choice)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-class ApprovedIdeaList(PostList):
-    manage_template_name = 'management/pending_ideas.html'
     context_object_name = 'ideas'
-    model = Idea
 
     def get_queryset(self, *args, **kwargs):
-        portal_choice = self.kwargs['slug']
-        logging.error(portal_choice)
-        portal_choice = Organisation.objects.get(slug=self.kwargs['slug'])
-        return self.model.objects.filter(status=0).filter(org_tag=portal_choice)
+        query_set = super().get_queryset(*args, **kwargs)
+        return query_set.filter(status=0)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+class ApprovedIdeaList(ManagementListView):
+    template_name = 'management/pending_ideas.html'
+    model = Idea
+    context_object_name = 'ideas'
+
+    def get_queryset(self, *args, **kwargs):
+        query_set = super().get_queryset(*args, **kwargs)
+        return query_set.filter(status=1)
+
 
 class PostManagementDetail(DetailView):
 
@@ -121,6 +113,7 @@ class PostManagementDetail(DetailView):
 
         portal_choice = Organisation.objects.get(slug=self.kwargs["orgslug"])
         portal_slug = Organisation.objects.get(slug=self.kwargs["orgslug"]).slug
+        context['org'] = portal_choice
         context["orgslug"] = portal_slug
         return context
 
@@ -155,6 +148,7 @@ class IdeaManagementDetail(DetailView):
             context['ig_agreements_in_place'] = customised.ig_agreements_in_place
             context['data_and_model_agreed'] = customised.data_and_model_agreed
         context['custom'] = custom
+        context['org'] = Organisation.objects.get(slug=self.kwargs['orgslug'])
         return context
 
 def approve_idea(request, pk, slug, orgslug):
