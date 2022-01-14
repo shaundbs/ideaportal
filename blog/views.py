@@ -213,35 +213,6 @@ class PostDetail(generic.DetailView):
         return context
 
 
-class PostManagementDetail(generic.DetailView):
-
-    model = Post
-    template_name = "blogs/post_management_detail.html"
-
-    def get_context_data(self, *args, **kwargs):
-        context = super(PostManagementDetail, self).get_context_data()
-
-        stuff = get_object_or_404(Post, id=self.kwargs["pk"])
-        total_likes = stuff.total_likes()
-
-        liked = False
-        if stuff.likes.filter(id=self.request.user.id).exists():
-            liked = True
-        active = False
-
-        if stuff.endDate == None:
-            active = True
-
-        context["total_likes"] = total_likes
-        context["liked"] = liked
-        context["is_active"] = active
-
-        portal_choice = Organisation.objects.get(slug=self.kwargs["orgslug"])
-        portal_slug = Organisation.objects.get(slug=self.kwargs["orgslug"]).slug
-        context["orgslug"] = portal_slug
-        return context
-
-
 class PostCommentList(generic.ListView):
     model = Comment
     template_name = "components/sidebar_challenge.html"
