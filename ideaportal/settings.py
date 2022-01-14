@@ -42,14 +42,14 @@ INSTALLED_APPS = [
     'django_filters',
     'widget_tweaks',
     'psycopg2',
+    'rest_framework.authtoken',
+    'dotenv',
+    'formtools',
+    'organisations',
     'account',
     'challenges',
     'blog',
-    'formtools',
     'orchaapi',
-    'rest_framework.authtoken',
-    'dotenv',
-    'organisations',
     'ideastore',
 ]
 
