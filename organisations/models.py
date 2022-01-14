@@ -1,8 +1,8 @@
+import random
+
 from django.db import models
-from challenges.models import Department
 from django.utils.text import slugify 
 from django.templatetags.static import static
-import random
 from django.db.models import Count, Max
 
 # Create your models here.
