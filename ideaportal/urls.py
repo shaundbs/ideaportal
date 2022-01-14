@@ -30,15 +30,6 @@ from orchaapi.views import GetDroplets
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 
-named_contact_forms = (
-    ('contactdata', CustomUserCreationForm),
-    ('agedata', AgeForm),
-    ('employeedata', EmployeeForm),
-)
-
-contact_wizard = views.ContactWizard.as_view(named_contact_forms,
-    url_name='contact_step', done_step_name='finished')
-
 """
 Issue: add '/' to the end of each pattern
 """
