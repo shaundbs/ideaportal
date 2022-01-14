@@ -151,11 +151,11 @@ class IdeaManagementDetail(DetailView):
         context['org'] = Organisation.objects.get(slug=self.kwargs['orgslug'])
         return context
 
-def approve_idea(request, pk, slug, orgslug):
-    idea = get_object_or_404(Idea, id=request.POST.get('idea_id'))
+def change_idea(request, pk, slug, orgslug):
+    idea = get_object_or_404(Idea, id=pk)
     logging.error(idea.status)
     idea.status = 1
-    idea.stage = 'open'
+    idea.stage = request.POST.get('idea_id')
     idea.save()
 
     return HttpResponseRedirect(reverse('pending_ideas', args=[orgslug]))

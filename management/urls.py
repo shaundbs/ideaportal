@@ -10,7 +10,7 @@ urlpatterns = [
     path('<slug:orgslug>/<int:pk>/<slug:slug>/manage-challenges/', views.PostManagementDetail.as_view(), name='post_management_detail'),
     path('<slug:orgslug>/<int:pk>/<slug:slug>/manage-ideas/', views.IdeaManagementDetail.as_view(), name='idea_management_detail'),
 
-    path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/approve', views.approve_idea, name='approve_idea'),
+    path('<slug:orgslug>/<int:pk>/<slug:slug>/manage/change', views.change_idea, name='change_idea'),
     path('<slug:orgslug>/<int:pk>/manage/<slug:slug>/reject', views.reject_idea, name='reject_idea'),
 
 ]
