@@ -14,22 +14,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from account.admin import user_site
 from django.urls import path
-from django.urls.conf import re_path
-import account.views as views
-import challenges.views as cviews
-import blog.views as bviews
 from django.urls import path, include
-import blog.urls
-from account.forms import CustomUserCreationForm, AgeForm, EmployeeForm
 from django.conf.urls.static import static
-import ideaportal.settings
 from django.conf import settings
-from orchaapi.views import GetDroplets
 from django.conf import settings
 from django.contrib.auth import views as auth_views
 
+from account.admin import user_site
 """
 Issue: add '/' to the end of each pattern
 """
