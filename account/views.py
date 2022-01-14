@@ -541,13 +541,13 @@ class blogfeed_main(generic.DetailView):
         logging.error(leaderboard_data_contribution)
         context['leaderboard_data_contribution'] = leaderboard_data_contribution
 
-        total_challenges = Post.objects.filter(org_tag = portal_choice).count()
-        total_ideas = Idea.objects.filter(org_tag = portal_choice).count()
+        total_challenges = Post.objects.filter(org_tag = portal_choice, status=True).count()
+        total_ideas = Idea.objects.filter(org_tag = portal_choice, status=1).count()
         context['total_challenges'] = total_challenges
         context['total_ideas'] = total_ideas
 
-        post_notifs = Post.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id).order_by("-updated_on")[:5]
-        idea_notifs = Idea.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id).order_by("-updated_on")[:5]
+        post_notifs = Post.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id, status=True).order_by("-updated_on")[:5]
+        idea_notifs = Idea.objects.filter(org_tag = portal_choice).filter(author = self.request.user.id, status=1).order_by("-updated_on")[:5]
 
         # notifications = zip(post_notifs, idea_notifs)
         context['notifications'] = post_notifs

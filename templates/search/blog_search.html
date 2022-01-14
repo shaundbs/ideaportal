@@ -33,7 +33,7 @@
                         You searched for... {{ searched }}
                     </h2>
                     <br>
-                    {% if not posts %}
+                    {% if not posts and not ideas %}
                     <br>
                     <h3>Sorry - your seach returned no results</h5>
                     {% else %}
@@ -45,6 +45,17 @@
                     
                     </div>                    
                     <h5><a href="{% url 'post_detail' orgslug post.pk post.slug %}">{{ post }}</a> <br> </h5>
+
+
+                    {% endfor %}
+                    {% for idea in ideas %}
+                    <div id="nhs-number-hint">
+                        <div class="nhsuk-hint" id="example-hint">
+                            {{ idea.author }} | {{ idea.created_on }}
+                          </div>
+                    
+                    </div>                    
+                    <h5><a href="{% url 'idea_post' orgslug idea.pk idea.slug %}">{{ idea }}</a> <br> </h5>
 
 
                     {% endfor %}

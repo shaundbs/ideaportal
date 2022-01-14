@@ -34,10 +34,13 @@ from ideaportal.templates import ListViewTemplate
 def search_blog(request, slug):
     # org = Organisation.objects.get(id=slug)
     orgslug = slug
+    orgid = Organisation.objects.filter(slug=orgslug)[0].id
 
     if request.method == "POST":
         searched = request.POST["searched"]
-        posts = Post.objects.filter(title__icontains=searched)
+        posts = Post.objects.filter(title__icontains=searched, org_tag=orgid)
+        ideas = Idea.objects.filter(title__icontains=searched, org_tag=orgid)
+        # contents no use
         contents = Post.objects.filter(description__icontains=searched)
         logging.error("hello")
 
@@ -47,6 +50,7 @@ def search_blog(request, slug):
             {
                 "searched": searched,
                 "posts": posts,
+                "ideas": ideas,
                 "contents": contents,
                 "orgslug": orgslug,
             },

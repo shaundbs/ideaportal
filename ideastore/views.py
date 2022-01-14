@@ -465,7 +465,7 @@ class IdeaList(generic.ListView):
         ('delivered', 'Delivered'),
         """
         portal_choice = Organisation.objects.get(slug=self.kwargs["slug"])
-        return Idea.objects.filter(org_tag=portal_choice).order_by("-created_on" ,"-updated_on")
+        return Idea.objects.filter(org_tag=portal_choice, status=1).order_by("-created_on" ,"-updated_on")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
