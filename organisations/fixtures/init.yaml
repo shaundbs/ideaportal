@@ -1,0 +1,10 @@
+- model: organisations.Organisation
+  fields:
+    name: CNWL
+    slug: cnwl
+    is_active: true
+    created_on: 2022-01-01 00:00:00.000000+00:00
+    description: 'A sapce for patients, carers, servise users and staff members to collaborate on ideas to make CNWL the best it can be'
+    image: 'relationship03_YeeiBZG.jpg'
+    api_on: true
+    custom_form_on: true
