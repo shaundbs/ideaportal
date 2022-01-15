@@ -26,7 +26,7 @@ urlpatterns = [
     path('selected-ideas/', views.IdeaViewSet, name='selected_ideas'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('search-selected-idea/', views.search_idea, name='search_selected_idea'),
-    path('public/ideas/<slug:stage>/', views.intranet_api),
+    path('<slug:slug>/ideas/<slug:stage>', views.trustnet_api),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

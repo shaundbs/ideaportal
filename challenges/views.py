@@ -842,8 +842,8 @@ class PostDetail(generic.DetailView):
 @api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
-def intranet_api(request, stage=None):
-    org = Organisation.objects.get(name='Public')
+def trustnet_api(request, slug=None, stage=None):
+    org = Organisation.objects.get(slug=slug)
     pk = org.id
 
     if stage=='all':
@@ -851,8 +851,8 @@ def intranet_api(request, stage=None):
     else:
         query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
     serializer = IdeaSerializer(query_set, many=True)
-
     result = HttpResponse(serializer.data)
+
     return result
 
     
