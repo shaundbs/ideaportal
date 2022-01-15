@@ -1,0 +1,88 @@
+{% extends 'ideastore/idea_list_base.html' %}
+
+{%block nav_bar%} {% include 'components/navbar_management.html' %} {%endblock%}
+
+{%block section_title%} Pending Ideas {%endblock%}
+
+{%block button%}
+<a href="{% url 'idea_management_detail' orgslug idea.pk idea.slug %}" class="nhsuk-button">Manage</a>
+{%endblock button%}
+{% comment %} {% extends "blogs/base.html" %} 
+{% block content %}
+
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+        font-size: 18px;
+        background-color: #fdfdfd;
+    }
+    
+    .head_text {
+        color: white;
+    }
+    
+    .card {
+        box-shadow: 0 16px 48px #E3E7EB;
+    }
+</style>
+
+<div class="container">
+    <br>
+    <div class="nhsuk-back-link">
+        <a class="nhsuk-back-link__link" href="{% url 'blogfeed_main' orgslug %}">
+          <svg class="nhsuk-icon nhsuk-icon__chevron-left" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8.5 12c0-.3.1-.5.3-.7l5-5c.4-.4 1-.4 1.4 0s.4 1 0 1.4L10.9 12l4.3 4.3c.4.4.4 1 0 1.4s-1 .4-1.4 0l-5-5c-.2-.2-.3-.4-.3-.7z"></path>
+          </svg>
+          Go back</a>
+    
+      </div>
+    
+    <h1>Pending Ideas</h1>
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-8 mt-3 left">
+            {% if idea_list %}
+            {% for idea in idea_list %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">Suggested idea: {{ idea.title }}</h2>
+                    <h4>{% block title %}Challenge: {{ idea.post.title }}{% endblock title %}</h4>
+                    <p class="card-text text-muted h6">{{ idea.author }} | {{ idea.created_on}} </p>
+                    <br>
+                    <p class="card-text">{{idea.description|slice:":200" }}...</p>
+                    <p class="card-text">Department: {{idea.department}}</p>
+                    <p class="card-text">Estimated cost: £{{idea.estimated_cost}}</p>
+
+                   
+
+
+                    <a href="{% url 'idea_management_detail' orgslug idea.pk idea.slug %}" class="nhsuk-button">Manage</a>
+
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h3>There are currently no pending idea - you will be notified once a user submits an request</h3>
+            {% endif %}
+        </div>
+        {% block sidebar %} {% include 'components/sidebar.html' %} {% endblock sidebar %}
+    </div>
+    {% if is_paginated %}
+    <div class="pagination">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+            <a href="/challenges/{{ org.slug }}/pending-ideas/?page={{ page_obj.previous_page_number }}" class="nhsuk-button">Previous Page</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a href="/challenges/{{ org.slug }}/pending-ideas/?page={{ page_obj.next_page_number }}" class="nhsuk-button">Next Page</a>
+            {% endif %}
+            <span class="page-current">
+                <h2 class="card-title">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</h2>                    
+            </span>
+        </span>
+    </div>
+{% endif %}
+</div>
+</div>
+{% include 'components/footer.html' %}
+{%endblock%} {% endcomment %}

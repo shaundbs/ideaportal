@@ -297,11 +297,7 @@
 {% endif %}
 
 
-<button formaction="{% url 'change_idea' orgslug idea.pk idea.slug %}" type="submit" name="idea_id" value="open" class="nhsuk-button"  onclick="return confirm('Are you sure you want to set it to open?');">Open</button>
-<button formaction="{% url 'change_idea' orgslug idea.pk idea.slug %}" type="submit" name="idea_id" value="under review" class="nhsuk-button"  onclick="return confirm('Are you sure you want to set it to under review?');">Under Review</button>
-<button formaction="{% url 'change_idea' orgslug idea.pk idea.slug %}" type="submit" name="idea_id" value="accepted" class="nhsuk-button"  onclick="return confirm('Are you sure you want to set it to accepted?');">Accepted</button>
-<button formaction="{% url 'change_idea' orgslug idea.pk idea.slug %}" type="submit" name="idea_id" value="in development" class="nhsuk-button"  onclick="return confirm('Are you sure you want to set it to in development?');">In development</button>
-<button formaction="{% url 'change_idea' orgslug idea.pk idea.slug %}" type="submit" name="idea_id" value="delivered" class="nhsuk-button"  onclick="return confirm('Are you sure you want to set it to delivered?');">Delivered</button>
+<button formaction="{% url 'approve_idea' orgslug idea.pk idea.slug %}" type="submit" name="idea_id" value="{{ idea.id }}" class="nhsuk-button"  onclick="return confirm('Are you sure you want to approve this item?');">Approve</button>
 
 <button formaction="{% url 'reject_idea' orgslug idea.pk idea.slug %}" id="submit-button" type="submit" name="idea_id" value="{{ idea.id }}" class="nhsuk-button nhsuk-button--secondary" onclick="return confirm('Are you sure you want to reject this item?');">Reject</button>
 
