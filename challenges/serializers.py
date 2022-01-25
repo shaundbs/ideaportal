@@ -1,3 +1,4 @@
+from gc import get_objects
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
@@ -33,7 +34,13 @@ class IdeaSerializer(serializers.HyperlinkedModelSerializer):
     department = DepartmentSerializer(read_only=True)
     author = UserSerializer(read_only=True)
 
+    url = serializers.HyperlinkedIdentityField(
+        view_name='idea-detail',
+        lookup_field='pk',
+    )
+    # cannot add kwargs 'orgslug here', even overwrite the get-url method from parent class
+
     class Meta:
         model = Idea
-        fields = ('id', 'created_on', 'title', 'estimated_cost', 'description', 'stage', 'post', 'org_tag', 'department', 'author')
-        read_only_fields = ('id', 'title', 'estimated_cost', 'description', 'post', 'author')
+        fields = ('id', 'created_on', 'title', 'estimated_cost', 'description', 'stage', 'post', 'org_tag', 'department', 'author', 'url')
+        read_only_fields = ('id', 'title', 'estimated_cost', 'description', 'post', 'author', 'url')

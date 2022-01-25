@@ -26,6 +26,9 @@ import logging
 from rest_framework.decorators import api_view
 from rest_framework.decorators import authentication_classes, permission_classes
 
+from challenges import serializers
+from blog.views import IdeaDetail
+
 
 
 """Below are the calsses for pages in [Management] tab in [Home] page.
@@ -962,6 +965,11 @@ class PostDetail(generic.DetailView):
         return context
 
 @api_view(['GET'])
+def idea_detail(request, pk):
+    orgslug = Organisation.objects.get(name='Public').slug
+    return IdeaDetail.as_view()(request, pk=pk, orgslug=orgslug)
+
+@api_view(['GET'])
 @authentication_classes([])
 @permission_classes([])
 def trustnet_api(request, slug=None, stage=None):
@@ -972,8 +980,9 @@ def trustnet_api(request, slug=None, stage=None):
         query_set = Idea.objects.filter(org_tag = pk).order_by('-created_on')
     else:
         query_set = Idea.objects.filter(org_tag = pk).filter(stage=stage).order_by('-created_on')
-    serializer = IdeaSerializer(query_set, many=True)
-    result = HttpResponse(serializer.data)
+    serializer = IdeaSerializer(query_set, many=True, context={'request':request})
+    print(serializer.data)
+    result = HttpResponse(json.dumps(serializer.data))
 
     return result
 

@@ -98,6 +98,7 @@ class Idea(models.Model):
     description = models.TextField(max_length=500,default='Type content here...')
     notes = models.TextField(max_length=500,default='', null=True, blank=True)
     created_on = models.DateTimeField(auto_now_add=True)
+    # unnecessary
     status = models.IntegerField(choices=STATUS, default=0)
     is_user_led = models.BooleanField(default=True)
     is_similar = models.BooleanField(default=False, null=True)

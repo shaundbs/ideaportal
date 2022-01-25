@@ -1,8 +1,11 @@
+from django.http import request
+from organisations.models import Organisation
 from . import views
 from django.urls import path, include 
 from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
+from blog.views import IdeaDetail
 router = routers.DefaultRouter()
 router.register(r'all-ideas', views.IdeaViewSet)
 router.register(r'cnwl', views.CNWLIdeaViewSet)
@@ -33,6 +36,8 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('search-selected-idea/', views.search_idea, name='search_selected_idea'),
     path('<slug:slug>/ideas/<slug:stage>', views.trustnet_api),
+    
+    path('api/idea/<int:pk>', views.idea_detail, name='idea-detail'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
